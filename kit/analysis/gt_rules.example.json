@@ -1,0 +1,40 @@
+{
+  "_note": "These default rules are a working hypothesis. The call order an input method engine follows is not documented by the operating system, nor is the sequence of calls that signals a cancellation (on macOS, unmarkText is treated as a commit signal). Revise the rules against the call sequences observed on calibration-pilot devices. Schema of a rule set: start is the event that opens a composition; commit and cancel are arrays of events that close a composition; candidate is the event taken to indicate that a candidate window has appeared (unavailable on macOS, hence null); candidate_end is the event taken to indicate that a candidate window has closed (same schema as candidate; also null on macOS); clock_jump_ms is the threshold for a clock discontinuity. For win_tsf, the tsf_end event may omit result_len; when omitted, after_result is treated as false and the event is counted as a cancellation. Confirm this against a reference-input-field implementation in which the composition-end callback does not report the length of the committed result.",
+  "mac_nstic": {
+    "start": {"ev": "set_marked", "len_gt": 0},
+    "commit": [
+      {"ev": "insert_text", "len_gt": 0},
+      {"ev": "unmark"}
+    ],
+    "cancel": [
+      {"ev": "set_marked", "len_eq": 0, "not_followed_by": {"ev": "insert_text", "len_gt": 0}, "within_ms": 50}
+    ],
+    "candidate": null,
+    "candidate_end": null,
+    "clock_jump_ms": 1000
+  },
+  "win_imm": {
+    "start": {"ev": "start_comp"},
+    "commit": [
+      {"ev": "end_comp", "after_result": true}
+    ],
+    "cancel": [
+      {"ev": "end_comp", "after_result": false}
+    ],
+    "candidate": {"ev": "notify", "imn": 5},
+    "candidate_end": {"ev": "notify", "imn": 4},
+    "clock_jump_ms": 1000
+  },
+  "win_tsf": {
+    "start": {"ev": "tsf_start"},
+    "commit": [
+      {"ev": "tsf_end", "after_result": true}
+    ],
+    "cancel": [
+      {"ev": "tsf_end", "after_result": false}
+    ],
+    "candidate": {"ev": "ui_begin", "ui_kind": "candidate"},
+    "candidate_end": {"ev": "ui_end", "ui_kind": "candidate"},
+    "clock_jump_ms": 1000
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "_note": "Settings of the plan generator (kit/gen/generate_plan.py --config) for the macOS cells of the measurement. Frozen with the pre-registration and not edited afterwards. The same file serves both macOS cells; the cell with live conversion on is generated with kit/gen/recipes.json and the cell with it off with kit/gen/recipes.macos-live-off.json. The key-interval medians span the per-participant mean inter-key intervals of the slowest tenth, all participants and the fastest tenth reported by Dhakal, Feit, Kristensson and Oulasvirta (2018); the other values are design choices explained in the pre-registration.",
+  "n_per_cell_scenario_speed": 75,
+  "block_size": 25,
+  "speeds": {
+    "slow": {"iki_median_ms": 480, "iki_sigma": 0.3},
+    "mid": {"iki_median_ms": 240, "iki_sigma": 0.3},
+    "fast": {"iki_median_ms": 120, "iki_sigma": 0.3}
+  },
+  "key_hold_ms": 60,
+  "think_ms": {"min": 200, "max": 20000},
+  "cand_index_max": 4,
+  "nav_count_max": 3,
+  "inter_trial_ms": 1000,
+  "marker": ["left", "right", "left", "right"],
+  "marker_gap_ms": 150,
+  "reset_ime_every_block": false,
+  "kana_len_min": 4,
+  "kana_len_max": 8
+}

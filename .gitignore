@@ -1,0 +1,19 @@
+**/target/
+**/.build/
+**/__pycache__/
+*.jsonl
+*.ndjson
+runs/
+sealed/
+experiment/raw/
+# Compressed or archived raw logs (Zenodo deposits tend to end up in the working tree)
+*.jsonl.*
+*.ndjson.*
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.zst
+.venv/
+venv/
+!kit/corpus/data/*.jsonl

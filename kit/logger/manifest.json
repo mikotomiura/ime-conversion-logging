@@ -1,0 +1,108 @@
+{
+  "entries": [
+    {
+      "kind": "file",
+      "id": "ime_compose",
+      "path": "src/input/ime_compose.rs",
+      "symbol": null,
+      "sha256": "1cb76f7d3a48ac9bd9f6fa75ea73b243540f58e0311c705947c5bc841cd85e3e",
+      "reason": null
+    },
+    {
+      "kind": "file",
+      "id": "ime_cloak",
+      "path": "src/input/ime_cloak.rs",
+      "symbol": null,
+      "sha256": "20d02216c0a679138a3973e705214d59e8be681ab3d129502d1f6182f8779f68",
+      "reason": null
+    },
+    {
+      "kind": "file",
+      "id": "ime_mode",
+      "path": "src/input/ime_mode.rs",
+      "symbol": null,
+      "sha256": "8ac083b7c4bce4078c76d929afbce077da9251851dd3f903ea696b2db1b227a9",
+      "reason": null
+    },
+    {
+      "kind": "excerpt",
+      "id": "key_category",
+      "path": "src/key_category.rs",
+      "symbol": "KeyCategory",
+      "sha256": "bf0713092d43c56828a15866e24e4f9374b607093a2b2a46a5a1a275222b7db2",
+      "reason": "The enclosing file's unit tests depend on a module this logger does not carry, so only this excerpt (KeyCategory and the immediately following ABSOLUTE_TIME_FIELDS declaration, the latter unused by this logger) is included."
+    },
+    {
+      "kind": "new",
+      "id": "hook_shim",
+      "path": "src/input/hook.rs",
+      "symbol": null,
+      "sha256": "0ea18dbee0c2d1f47a910d79b9d1e2d1b511b7030e465409b600bb15079a014e",
+      "reason": "Exposes only the six pub const declarations and eight atomics that the three copied state-machine modules reference."
+    },
+    {
+      "kind": "new",
+      "id": "input_mod",
+      "path": "src/input/mod.rs",
+      "symbol": null,
+      "sha256": "d8f838193f5aa031a838901f9c2525ca5d79f4b48831b6b7e2cb8a98916f7a6a",
+      "reason": "Declares only the four modules this logger's input layer carries: the hook shim and the three state-machine modules."
+    },
+    {
+      "kind": "new",
+      "id": "main",
+      "path": "src/main.rs",
+      "symbol": null,
+      "sha256": "5e66e99adaaf22c5a0ece0bf93a7adb803d578051251ba136295523ce9f6468f",
+      "reason": "Summary emission and the monitoring thread, omitting an unrelated experiment-mode branch (t is the time a summary was drained; the stale path and the active-to-false transition path are Windows-only), plus this logger's own meta/key line writers and a selftest. Whether a candidate window is open is read directly from an atomic flag by default, but a driver may plug in a stronger observation function through the contract in driver_api.rs. Declares the module carrying the key-gate copy."
+    },
+    {
+      "kind": "new",
+      "id": "driver_api",
+      "path": "src/driver_api.rs",
+      "symbol": null,
+      "sha256": "224d2c035120a9364c10ee86ba4fbfcfdbbc171ec615261854f004ef1922c751",
+      "reason": "Boundary types between a driver and the core (KeyEvent / DriverCtx / DriverHandle). Defines the candidate-window observation hook and the driver stop contract."
+    },
+    {
+      "kind": "new",
+      "id": "cargo_toml",
+      "path": "Cargo.toml",
+      "symbol": null,
+      "sha256": "baae9686d61acff5ca7ef627591dfedd181f875b64b6b16c22dcd5a435caefce",
+      "reason": "Dependency versions are pinned crate-by-crate (the windows crate's feature list covers the full set needed across drivers). Declares the drivers' dependencies as well. Marked as its own workspace root so that an ancestor directory's Cargo workspace cannot pull it in."
+    },
+    {
+      "kind": "new",
+      "id": "main_emit_ime_shadow_judgment",
+      "path": "src/main.rs",
+      "symbol": "emit_ime_shadow",
+      "sha256": "5e66e99adaaf22c5a0ece0bf93a7adb803d578051251ba136295523ce9f6468f",
+      "reason": "Pins the ordering and branching of the summary-emission function that writes ime_shadow lines. The copy substitutes an injectable set of atomics for direct static access while carrying over the same branching."
+    },
+    {
+      "kind": "new",
+      "id": "main_ime_monitor_loop_judgment",
+      "path": "src/main.rs",
+      "symbol": null,
+      "sha256": "5e66e99adaaf22c5a0ece0bf93a7adb803d578051251ba136295523ce9f6468f",
+      "reason": "Pins the ordering of one monitoring-loop cycle (safety valve, then the active-to-false transition, then direct polling of the ready flag), as implemented by main.rs's monitoring-loop cycle function, omitting an unrelated experiment-mode branch."
+    },
+    {
+      "kind": "file",
+      "id": "key_gate",
+      "path": "src/analysis/key_gate.rs",
+      "symbol": null,
+      "sha256": "e6b6ed0016418bce6ad0fd90903e8d1447e3d69bf8abd067b0a8aaac3ff2762c",
+      "reason": "The Windows driver's low-level keyboard hook calls this module's feature-key classifier at the top of its callback. The module has no external dependencies, so the whole file is included, including its own tests."
+    },
+    {
+      "kind": "new",
+      "id": "analysis_mod",
+      "path": "src/analysis/mod.rs",
+      "symbol": null,
+      "sha256": "85436ca560142a375cca271f547934d5409ae9e921e0156eb8f72fef1546b251",
+      "reason": "Declares only the key-gate module."
+    }
+  ]
+}

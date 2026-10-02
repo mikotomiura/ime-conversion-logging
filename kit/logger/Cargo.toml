@@ -1,0 +1,50 @@
+[package]
+name = "ime-observation-logger"
+version = "0.1.0"
+edition = "2021"
+description = "Standalone logger producing content-free input-method observations"
+publish = false
+
+# Every dependency version is pinned.
+# The drivers (driver_macos / driver_windows) declare their dependencies here as well, so that later
+# work does not need to touch this file.
+
+# Makes this package its own workspace root. Without this, an ancestor directory that later gains its
+# own Cargo workspace would pull this package in, and cargo would search upward to decide which
+# workspace it belongs to.
+[workspace]
+
+[[bin]]
+name = "ime-observation-logger"
+path = "src/main.rs"
+
+[dependencies]
+tracing = "0.1.44"
+tracing-subscriber = "0.3.22"
+# Used to compute the `manifest_sha256` field of the `meta` line.
+sha2 = "0.10"
+
+[target.'cfg(windows)'.dependencies]
+# Some of the listed features are unused by this logger.
+windows = { version = "0.58", features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_Input",
+    "Win32_UI_Input_Ime",
+    "Win32_System_Threading",
+    "Win32_System_LibraryLoader",
+    "Win32_UI_Accessibility",
+    "Win32_System_Com",
+    "Win32_System_Variant",
+    "Win32_Graphics_Dwm",
+    "Win32_Graphics_Gdi",
+    "Win32_System_Registry",
+] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+core-graphics = { version = "0.24", features = ["highsierra"] }
+core-foundation = "0.10"
+
+[profile.release]
+opt-level = 2

@@ -1,0 +1,2 @@
+sudachidict-core==20260723.1
+SudachiPy==0.7.0

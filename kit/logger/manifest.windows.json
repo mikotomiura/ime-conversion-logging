@@ -1,0 +1,92 @@
+{
+  "entries": [
+    {
+      "kind": "excerpt",
+      "id": "is_observed_key",
+      "path": "src/driver_windows/keyboard.rs",
+      "symbol": "is_observed_key",
+      "sha256": "db93300b949d1abf2bef187c031461f62b31ecacbae6408c3fc579677e2b32e6",
+      "reason": null
+    },
+    {
+      "kind": "excerpt",
+      "id": "classify_ime_nav_key",
+      "path": "src/driver_windows/keyboard.rs",
+      "symbol": "classify_ime_nav_key",
+      "sha256": "7b8e31e80aa9d64c49c96f916b0738475ebed86a28077cb50dde8c0c5d2fee49",
+      "reason": null
+    },
+    {
+      "kind": "new",
+      "id": "keyboard_hook",
+      "path": "src/driver_windows/keyboard.rs",
+      "symbol": "hook_callback",
+      "sha256": "e7c41c3d416297ea860915468b01006d7f4a187cea05b5e2776edb6d90de5744",
+      "reason": "Low-level keyboard hook of the Windows driver: the callback, its installation and the two excerpted pure functions. The callback sends observed key transitions to the core channel and omits per-session statistics and mode tracking."
+    },
+    {
+      "kind": "new",
+      "id": "ime_winevent",
+      "path": "src/driver_windows/ime_winevent.rs",
+      "symbol": "win_event_callback",
+      "sha256": "003b17ccf13b28f576be88f9f9862bd0d51228f9050f5932f85d34c567cac863",
+      "reason": "Out-of-context WinEvent hook for the input-method window events. The event handling runs over injectable cells."
+    },
+    {
+      "kind": "new",
+      "id": "driver_windows",
+      "path": "src/driver_windows.rs",
+      "symbol": null,
+      "sha256": "a7932fc986119d0b6dff07d6b536bdb11eacd2d9c04ec73ed7bf80cb6282bab9",
+      "reason": "Entry point of the Windows driver: synchronous start-up, the hook thread and its message pump, the resolver thread, and the observation closure handed to the core. Newly written; the hooks it installs live in the submodules."
+    },
+    {
+      "kind": "excerpt",
+      "id": "legacy_path_is_driving",
+      "path": "src/driver_windows/cloak.rs",
+      "symbol": "legacy_path_is_driving",
+      "sha256": "e5683aa85e4e75f17b23ab74361104d0c17cf2e762626680c0e60b1304c68431",
+      "reason": null
+    },
+    {
+      "kind": "excerpt",
+      "id": "resolved_cloak_state",
+      "path": "src/driver_windows/cloak.rs",
+      "symbol": "resolved_cloak_state",
+      "sha256": "6a043e13b49b2ab0f50f6454281b9d0579eb419f1cef39ad0033049382b44ff4",
+      "reason": null
+    },
+    {
+      "kind": "excerpt",
+      "id": "is_stale_winevent_active",
+      "path": "src/driver_windows/candidate.rs",
+      "symbol": "is_stale_winevent_active",
+      "sha256": "e2408727f22a1ec5d01b81efada2ba74e9a461c6dc9cbd32db218a456d6a9084",
+      "reason": null
+    },
+    {
+      "kind": "excerpt",
+      "id": "is_ime_candidate_class_name",
+      "path": "src/driver_windows/candidate.rs",
+      "symbol": "is_ime_candidate_class_name",
+      "sha256": "880b27ddec5161719494b26eba7196b1161db1efec83d56314815111027784f7",
+      "reason": null
+    },
+    {
+      "kind": "new",
+      "id": "cloak_events",
+      "path": "src/driver_windows/cloak.rs",
+      "symbol": "cloak_event_callback",
+      "sha256": "51d97083e97ebc3ec87c4e531adaaab7ae1cee5709078a4643cc39cc6a08a5ae",
+      "reason": "Out-of-context WinEvent hook for window cloak and uncloak events, and the resolver thread that folds them into conversion sessions. The callback only forwards a window handle; the class and the compositor state are read on the resolver thread, and the resulting state is written over injectable cells."
+    },
+    {
+      "kind": "new",
+      "id": "candidate_window_observer",
+      "path": "src/driver_windows/candidate.rs",
+      "symbol": "is_candidate_window_open",
+      "sha256": "68dae923ba5bc4af27136fb9a267296ec0e93ec47948bafd99b8aa8b3b8c5fa2",
+      "reason": "Observation of whether a candidate window is open: the shared active flag, a window scan and a focus query combined by disjunction, with the reset of a stale flag. The judgments are excerpted; the scan and the focus query are newly written and read class names only, never the accessible name of the focused element, and the combination runs over injectable probes."
+    }
+  ]
+}

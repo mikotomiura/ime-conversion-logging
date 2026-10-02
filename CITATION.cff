@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use these artifacts, please cite them as below."
+type: software
+title: "Observing Japanese IME conversion without recording text: Observability limits, a cross-platform logger, and a synthetic-input validation"
+# The author list is a placeholder. The authors confirm names and affiliations before publication.
+authors:
+  - family-names: "TODO"
+    given-names: "TODO"
+    affiliation: "TODO"
+# Code is released under Apache-2.0; data and documents are released under CC BY 4.0.
+license:
+  - Apache-2.0
+  - CC-BY-4.0
+# The DOI is added when the archive is published (the archive assigns it):
+# doi: "10.5281/zenodo.XXXXXXX"
+keywords:
+  - Japanese input method
+  - IME
+  - keystroke dynamics
+  - privacy-preserving logging
+  - observability
+  - reproducibility

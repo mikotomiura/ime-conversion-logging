@@ -1,0 +1,52 @@
+{
+  "entries": [
+    {
+      "kind": "excerpt",
+      "id": "is_observed_key",
+      "path": "src/driver_macos/keymap.rs",
+      "symbol": "is_observed_key",
+      "sha256": "1f5edde3321eccea7ae5eba94bbea22d9bc45360cbc8446f1eb78c631a4194fb",
+      "reason": null
+    },
+    {
+      "kind": "excerpt",
+      "id": "macos_vk_to_vk",
+      "path": "src/driver_macos/keymap.rs",
+      "symbol": "macos_vk_to_vk",
+      "sha256": "fb0554d32537fe861180ef8c8edf95b6b809e857f4e6f8d65ae7835f9a837ffd",
+      "reason": null
+    },
+    {
+      "kind": "excerpt",
+      "id": "select_ime_source",
+      "path": "src/driver_macos/ime_source.rs",
+      "symbol": "select_ime_source",
+      "sha256": "701eb41be13a8c252a51ed53a172168fa76676f6f03f3b927e4cd3bc6b5e1bf7",
+      "reason": null
+    },
+    {
+      "kind": "new",
+      "id": "driver_macos",
+      "path": "src/driver_macos.rs",
+      "symbol": null,
+      "sha256": "28773ca204e85fe3befc5f7c345a8af1633313d229bdbae6e7b09a2ff39c5253",
+      "reason": "Entry point of the macOS driver: the listen-only event tap, its run-loop thread and start-up handshake, the forwarding thread, the tap callback, and the modifier and input-mode handling that feeds the conversion-session state machine. Newly written; the key-code tables and the input-source selection live in the submodules."
+    },
+    {
+      "kind": "new",
+      "id": "ime_source_poll",
+      "path": "src/driver_macos/ime_source.rs",
+      "symbol": "spawn_ime_open_polling_thread",
+      "sha256": "1d55d66ff82ce54ab508d0931480ca408bb7187e1bfca5f542ea448e7cc3d1a1",
+      "reason": "Polling of the input source. The selection between the mode-key flag and the input-source query is excerpted; the polling loop and the query are newly written, because the query is submitted to the main dispatch queue without blocking, and the loop writes the flag only from a completed query."
+    },
+    {
+      "kind": "new",
+      "id": "driver_macos_tests",
+      "path": "src/driver_macos/tests.rs",
+      "symbol": null,
+      "sha256": "49eef1059da8139e66f04188eed23acbaee788b48a20fb760d98686b9201e690",
+      "reason": "Unit tests of the pure parts of the macOS driver, on cells and channels local to each test."
+    }
+  ]
+}

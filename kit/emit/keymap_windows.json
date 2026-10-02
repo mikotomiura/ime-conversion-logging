@@ -1,0 +1,18 @@
+{
+  "a": {"scan": 30},  "b": {"scan": 48},  "c": {"scan": 46},  "d": {"scan": 32},  "e": {"scan": 18},
+  "f": {"scan": 33},  "g": {"scan": 34},  "h": {"scan": 35},  "i": {"scan": 23},  "j": {"scan": 36},
+  "k": {"scan": 37},  "l": {"scan": 38},  "m": {"scan": 50},  "n": {"scan": 49},  "o": {"scan": 24},
+  "p": {"scan": 25},  "q": {"scan": 16},  "r": {"scan": 19},  "s": {"scan": 31},  "t": {"scan": 20},
+  "u": {"scan": 22},  "v": {"scan": 47},  "w": {"scan": 17},  "x": {"scan": 45},  "y": {"scan": 21},
+  "z": {"scan": 44},
+  "1": {"scan": 2},   "2": {"scan": 3},   "3": {"scan": 4},   "4": {"scan": 5},   "5": {"scan": 6},
+  "6": {"scan": 7},   "7": {"scan": 8},   "8": {"scan": 9},   "9": {"scan": 10},  "0": {"scan": 11},
+  "minus": {"scan": 12}, "comma": {"scan": 51}, "period": {"scan": 52},
+  "enter": {"scan": 28}, "tab": {"scan": 15}, "space": {"scan": 57}, "backspace": {"scan": 14}, "esc": {"scan": 1},
+  "left": {"scan": 75, "ext": true}, "right": {"scan": 77, "ext": true},
+  "down": {"scan": 80, "ext": true}, "up": {"scan": 72, "ext": true},
+  "f13": {"vk": 124}, "f14": {"vk": 125}, "f15": {"vk": 126}, "f16": {"vk": 127},
+  "f17": {"vk": 128}, "f18": {"vk": 129}, "f19": {"vk": 130},
+  "ime_on": {"vk": 22}, "ime_off": {"vk": 26},
+  "shift": {"scan": 42}
+}

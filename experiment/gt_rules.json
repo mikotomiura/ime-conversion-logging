@@ -1,0 +1,94 @@
+{
+  "_note": "Ground-truth rules for the measurement. mac_nstic was revised against the macOS calibration pilot (macOS 27.0, Japanese Romaji input, JIS keyboard; see pilot-macos.md); win_imm and win_tsf are not used by the macOS cells; until the Windows addendum (preregistration.md, section 8) they hold the working hypothesis of kit/analysis/gt_rules.example.json, and the addendum may revise them against the Windows calibration pilot. Change from the example (mac_nstic, commit): with live conversion on, the input method commits the head of the marked text while the reading is still being typed, and then marks the remainder (insert_text immediately followed by set_marked). Under the example rules each such automatic commit closes a session, so one intended composition is split into several. A commit therefore closes a session only if no set_marked with len > 0 follows within 50 ms. In the pilot, the set_marked that continued a composition followed the automatic commit by 0.50 to 7.85 ms (85 cases with live conversion on, and none of them had a key_down in between), while the next composition began at least 958 ms after a final commit (the inter-trial wait); every threshold from 10 to 900 ms gave the same sessions. With live conversion off there was no automatic commit, and the rule changes nothing. A session's outcome is the reason it finally closed: text committed automatically earlier in the same session is not counted, so a session whose head was committed before the rest was cancelled is a cancellation (11 of the 27 cancelled trials with live conversion on). unmark was never observed in the pilot; it is given the same condition for consistency. A session that runs on from one trial into the next is excluded by kit/analysis/gt_sessions.py as carry_over, together with every trial it overlaps. Schema: see kit/analysis/gt_rules.example.json.",
+  "mac_nstic": {
+    "start": {
+      "ev": "set_marked",
+      "len_gt": 0
+    },
+    "commit": [
+      {
+        "ev": "insert_text",
+        "len_gt": 0,
+        "not_followed_by": {
+          "ev": "set_marked",
+          "len_gt": 0
+        },
+        "within_ms": 50
+      },
+      {
+        "ev": "unmark",
+        "not_followed_by": {
+          "ev": "set_marked",
+          "len_gt": 0
+        },
+        "within_ms": 50
+      }
+    ],
+    "cancel": [
+      {
+        "ev": "set_marked",
+        "len_eq": 0,
+        "not_followed_by": {
+          "ev": "insert_text",
+          "len_gt": 0
+        },
+        "within_ms": 50
+      }
+    ],
+    "candidate": null,
+    "candidate_end": null,
+    "clock_jump_ms": 1000
+  },
+  "win_imm": {
+    "start": {
+      "ev": "start_comp"
+    },
+    "commit": [
+      {
+        "ev": "end_comp",
+        "after_result": true
+      }
+    ],
+    "cancel": [
+      {
+        "ev": "end_comp",
+        "after_result": false
+      }
+    ],
+    "candidate": {
+      "ev": "notify",
+      "imn": 5
+    },
+    "candidate_end": {
+      "ev": "notify",
+      "imn": 4
+    },
+    "clock_jump_ms": 1000
+  },
+  "win_tsf": {
+    "start": {
+      "ev": "tsf_start"
+    },
+    "commit": [
+      {
+        "ev": "tsf_end",
+        "after_result": true
+      }
+    ],
+    "cancel": [
+      {
+        "ev": "tsf_end",
+        "after_result": false
+      }
+    ],
+    "candidate": {
+      "ev": "ui_begin",
+      "ui_kind": "candidate"
+    },
+    "candidate_end": {
+      "ev": "ui_end",
+      "ui_kind": "candidate"
+    },
+    "clock_jump_ms": 1000
+  }
+}

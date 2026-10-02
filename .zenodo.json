@@ -1,0 +1,21 @@
+{
+  "upload_type": "software",
+  "title": "Observing Japanese IME conversion without recording text: Observability limits, a cross-platform logger, and a synthetic-input validation",
+  "description": "Artifacts of a study on observing Japanese IME conversion without recording its text: the log formats, the scenario generator, the synthetic-input emitter, the reference input fields, the standalone logger, the analysis pipeline, the aggregate results of the experiment, and the export tooling. Code is released under Apache-2.0. Data (including the phrases and readings in kit/corpus/data/) and documents are released under CC BY 4.0; both licenses are described in README.md.",
+  "access_right": "open",
+  "license": "apache-2.0",
+  "creators": [
+    {
+      "name": "TODO",
+      "affiliation": "TODO"
+    }
+  ],
+  "keywords": [
+    "Japanese input method",
+    "IME",
+    "keystroke dynamics",
+    "privacy-preserving logging",
+    "observability",
+    "reproducibility"
+  ]
+}

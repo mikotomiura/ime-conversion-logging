@@ -1,0 +1,16 @@
+{
+  "_note": "Analysis settings, frozen with the pre-registration of the macOS cells (preregistration.md, section 9) and not edited after the freeze. gt_rules is resolved relative to this file. The Windows blocks of the rule file are the only part of these files that the Windows addendum may revise (preregistration.md, section 8).",
+  "iou_min": 0.5,
+  "obs_end_offset_ms": 0,
+  "theta": 0.5,
+  "drop_start_while_open": false,
+  "text_size_trials": 8,
+  "bootstrap_B": 2000,
+  "limit_ms": 20000,
+  "mixtures": {
+    "slow_heavy": {"slow": 0.6, "mid": 0.3, "fast": 0.1},
+    "uniform": {"slow": 1, "mid": 1, "fast": 1},
+    "fast_heavy": {"slow": 0.1, "mid": 0.3, "fast": 0.6}
+  },
+  "gt_rules": "gt_rules.json"
+}

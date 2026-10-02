@@ -1,0 +1,45 @@
+[package]
+name = "refinput-windows"
+version = "0.1.0"
+edition = "2021"
+description = "Windows reference input field: records IME messages as content-free gt/1 (lengths, flags and times only)"
+license = "Apache-2.0"
+publish = false
+
+# This package is deliberately excluded from any enclosing Cargo workspace; it is
+# self-contained and builds independently of the rest of the evaluation kit.
+[workspace]
+
+[lib]
+name = "refinput_windows"
+path = "src/core.rs"
+
+[[bin]]
+name = "refinput_imm"
+path = "src/bin/refinput_imm.rs"
+
+[[bin]]
+name = "refinput_tsf"
+path = "src/bin/refinput_tsf.rs"
+
+# Dependencies are limited to the `windows` crate family, version 0.58. JSON output is
+# hand-written (only integers and enumerated names appear), so serde is not required.
+# `windows-core` is added as a direct dependency because the expansion of the `#[implement]`
+# macro used for the TSF sink types refers to `::windows_core::...` by name; it is already
+# present in Cargo.lock at the same 0.58 line as a transitive dependency of `windows`, so this
+# does not add a new crate.
+[target.'cfg(windows)'.dependencies]
+windows-core = "0.58"
+windows = { version = "0.58", features = [
+    "implement",
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Input_Ime",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_TextServices",
+    "Win32_UI_Controls_RichEdit",
+    "Win32_Graphics_Gdi",
+    "Win32_System_Com",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Performance",
+] }

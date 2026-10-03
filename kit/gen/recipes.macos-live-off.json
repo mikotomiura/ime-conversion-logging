@@ -89,7 +89,7 @@
         "intent": {"commit": "enter", "cand_index": null, "nav_count": 0, "abandon": false, "predictive": false, "ime_toggle_mid": false, "focus_switch_mid": false, "expect_session": true}
       },
       "S4": {
-        "steps": [{"type_reading": true}, {"key": "space"}, {"pause": "think"}, {"key": "esc"}, {"key": "esc"}],
+        "steps": [{"type_reading": true}, {"key": "space"}, {"pause": "think"}, {"key": "esc"}, {"key": "esc"}, {"key": "esc"}],
         "intent": {"commit": "none", "cand_index": null, "nav_count": 0, "abandon": true, "predictive": false, "ime_toggle_mid": false, "focus_switch_mid": false, "expect_session": true}
       },
       "S5": {
@@ -107,7 +107,7 @@
       },
       "S8": {
         "params": {"cand_index": {"min": 0, "max": "cand_index_max", "cap": 8}},
-        "steps": [{"type_reading": true}, {"key": "space"}, {"key": "space"}, {"pause": "think"}, {"digit": "cand_index+1"}],
+        "steps": [{"type_reading": true}, {"key": "space"}, {"key": "space"}, {"pause": "think"}, {"digit": "cand_index+1"}, {"key": "enter"}],
         "intent": {"commit": "digit", "cand_index": {"$param": "cand_index"}, "nav_count": 0, "abandon": false, "predictive": false, "ime_toggle_mid": false, "focus_switch_mid": false, "expect_session": true}
       },
       "S9": {

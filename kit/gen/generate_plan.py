@@ -912,9 +912,9 @@ def _sha_file(path):
 
 # Keys each procedure profile ends a scenario with (see the README's Limitations). "commit" follows a conversion
 # after one Space (and, in S7 / S15, the arrows or the focus switch that come after it), "commit_cands" follows the
-# candidate window opened by two or more Spaces, "after_digit" follows a digit pick, and "cancel" cancels an
-# unconverted reading. A commit that follows no Space (S3, S10, S11) takes one Return under every profile and is not
-# listed here.
+# candidate window opened by two or more Spaces, "after_digit" follows a digit pick, "cancel" cancels an
+# unconverted reading and "cancel_converted" cancels a reading converted by one Space (S4). A commit that follows no
+# Space (S3, S10, S11) takes one Return under every profile and is not listed here.
 # - macos-live-on (recipes.json): one Space already opens the candidate window, where a Return only picks the
 #   candidate, so every commit after a Space takes a second Return, and so does a digit pick; each Escape steps the
 #   live conversion back one stage (kanji, kana, spelling), so the cancel presses four (extra presses only reach the
@@ -922,13 +922,19 @@ def _sha_file(path):
 # - macos-live-off (recipes.macos-live-off.json): one Space shows the conversion in place and one Return commits
 #   it; a second Space opens the candidate window, which still takes two Returns, and a digit pick is followed by one
 #   Return; one Escape cancels.
-# - windows (either file): one Return for each commit and one Escape for the cancel; a digit pick commits by itself.
+# - both macOS profiles cancel a converted reading with two Escapes.
+# - windows (either file): one Return for each commit and one Escape for the cancel; a digit pick only selects the
+#   candidate and takes one Return to commit; after a conversion into several segments the first Escape reverts the
+#   focused segment and the second returns to kana, so the cancel of a converted reading presses three (a reading in
+#   one segment is cancelled by the second, and the third then falls outside the composition); this is a deviation
+#   from the macOS freeze, recorded in experiment/deviations.md (D1).
 _PROFILES = {
-    "windows": {"commit": ["enter"], "commit_cands": ["enter"], "after_digit": [], "cancel": ["esc"]},
+    "windows": {"commit": ["enter"], "commit_cands": ["enter"], "after_digit": ["enter"], "cancel": ["esc"],
+                "cancel_converted": ["esc"] * 3},
     "macos-live-on": {"commit": ["enter", "enter"], "commit_cands": ["enter", "enter"], "after_digit": ["enter"],
-                      "cancel": ["esc"] * 4},
+                      "cancel": ["esc"] * 4, "cancel_converted": ["esc", "esc"]},
     "macos-live-off": {"commit": ["enter"], "commit_cands": ["enter", "enter"], "after_digit": ["enter"],
-                       "cancel": ["esc"]},
+                       "cancel": ["esc"], "cancel_converted": ["esc", "esc"]},
 }
 
 
@@ -958,7 +964,7 @@ def _scenario_checks(rows, phrases, recipes, cfg, fails, profile):
         elif sc == "S3":
             ok = downs == full + ["enter"] and r["think_ms"] == 0
         elif sc == "S4":
-            ok = downs == full + ["space", "esc", "esc"] and it["abandon"] is True
+            ok = downs == full + ["space"] + tail["cancel_converted"] and it["abandon"] is True
         elif sc == "S5":
             ok = downs == full + tail["cancel"]
         elif sc == "S6":

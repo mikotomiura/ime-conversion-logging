@@ -1,0 +1,39 @@
+{
+  "label": "windows-msime-tsf",
+  "os": "windows",
+  "ime": "Microsoft IME (Japanese) - Windows version and input method version to be filled in from the machine",
+  "ime_settings": {
+    "layout": "JIS keyboard, Romaji input",
+    "predictive_candidates": "input method default (shown; not changed)",
+    "learning": "not reset; the input method offers no command to clear its input history, and the plan requests no reset",
+    "initial_state": "Japanese, switched on by VK_IME_ON in focus_cmd before each block, after the reference input field is confirmed in front",
+    "reference_path": "TSF (refinput_tsf, ground-truth rules win_tsf)"
+  },
+  "refinput_cmd": [
+    "kit/refinput-windows/target/release/refinput_tsf.exe",
+    "--out",
+    "{out}"
+  ],
+  "logger_cmd": [
+    "kit/logger/target/release/ime-observation-logger.exe",
+    "--out",
+    "{out}"
+  ],
+  "reset_cmd": [],
+  "focus_cmd": [
+    "python",
+    "kit/run/focus_windows.py",
+    "--title",
+    "refinput_tsf (gt/1 win_tsf)",
+    "--ime-on"
+  ],
+  "ready_wait_ms": 3000,
+  "settle_ms": 1000,
+  "backend": "windows",
+  "backend_opts": {
+    "focus_window": "refinput_tsf (gt/1 win_tsf)",
+    "away_window": "ime-away"
+  },
+  "clock_sync_disabled": false,
+  "auto_update_disabled": false
+}

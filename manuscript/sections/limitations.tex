@@ -1,0 +1,106 @@
+% Section 13 of the manuscript: limitations. It follows the section plan of outline.md and sections 7 and 10.11 of the
+% registration; where a limitation has an expected direction, the direction is stated as an expectation, not as a
+% result.
+
+\section{Limitations}
+\label{sec:limitations}
+
+\paragraph{The reference.} The reference is a reference input field, not the input method's internal state, and
+another application may receive other calls from the same input method. The ground truth depends on the rules that
+assemble sessions from the calls; with live conversion on, the rule folds the automatic commits made while a reading is
+typed into one session, and a rule that did not fold them would define a conversion differently. The reference is
+software on the measured machine, with no external clock or device, so the agreement is between two software records;
+and the kind of field affects the reference, as the two Windows fields of the pilot showed
+(Section~\ref{sec:method-reference}).
+The field can lose the focus by itself, as it did once in the pilot; the presses sent during such a loss reach another
+application, and their trials stay in the evaluation as disagreements between the plan and the ground truth.
+
+\paragraph{Windows.} The Windows estimates include the difference between the two constructs
+(Section~\ref{sec:observability-consequence}). They hold for an unknown mixture of the
+logger's two paths, because a row does not record its path (Section~\ref{sec:logger-windows}). The input method ran
+with its default settings, with predictive candidates shown; with them turned off, the window would open at the
+conversion rather than while the reading is typed. Applications that draw their own candidates were not tested, and in
+them the logger may see no session. The counts \texttt{nav} and \texttt{abandon} are counted system-wide while a
+session is open and are upper bounds; this design does not exercise their excess, because only the executor typed. In
+this study the per-text abandonment rate of the Windows logger was lower than the reference's
+(Section~\ref{sec:results-session}). In
+S15 the input method commits when another window comes to the front, so the session ends there. On the cloaking path
+the observed interval ends at least 150~ms before the row's time, and on both paths the row's time is that of its
+collection; the matching is not adjusted for either, so short sessions can fail to pair for this reason. The input mode
+was switched with keys that a program sends, and the response of the input method was not compared with that to keys
+pressed by hand.
+
+\paragraph{Synthetic and idealised input.} The procedures were calibrated so that each conversion ends within its trial,
+and trials were separated by a pause of 1~s; a conversion that ran from one trial into the next was excluded as
+carry-over, so the agreement for conversions that continue into the input that follows is not estimated. Each key was
+held for 60~ms and no two presses overlapped; the session rules of the macOS logger act on the order of the presses,
+which overlapping presses do not change, and the release rows, whose times overlapping would change, were not validated.
+The think time before the decisive key was drawn between 0.2 and 20~s (Section~\ref{sec:method-plans}); a difference
+in where the rules and the reference end a session can include such a pause, so the long tails of the duration
+differences may depend on this distribution, and the limits of agreement are not carried over to other distributions
+of pauses. Key intervals were drawn independently of the keys, with no pauses at the boundaries of words and phrases;
+this affects the measures of timing and the feature sets of question~4 that keep time. The timing of human typing
+carries information about the keys \citep{monaco2018} that these logs lack, while the attacker's knowledge of the
+generator and the absence of typing errors favour identification here, so how those sets would fare on human typing is
+not known. The input had no typing errors, and
+corrections occurred only where a scenario prescribed them; errors would add presses that the attacks of question~4 do
+not expect, so the identification is expected to be lower with them than here, and the effect of errors on detection is
+not known. The events were injected through the interfaces of the operating system, so the timing of the key rows
+(Table~\ref{tab:key-timing}) covers the path from the injection to the row; the path from a physical key, which earlier
+validations measured from the key to the record \citep{pinet2017}, adds its own delay, so the delay from a physical key
+to a row is expected to be longer than the delays reported here. The rows take their times from the wall clock when an
+event reaches the logger; the registration asks for network time synchronisation to be off during the runs, whether it
+was off was not recorded (Section~\ref{sec:method-cells}), and an adjustment of the clock while the logger runs, which
+in ordinary use can happen, moves the times of the rows. Such an adjustment was not tested; during the runs no trial was
+excluded for a step of the wall clock (Section~\ref{sec:results-detection}), but a smaller adjustment, or one undone
+within a block, need not show in the drift between the clocks of the records, which was measured only at the block
+markers (Section~\ref{sec:results-reference}), so an effect of such adjustments on the times within a trial is not
+ruled out. The input mode was switched only by the mode keys; on macOS a switch made
+otherwise is followed by polling the input source every 100~ms, which was not exercised.
+
+\paragraph{The rules of the macOS logger.} The minus, comma and period keys close a session, so a reading that contains
+a long-vowel mark or punctuation is split into several sessions, which can raise the number of conversions that a
+researcher counts from the log. With the kana layout every kana typed with a symbol key, among them the voiced-sound
+mark, closes a session in the same way; S12 used only kana typed with letter, digit, minus, comma and period keys, so
+its agreement does not represent kana input in general. The cut-off leaves out
+the sessions that reach 20~s; how it moves each aggregate is stated in Section~\ref{sec:recommendations}.
+
+\paragraph{One machine and one version per system.} One input method was measured per system, on one machine, with the
+versions recorded in the run manifests; the Windows versions of the measurement differed from those of the pilot, and
+the registered check passed (Section~\ref{sec:method-cells}). The learning of the input method was not reset, so the
+candidates and the automatic commits may have changed over the runs. Other programs ran on the measuring machines
+(Section~\ref{sec:results-attempts}), and their load was not controlled. Scenario S9 (choosing a candidate with the
+mouse) was not evaluated.
+
+\paragraph{The prediction.} The prediction models the macOS logger's rules and the runner's presses, but not the
+modifier keys, the collection of rows or the delay from dispatch to the logger, so a difference between the prediction
+and the observation is reported as such and is not attributed to a cause. On macOS as on Windows the time of a session
+row is that of its collection, up to about 100~ms after the session closed, and the matching is not adjusted for it, so
+short sessions can fail to pair for this reason; the strata in which the logger's rows departed most from the specified
+rows (Section~\ref{sec:results-detection}) may owe their departures to this, which was not tested.
+
+\paragraph{Deviations.} A defect of the frozen code was corrected next to the registered analysis (deviation D10), and
+two changes of reporting were made after the results had been seen (D11 and D12; Section~\ref{sec:deviations}).
+
+\paragraph{Scopes and intervals.} The primary scope sets aside the trials whose presses went into a session that is cut
+off; how often that happens is a property of this design, and the trials that remain differ between speeds in reading
+length and think time. The Wilson intervals of pooled proportions are read as lower bounds of the uncertainty
+(Section~\ref{sec:method-analysis}), and the bootstrap intervals cover dependence within a block but not across blocks.
+
+\paragraph{The stopping rule.} The rules that stop a run when a person's key presses may have entered its logs have
+stated blind spots (Section~\ref{sec:method-checks} and section~7 of the registration): for example, a press that did
+not reach the reference and a press from outside cancel out, and a person's presses that reach neither the reference nor
+another application are caught by neither rule. On Windows the rule of deviation D4 can also stop a run for an error of
+the logger, because a key row that no sent press explains can come from either, so the runs analysed can be selected for
+the absence of such errors; had every attempt been stopped, the cell would not have been measured.
+
+\paragraph{Recoverability.} The study judges one phrase at a time, not a whole log, and no record that keeps times;
+what else it does not evaluate, and that its attacks are not claimed to be the strongest possible, is stated in
+Section~\ref{sec:recoverability-method}. The Wilson interval of the near-chance rule treats trials as independent, so
+with positive dependence within a block the rule can be met more easily than it should be
+(Section~\ref{sec:recoverability-method}).
+The decoys were not matched to the true phrase in length, so the numbers of
+keys of each category are expected to distinguish the candidates more than they would among phrases of equal length.
+
+\paragraph{Runtime cost.} The values of each system are read within that system (Section~\ref{sec:cost-method}), and
+battery use was not measured.

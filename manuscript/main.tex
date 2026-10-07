@@ -1,0 +1,171 @@
+% Manuscript for Behavior Research Methods, built with the Springer Nature LaTeX template (class sn-jnl with the
+% APA reference style). The template files are not part of this directory; they are obtained from the publisher.
+% The sections are kept in separate files while the manuscript is written and are combined into one file for
+% submission. The structure and the evidence for each claim are fixed in outline.md.
+% The version for submission (build.sh --submission) is double spaced, with 1-inch margins and the page number in the
+% upper right corner, as the journal asks; the public version keeps the layout of the template.
+\providecommand{\imsubmission}{0}
+\ifnum\imsubmission=1
+\documentclass[pdflatex,sn-apa,referee]{sn-jnl}
+\else
+\documentclass[pdflatex,sn-apa]{sn-jnl}
+\fi
+\ifnum\imsubmission=1
+% The class loads geometry itself.
+\geometry{margin=1in}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyhead[R]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+\fi
+
+% T1 encoding gives the underscore of URLs and the accented letters of names their own glyphs.
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+% The class expects amsmath (it calls \allowdisplaybreaks at the start of the document), as in the sample article of
+% the template.
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+
+% The figures are drawn by pgfplots: Figure 1 from figures/components.tex, Figures 2 to 5 from the coordinates that
+% tools/results_tables.py writes into generated/fig-*.tex with the styles below. The six colours are the first six
+% slots of a categorical palette checked for separation under colour-vision deficiencies; every series also has a mark
+% of its own, so that the figures can be read in grey.
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots}
+\usetikzlibrary{positioning,arrows.meta,calc}
+\definecolor{figc1}{HTML}{2A78D6}
+\definecolor{figc2}{HTML}{EB6834}
+\definecolor{figc3}{HTML}{1BAF7A}
+\definecolor{figc4}{HTML}{EDA100}
+\definecolor{figc5}{HTML}{E87BA4}
+\definecolor{figc6}{HTML}{008300}
+\pgfplotsset{
+  fig panel/.style={tick label style={font=\footnotesize}, title style={font=\footnotesize},
+    label style={font=\footnotesize}, legend style={font=\footnotesize, draw=none}, legend cell align=left,
+    ymajorgrids, major grid style={black!12}, scaled y ticks=false,
+    y tick label style={/pgf/number format/fixed, /pgf/number format/1000 sep={{,}}}},
+  fig proportion/.style={ymin=-0.03, ymax=1.03, ytick={0,0.25,0.5,0.75,1}},
+  fig zero/.style={extra y ticks={0}, extra y tick labels={}, extra y tick style={grid=major,
+    major grid style={black!60, dashed}}},
+  fig slow/.style={color=figc1, mark=*},
+  fig mid/.style={color=figc2, mark=square*},
+  fig fast/.style={color=figc3, mark=triangle*},
+  fig set1/.style={color=figc1, mark=*},
+  fig set2/.style={color=figc2, mark=square*},
+  fig set3/.style={color=figc3, mark=triangle*},
+  fig set4/.style={color=figc4, mark=diamond*},
+  fig set5/.style={color=figc5, mark=pentagon*},
+  fig set6/.style={color=figc6, mark=star, mark options={line width=0.8pt}},
+  fig point/.style={only marks, mark size=1.5pt},
+  fig open/.style={mark options={fill=white, line width=0.4pt}},
+  fig limit/.style={only marks, mark=-, mark size=3pt, mark options={line width=1pt}},
+  fig interval/.style={no markers, line width=0.6pt, unbounded coords=jump},
+  fig chance/.style={no markers, black!70, samples=2},
+  fig margin/.style={no markers, black!70, dashed, samples=2},
+}
+
+% A ragged-right paragraph column whose width, given as a fraction of the line, includes the space between columns, so
+% that columns whose fractions sum to at most one fit the line.
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{\dimexpr#1\linewidth-2\tabcolsep\relax}}
+
+% The APA style of the template prints the url field of a reference as plain text, so an underscore in a URL stops the
+% compilation; the environment that holds the field is redefined to pass the URL to \url.
+\makeatletter
+\AtBeginDocument{%
+  \renewenvironment{APACrefURL}[1][]{%
+    \ifx\@empty#1\@empty\BRetrievedFrom\else\BRetrieved{#1}\fi\url}{}}
+\makeatother
+
+% Bookmarks go down to subsections; the run-in paragraph headings are not bookmarked.
+\hypersetup{bookmarksdepth=2}
+
+% A value that is filled in from the result files or the run manifests after the measurement.
+\newcommand{\tbd}[1]{\textbf{[#1]}}
+
+% A value of the results, generated from the result files by tools/results_tables.py into generated/values.tex; a key
+% without a generated value prints as a value still to be filled in and is reported in the log, where build.sh counts
+% it.
+\newcommand{\rv}[1]{\ifcsname rv:#1\endcsname\csname rv:#1\endcsname\else\tbd{#1}%
+  \PackageWarningNoLine{results}{Result value #1 not generated}\fi}
+\input{generated/values}
+
+\begin{document}
+
+\title{Logging Japanese IME conversion without recording text: Observability limits, a cross-platform logger, and a
+synthetic-input validation}
+
+% The class draws the ORCID mark from an image that the template does not ship, so the mark is a text link. The postal
+% address and the telephone number of the corresponding author are on a separate title page for the submission
+% (submission/title-page.tex, filled in outside the repository); the public versions omit them.
+\renewcommand{\orcidlogo}{(ORCID 0009-0000-4196-0508)}
+\author*[1]{\fnm{Mikoto} \sur{Miura}~\orcid{https://orcid.org/0009-0000-4196-0508}}\email{mmiura.network@gmail.com}
+\affil*[1]{\orgname{Independent researcher}, \orgaddress{\city{Hiroshima}, \country{Japan}}}
+
+% The abstract follows the rule fixed in outline.md before the results (section 6.1 of the registration): item (i)
+% for each cell and item (iii), the recommendation. Items (iv), the CPU of the logger, and (ii), the bias of the
+% session duration, are left to the text (Sections sec:cost and sec:results-session), in this order, because the
+% abstract does not fit 250 words with them. Every value is read with \rv{} from the generated values; the words that
+% state the judgement of question 4 ("neither", "none", "nor") and the strata that set the lower ends ("lowest where
+% the logger's rules predict disagreement": S6 and S10 in both macOS cells; "lowest in a scenario built to outlast the
+% 20-s cut-off": S13, the only stratum over all trials whose intervals start at 0, in every cell) follow from the values
+% and the supplement and are corrected by hand if the result files change.
+\abstract{Keystroke loggers for writing research record the conversion of a Japanese input method either not at all or
+with text: key names spelling the reading, or the composition or screen text. We examined which documented Windows and
+macOS interfaces let a program log conversion without reading text, built a logger writing key categories, times and
+one row per conversion session, and estimated, in a pre-registered study with synthetic input, its agreement with the
+sessions a reference input field received. On macOS, with live conversion off and on, over the strata keeping at least
+30 trials in the primary scope, Wilson intervals of recall spanned \rv{macos-standard-live-off.primary.recall.range} and
+\rv{macos-standard-live-on.primary.recall.range} and those of precision
+\rv{macos-standard-live-off.primary.precision.range} and \rv{macos-standard-live-on.primary.precision.range} (strata
+left out: \rv{macos-standard-live-off.primary.recall.strata.left} and \rv{macos-standard-live-on.primary.recall.strata.left};
+\rv{macos-standard-live-off.primary.precision.strata.left} and \rv{macos-standard-live-on.primary.precision.strata.left}),
+lowest where the logger's rules predict disagreement; the scope set aside
+\rv{macos-standard-live-off.scope.setaside.pct} and \rv{macos-standard-live-on.scope.setaside.pct} of trials and
+carry-over excluded \rv{macos-standard-live-off.carryover.pct} and \rv{macos-standard-live-on.carryover.pct}. Over all
+trials recall spanned \rv{macos-standard-live-off.all.recall.range} and \rv{macos-standard-live-on.all.recall.range} and
+precision \rv{macos-standard-live-off.all.precision.range} and \rv{macos-standard-live-on.all.precision.range}, lowest
+in a scenario built to outlast the 20-s cut-off. On Windows, where the logger's sessions (input-method windows) differ in
+construct from the reference's compositions, recall spanned \rv{windows-msime-tsf.primary.recall.range} and
+precision \rv{windows-msime-tsf.primary.precision.range} (\rv{windows-msime-tsf.primary.recall.strata.left} and
+\rv{windows-msime-tsf.primary.precision.strata.left} strata left out; \rv{windows-msime-tsf.scope.setaside.pct} set
+aside; \rv{windows-msime-tsf.carryover.pct} carried over; over all trials \rv{windows-msime-tsf.all.recall.range} and
+\rv{windows-msime-tsf.all.precision.range}). For identifying the typed phrase among $K$ candidates, neither granularity
+of the key rows without times met the registered near-chance rule in either macOS cell, so none is recommended; nor did
+either on Windows. The registrations, code and data are public.}
+
+\keywords{Japanese input method, keystroke logging, writing research, observability, method validation,
+reproducibility}
+
+\maketitle
+% The class sets its own page style with the title; the submission layout puts the page number in the upper right.
+\ifnum\imsubmission=1
+\pagestyle{fancy}
+\fancypagestyle{titlepage}{\fancyhf{}\fancyhead[R]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+\fancypagestyle{headings}{\fancyhf{}\fancyhead[R]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+\fi
+
+\input{sections/introduction}
+\input{sections/related}
+\input{sections/observability}
+\input{sections/logger}
+\input{sections/method}
+\input{sections/results-agreement}
+\input{sections/results-text}
+\input{sections/recoverability}
+\input{sections/cost}
+\input{sections/discussion}
+\input{sections/dataset}
+\input{sections/recommendations}
+\input{sections/limitations}
+\input{sections/conclusions}
+\input{sections/declarations}
+
+\bibliography{references}
+
+\end{document}

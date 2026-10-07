@@ -27,7 +27,7 @@ enumerated names, so it is hand-written, and serde is not used.
 ## Build, run, self-test
 
 ```bash
-cd papers/ime-observation/kit/refinput-windows
+cd kit/refinput-windows
 cargo test                                        # unit tests for the core (platform independent)
 cargo build --release --bin refinput_imm
 target/release/refinput_imm.exe --selftest --out /tmp/gt.jsonl   # no window; writes and reads back through the core for validation
@@ -196,7 +196,7 @@ content-free rules are the same as in (a); the contract is
 | `src/bin/refinput_tsf.rs` | Windows only. Creates a parent window and a RichEdit control and pumps messages after activating TSF. `--selftest` does not activate TSF. |
 
 ```bash
-cd papers/ime-observation/kit/refinput-windows
+cd kit/refinput-windows
 cargo build --release --bins
 target/release/refinput_tsf.exe --selftest --out /tmp/gt.jsonl   # does not activate TSF; writes and reads back through the state machine and the core for validation
 python3 ../formats/validate_logs.py --kind gt /tmp/gt.jsonl

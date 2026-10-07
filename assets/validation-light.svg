@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" width="960" height="360" role="img" aria-labelledby="t d">
+  <title id="t">How the logger was validated</title>
+  <desc id="d">A plan generated from the phrase corpus and the settings drives an executor that sends every key press and release and records what it sent. The presses reach the input method and a reference input field, which records the calls it receives without text, and the logger, which writes key categories, times and a row per conversion session that it detects (on macOS inferred from the key presses, on Windows while a window of the input method is visible). The sessions of the reference and the rows of the logger are matched by wall-clock time under the registered rules, with the trials and the presses sent taken from the executor's record: detection, duration, arrow-key presses and abandonment.</desc>
+  <rect x="0.5" y="0.5" width="959" height="359" rx="12" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="24" y="40" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="16" fill="#1f2328" font-weight="600">How the logger was validated</text>
+  <text x="24" y="62" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">Synthetic input in a pre-registered study. The logger and a reference input field record the same runs.</text>
+  <rect x="24" y="140" width="150" height="116" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <rect x="38" y="150" width="36" height="4" rx="2" fill="#0969da"/>
+  <text x="38" y="176" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#1f2328" font-weight="600">Plan</text>
+  <text x="38" y="200" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">Generated from the</text>
+  <text x="38" y="218" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">phrase corpus and</text>
+  <text x="38" y="236" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">the settings with a seed</text>
+  <rect x="204" y="140" width="158" height="116" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <rect x="218" y="150" width="36" height="4" rx="2" fill="#0969da"/>
+  <text x="218" y="176" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#1f2328" font-weight="600">Executor</text>
+  <text x="218" y="200" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">Sends every key press</text>
+  <text x="218" y="218" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">and release, and records</text>
+  <text x="218" y="236" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">what it sent</text>
+  <rect x="394" y="80" width="170" height="100" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <rect x="408" y="90" width="36" height="4" rx="2" fill="#0969da"/>
+  <text x="408" y="116" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#1f2328" font-weight="600">Input method</text>
+  <text x="408" y="140" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">macOS Japanese input</text>
+  <text x="408" y="158" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">or Microsoft IME</text>
+  <rect x="596" y="80" width="170" height="100" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <rect x="610" y="90" width="36" height="4" rx="2" fill="#0969da"/>
+  <text x="610" y="116" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#1f2328" font-weight="600">Reference field</text>
+  <text x="610" y="140" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">Records the calls it</text>
+  <text x="610" y="158" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">receives. No text.</text>
+  <rect x="394" y="206" width="372" height="110" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <rect x="408" y="216" width="36" height="4" rx="2" fill="#0969da"/>
+  <text x="408" y="242" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#1f2328" font-weight="600">Logger</text>
+  <text x="408" y="266" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">Key categories, times and one row per conversion session.</text>
+  <text x="408" y="284" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">macOS: sessions inferred from the key presses.</text>
+  <text x="408" y="302" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">Windows: while a window of the input method is visible.</text>
+  <rect x="798" y="124" width="138" height="150" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+  <rect x="812" y="134" width="36" height="4" rx="2" fill="#1a7f37"/>
+  <text x="812" y="160" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#1f2328" font-weight="600">Matching</text>
+  <text x="812" y="184" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">By wall-clock time,</text>
+  <text x="812" y="202" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">by registered rules:</text>
+  <text x="812" y="220" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">detection, duration,</text>
+  <text x="812" y="238" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">arrow-key presses,</text>
+  <text x="812" y="256" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#59636e">abandonment</text>
+  <polyline points="174,198 196,198" fill="none" stroke="#59636e" stroke-width="2"/>
+  <polygon points="204,198 195,193 195,203" fill="#59636e"/>
+  <polyline points="362,180 378,180 378,130 386,130" fill="none" stroke="#59636e" stroke-width="2"/>
+  <polygon points="394,130 385,125 385,135" fill="#59636e"/>
+  <polyline points="362,216 378,216 378,261 386,261" fill="none" stroke="#59636e" stroke-width="2"/>
+  <polygon points="394,261 385,256 385,266" fill="#59636e"/>
+  <polyline points="564,130 588,130" fill="none" stroke="#59636e" stroke-width="2"/>
+  <polygon points="596,130 587,125 587,135" fill="#59636e"/>
+  <polyline points="766,130 782,130 782,170 790,170" fill="none" stroke="#59636e" stroke-width="2"/>
+  <polygon points="798,170 789,165 789,175" fill="#59636e"/>
+  <polyline points="766,261 782,261 782,228 790,228" fill="none" stroke="#59636e" stroke-width="2"/>
+  <polygon points="798,228 789,223 789,233" fill="#59636e"/>
+  <line x1="479" y1="180" x2="479" y2="206" stroke="#59636e" stroke-width="2" stroke-dasharray="4 4"/>
+  <text x="487" y="198" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#59636e">its windows (Windows)</text>
+  <polyline points="283,256 283,340 790,340 790,256 790,256" fill="none" stroke="#59636e" stroke-width="2" stroke-dasharray="4 4"/>
+  <polygon points="798,256 789,251 789,261" fill="#59636e"/>
+  <text x="300" y="334" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#59636e">the executor's record: the trials and the presses sent</text>
+</svg>

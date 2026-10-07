@@ -1,0 +1,173 @@
+% Section 4 of the manuscript: the logger.
+% Every statement follows the logger's source in kit/logger/ (fixed by the two freezing tags), the format
+% specification kit/formats/FORMATS.md, and sections 1.1, 4.4 and 10.3 of the registration. Where the
+% registration describes the logger differently, the difference is stated in a footnote.
+
+\section{The logger}
+\label{sec:logger}
+
+The logger is a stand-alone program for Windows and macOS. It writes one log per run in a line-based format with a
+header, a row for every key press and release of the keys it observes, and a summary row for every conversion
+session. The two systems share the format, the key categories and the writing of the rows; they differ in how a
+session is recognised, because they offer different routes (Section~\ref{sec:observability}). Table~\ref{tab:rows}
+gives the rows and the definitions on each system.
+
+\subsection{Rows}
+\label{sec:logger-rows}
+
+\paragraph{Key rows.} For each press and each release of an observed key the logger writes a row with the time on
+the wall clock in whole milliseconds, one of fourteen categories and whether the event was a press. The time is read
+from the wall clock when the event reaches the logger's keyboard hook (Windows) or event tap (macOS), not taken from the
+event's own time stamp, so an adjustment of the system clock moves it. The rows are written for the presses of every
+application: the log does not record which application received a key. The categories
+keep the kind of a key and discard which key it was: letters, digits, punctuation and symbol keys, the comma and
+period keys, Tab, Backspace, Delete, Space, Return, navigation keys, modifier keys, function keys, Escape and other
+keys. The comma and period keys form a category of their own because they can mark the boundaries of clauses and
+sentences: in Romaji input they type the Japanese comma and full stop. The keys observed differ between the systems (Table~\ref{tab:rows}). On both systems the input-mode keys
+produce no row. On macOS rows are written for the letters, the digits and the symbol keys of the main block, Return,
+Tab, Space, Backspace, Forward Delete, Escape, the arrow keys and F1 to F12; the modifier keys, the numeric keypad,
+Page Up, Page Down, Home, End, the yen and underscore keys of the JIS layout and the function keys above F12 produce
+none, and auto-repeated presses are not written.\footnote{The registration describes the macOS logger as writing a row
+for every press other than the input-mode keys, F13 to F19 and the modifier keys, and does not mention rows of
+releases.
+The logger's source observes the narrower set given here and writes a row for each release as well. Apart from the
+input-mode keys (the key that the runner pressed before each block to switch the input method on, and the mode keys
+of scenario S14), no key outside the observed set was sent in the measurement, and every analysis uses the rows of
+presses only.} On Windows rows are
+also written for the modifier keys, the numeric keypad, Page Up, Page Down, Home and End; the function keys above F12
+produce none, and the driver does not distinguish auto-repeated key-down events. Each synthetic key of the measurement
+was held for 60~ms, and the times of releases enter no measure.
+
+\paragraph{Session rows.} For each conversion session the logger writes a row with the duration of the session on
+the wall clock (\texttt{dwell\_ms}), the number of arrow-key presses during it (\texttt{nav}) and whether it was
+abandoned (\texttt{abandon}). Its time \texttt{t} is the time at which the monitoring loop, which runs every 100~ms,
+collected the closed session, up to about 100~ms after the session closed. No row records which key closed a session,
+whether a candidate window was shown, or which path recognised the session.
+
+\paragraph{Header.} The first row states the format, the system, the version of the logger, the SHA-256 of the
+manifest of the logger's shared source files (the session rules, the key categories and the writing of the rows) and
+the row types the log can contain: key rows are written whenever a key is observed, and session rows depend on the
+system and its configuration, so that a log without session rows is not read as a log of a person who made no
+conversion. The source files of each system's driver are listed in manifests of their own, and the whole source,
+drivers included, is fixed by the freezing tags (Section~\ref{sec:deviations}).
+
+\subsection{What the log cannot contain}
+\label{sec:logger-content}
+
+No character, reading, candidate string, key name or window name is written. The format is closed: every string in a
+row is a member of a fixed enumeration, except the logger's version, which follows a pattern of at most 32 letters,
+digits, periods, plus and minus signs, and the SHA-256, which is 64 hexadecimal digits; every number is an integer
+within a bounded range; an unknown field, a field given twice and an escape sequence are rejected; and no whitespace
+may appear between fields. A validator that is part of the kit
+checks this shape on every log, and the analysis and the packing of the deposit refuse a log that fails it. The
+validator does not check the meaning of a value: that no content is encoded into a time, a count, the version string or
+the SHA-256 of the header is a property of the logger's source, which writes only kinds, durations, counts and times.
+The Windows driver reads the class names of windows to decide whether a window belongs to the input method; it does
+not keep or write them, and it reads no window title and no accessible name.
+
+\subsection{Sessions on macOS}
+\label{sec:logger-macos}
+
+On macOS the logger infers each session from the key presses while a Japanese input source is selected. It learns
+the input source from the input-mode keys of the JIS layout once one of them has been seen, and otherwise from polling
+the current input source every 100~ms. A session opens at the first press of a letter or digit key. It is closed as
+committed by Return, by any key other than a letter, digit, Space, Backspace, arrow or input-mode key, and by a change
+to non-Japanese input, at the mode key or at the next press; it is closed as abandoned by Escape. Space, Backspace and the arrow keys keep a session open,
+and a press with the Command or Control modifier is a shortcut that leaves the session unchanged. The minus, comma
+and period keys, which in Romaji input type a long-vowel mark, a comma and a full stop inside a reading, close a
+session, so a reading that contains them is split into several sessions. With the kana layout the same holds for every
+kana typed with a symbol key, among them the voiced-sound mark, which the JIS layout places on the @ key; the kana
+strings of S12 used only the 39 kana typed with letter, digit, minus, comma and period keys, and the last three of these
+close a session as above. A digit that chooses a candidate continues
+the session, as does the next letter after a candidate chosen with the mouse, so one row can cover several
+conversions. A session is cut off, without a row, at the first press that comes 20~s or more after it opened; that
+press starts afresh. \texttt{nav} counts the arrow presses of the session and \texttt{abandon} records that Escape
+closed it. These rules are deterministic functions of the presses, so the rows they specify for a known sequence of
+presses can be computed (Section~\ref{sec:method-prediction}).
+
+\subsection{Sessions on Windows}
+\label{sec:logger-windows}
+
+On Windows a session is a period during which a window of the input method is visible, observed system-wide without
+identifying its application. The logger has two paths, chosen from moment to moment. On the first, an accessibility
+event reports that a window of the input method has become visible, changed or hidden: a display, or a change while no
+session is open, opens a session, and a dismissal closes it. A display while a session is open starts the session
+again without a row. This path has no cut-off at 20~s; a window still shown 25~s after the session opened is ended by a
+safety valve of the monitoring loop, which writes a row with a duration of about 25~s, and the next change of the
+window opens a new session; the valve is part of the logger's main loop (\texttt{kit/logger/src/main.rs}), where a
+unit test exercises it, and it wrote no row in the measurement (Section~\ref{sec:results-detection}). On the second path, used until the first window event of a run arrives and whenever none
+has arrived for 60~s, the logger follows the cloaking and uncloaking of windows of the input method's class: a session
+opens when such a window becomes visible and closes when none is visible, a gap shorter than 150~ms is folded into the
+session, and a session is cut off, without a row, 20~s after it opened, whether or not the window is still shown. The monitoring loop
+judges whether a candidate window is open from the state that these paths set together with two further signals, the
+class of the element that has the keyboard focus and a scan of the visible top-level windows for the class of a
+candidate window, and treats any of the three as open. This judgement times the safety valve and closes a session
+whose dismissal was missed; on the first path, a raised state that neither further signal confirms is treated as left
+over and lowered.\footnote{The registration describes the two paths; the further signals, which are part of the frozen
+source, are described here.} On both paths
+\texttt{nav} counts the arrow presses and \texttt{abandon} records an Escape press made while a session is open, in any
+application, so both are upper bounds for the session. A session that closes and is followed by another before the
+monitoring loop collects it is lost.
+
+A row does not record which path wrote it, and which path drove the measured input method was not determined, because
+that would have meant reading the logger's session rows before the freeze; the Windows estimates therefore hold for an
+unknown mixture of the two paths. Rows of 20 to 25~s can come only from the first path, and rows of about 25~s from its
+safety valve.
+
+\subsection{What a researcher can compute from the log}
+\label{sec:logger-measures}
+
+Table~\ref{tab:measures} lists, for measures that keystroke studies of writing use, whether each can be computed from
+the logger's rows alone on each system, and whether this study estimates its agreement with a reference. The list
+covers common measures of the writing literature and the four per-text aggregates that this study defines; it was not
+selected by a systematic review. Agreement is estimated for the conversion summaries, the four per-text aggregates
+and the timing of the key rows of presses on the software path, and for no other measure.
+
+\begin{table}[t]
+\caption{The logger's rows and the definitions on each system}
+\label{tab:rows}
+\begin{tabular}{L{0.18}L{0.41}L{0.41}}
+\toprule
+& macOS & Windows \\
+\midrule
+Key rows & One per press and one per release of an observed key: time (ms), category, press or release & The same \\
+Keys observed & Letters, digits, symbol keys of the main block, Return, Tab, Space, Backspace, Forward Delete, Escape, arrows, F1 to F12 & As on macOS, and modifier keys, numeric keypad, Page Up, Page Down, Home, End \\
+Keys without a row & Input-mode keys, modifier keys, numeric keypad, Page Up, Page Down, Home, End, JIS yen and underscore keys, keys above F12; auto-repeated presses & Input-mode keys, keys above F12, and keys outside the observed set \\
+Session & A segment of kana input inferred from key presses while Japanese input is selected & A period during which a window of the input method is visible (window events, or cloaking) \\
+Opens & First letter or digit key & Display of the window (or a change while no session is open); uncloaking of a window of the input method's class \\
+Closes & Return or another closing key (committed); Escape (abandoned); a change to non-Japanese input, at the mode key or at the next press after another means of switching & Dismissal of the window; no visible window of the class after a gap of 150~ms \\
+Cut-off & At the first press 20~s or more after opening; no row & Window events: none, safety valve at about 25~s with a row; cloaking: 20~s after opening, no row \\
+\texttt{dwell\_ms} & From the opening press to the closing press & From the display to the dismissal (window events) or from the uncloaking to the last cloaking (cloaking); to the time of collection when the session is closed by the safety valve or after a missed dismissal \\
+\texttt{nav} & Arrow presses during the session & Arrow presses in any application while a session is open (upper bound) \\
+\texttt{abandon} & The session was closed by Escape & An Escape press in any application while a session is open (upper bound) \\
+\texttt{t} of a session row & Time of collection, up to about 100~ms after the close & The same; on the cloaking path at least 150~ms after the observed end \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[tp]
+\caption{Measures of keystroke studies of writing: whether each can be computed from the logger's rows alone, and
+whether this study estimates its agreement with a reference}
+\label{tab:measures}
+\begin{tabular}{L{0.18}L{0.17}L{0.17}L{0.18}L{0.30}}
+\toprule
+Measure & macOS & Windows & Agreement estimated & Reason when not computable or not estimated \\
+\midrule
+Inter-key intervals and pauses between presses & Yes & Yes & Timing of the rows of presses on the software path only (Section~\ref{sec:method-checks}) & Physical keyboard and keys outside the observed set not covered \\
+Pauses at word and sentence boundaries & Partly & Partly & No & No text; only the comma and period keys are marked, and Space converts rather than separating words \\
+Pauses before and after a conversion is committed & Approximate & Approximate & No & The row gives the collection time and the duration, not the time of the commit \\
+Key hold times & Without overlap only & Without overlap only & No & Releases pair with presses by category, so overlapping presses of one category cannot be paired; release times not evaluated \\
+Revisions (Backspace and Delete) & Counts & Counts & No & No text; whether a deletion edits a reading or committed text is not recorded \\
+Bursts of typing & Bounded by pauses only & Bounded by pauses only & No & The conditions on revisions and on the place of insertion need the text and the cursor \\
+Keys of one document or application & No & No & No & The application that received a key is not recorded, so key rows of every application are mixed \\
+Word counts, production and efficiency ratios & No & No & No & No text and no final product \\
+Input mode & No & No & No & The input-mode keys produce no row and the mode is not written \\
+Conversions and their duration & Yes, as inferred sessions & As window appearances; one conversion can give several rows & Detection and duration (Section~\ref{sec:method-analysis}) & Different constructs on the two systems \\
+Candidate navigation & Yes & Upper bound & Agreement with the arrow presses sent & Counted in any application on Windows \\
+Abandonment & Yes & Upper bound & Agreement with the session's outcome & Counted in any application on Windows; in this
+study the per-text rate was lower than the reference's (Section~\ref{sec:results-session}) \\
+Pointer and mouse actions & No & No & No & Not recorded, so a revision or insertion made with the pointer is not seen \\
+Four per-text aggregates of this study & Yes & Yes & Per-text agreement & Defined by this study \\
+\bottomrule
+\end{tabular}
+\end{table}

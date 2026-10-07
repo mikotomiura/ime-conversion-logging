@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 346" width="960" height="346" role="img" aria-labelledby="t d">
+  <title id="t">What the logger writes, and what it never writes</title>
+  <desc id="d">Written to the log in the format obs/1: for every press and release of an observed key, one of fourteen categories, the time and whether it was a press; when a conversion session that the logger detects ends, its duration, the arrow-key presses during it and whether it was abandoned (a session cut off, for example at 20 s, writes no row). Never written: key names and key codes, characters and readings, candidate strings and window names. Some categories stand for a single key, and the key rows are not anonymous by construction; the article measures how far they reveal the typed phrase.</desc>
+  <rect x="0.5" y="0.5" width="959" height="345" rx="12" fill="#0d1117" stroke="#30363d"/>
+  <text x="24" y="40" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="16" fill="#f0f6fc" font-weight="600">What the logger writes, and what it never writes</text>
+  <rect x="24" y="60" width="580" height="222" rx="10" fill="#161b22" stroke="#30363d"/>
+  <rect x="38" y="70" width="36" height="4" rx="2" fill="#3fb950"/>
+  <text x="38" y="96" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#3fb950" font-weight="600">Written to the log (format obs/1)</text>
+  <text x="38" y="122" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#f0f6fc" font-weight="600">Every press and release of an observed key</text>
+  <text x="330" y="122" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#9198a1">one of 14 categories, the time</text>
+  <rect x="38" y="136" width="86" height="22" rx="11" fill="#033a16" stroke="#3fb950"/>
+  <text x="81.0" y="151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#f0f6fc" text-anchor="middle">alphabetic</text>
+  <rect x="130" y="136" width="64" height="22" rx="11" fill="#033a16" stroke="#3fb950"/>
+  <text x="162.0" y="151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#f0f6fc" text-anchor="middle">numeric</text>
+  <rect x="200" y="136" width="93" height="22" rx="11" fill="#033a16" stroke="#3fb950"/>
+  <text x="246.5" y="151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#f0f6fc" text-anchor="middle">punctuation</text>
+  <rect x="299" y="136" width="158" height="22" rx="11" fill="#033a16" stroke="#3fb950"/>
+  <text x="378.0" y="151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#f0f6fc" text-anchor="middle">sentence_punctuation</text>
+  <rect x="463" y="136" width="35" height="22" rx="11" fill="#033a16" stroke="#3fb950"/>
+  <text x="480.5" y="151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#f0f6fc" text-anchor="middle">tab</text>
+  <rect x="504" y="136" width="78" height="22" rx="11" fill="#033a16" stroke="#3fb950"/>
+  <text x="543.0" y="151" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#f0f6fc" text-anchor="middle">backspace</text>
+  <rect x="38" y="164" width="57" height="22" rx="11" fill="#033a16" stroke="#3fb950"/>
+  <text x="66.5" y="179" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#f0f6fc" text-anchor="middle">delete</text>
+  <rect x="101" y="164" width="50" height="22" rx="11" fill="#033a16" stroke="#3fb950"/>
+  <text x="126.0" y="179" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#f0f6fc" text-anchor="middle">space</text>
+  <rect x="157" y="164" width="50" height="22" rx="11" fill="#033a16" stroke="#3fb950"/>
+  <text x="182.0" y="179" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#f0f6fc" text-anchor="middle">enter</text>
+  <rect x="213" y="164" width="86" height="22" rx="11" fill="#033a16" stroke="#3fb950"/>
+  <text x="256.0" y="179" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#f0f6fc" text-anchor="middle">navigation</text>
+  <rect x="305" y="164" width="71" height="22" rx="11" fill="#033a16" stroke="#3fb950"/>
+  <text x="340.5" y="179" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#f0f6fc" text-anchor="middle">modifier</text>
+  <rect x="382" y="164" width="71" height="22" rx="11" fill="#033a16" stroke="#3fb950"/>
+  <text x="417.5" y="179" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#f0f6fc" text-anchor="middle">function</text>
+  <rect x="459" y="164" width="57" height="22" rx="11" fill="#033a16" stroke="#3fb950"/>
+  <text x="487.5" y="179" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#f0f6fc" text-anchor="middle">escape</text>
+  <rect x="522" y="164" width="50" height="22" rx="11" fill="#033a16" stroke="#3fb950"/>
+  <text x="547.0" y="179" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#f0f6fc" text-anchor="middle">other</text>
+  <text x="38" y="222" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#f0f6fc" font-weight="600">Each detected session, when it ends</text>
+  <text x="290" y="222" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#9198a1">(a session cut off, as at 20 s, writes no row)</text>
+  <text x="38" y="242" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#9198a1">its duration (dwell_ms), the arrow-key presses during it (nav)</text>
+  <text x="38" y="260" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#9198a1">and whether it was abandoned (abandon)</text>
+  <rect x="624" y="60" width="312" height="222" rx="10" fill="#161b22" stroke="#30363d"/>
+  <rect x="638" y="70" width="36" height="4" rx="2" fill="#f85149"/>
+  <text x="638" y="96" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#f85149" font-weight="600">Never written</text>
+  <rect x="638" y="112" width="296" height="26" rx="6" fill="#3c1618"/>
+  <line x1="648" y1="125" x2="660" y2="125" stroke="#f85149" stroke-width="2"/>
+  <text x="670" y="130" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#f0f6fc">Key names and key codes</text>
+  <rect x="638" y="146" width="296" height="26" rx="6" fill="#3c1618"/>
+  <line x1="648" y1="159" x2="660" y2="159" stroke="#f85149" stroke-width="2"/>
+  <text x="670" y="164" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#f0f6fc">Characters and readings</text>
+  <rect x="638" y="180" width="296" height="26" rx="6" fill="#3c1618"/>
+  <line x1="648" y1="193" x2="660" y2="193" stroke="#f85149" stroke-width="2"/>
+  <text x="670" y="198" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#f0f6fc">Candidate strings</text>
+  <rect x="638" y="214" width="296" height="26" rx="6" fill="#3c1618"/>
+  <line x1="648" y1="227" x2="660" y2="227" stroke="#f85149" stroke-width="2"/>
+  <text x="670" y="232" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#f0f6fc">Window names</text>
+  <text x="24" y="310" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#9198a1">Some categories, such as backspace or enter, stand for a single key, and the key rows are not anonymous by construction:</text>
+  <text x="24" y="328" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" fill="#9198a1">the article measures how far they reveal the typed phrase.</text>
+</svg>

@@ -1,0 +1,52 @@
+% Supplement: the provenance of every result file. Copied by hand from the records of the runs
+% (experiment/data.md and experiment/data.windows.md), which give the commands and the SHA-256 of every output.
+
+\section*{Provenance of the result files}
+\label{sec:supp-provenance}
+
+Every result file was made from an export of a freezing tag of the public repository. Where a deviation replaced a
+file of the export, the replacing file is the one of release \texttt{v1.0.0}, with these SHA-256:
+\begin{itemize}
+\item \texttt{kit/analysis/match.py} (D10):\\
+{\footnotesize\texttt{6f817228e2e7d5f17f65895c7a00a721c28c00df24c46df0c8bd4b237ad72cff}}
+\item \texttt{kit/e2/closed\_set.py} (D8):\\
+{\footnotesize\texttt{364cc833b48a73aeb15b9416bff203ec21a71296e26534f914e3a2bb9bd067c3}}
+\end{itemize}
+The records of the runs (\texttt{experiment/data.md} for macOS and \texttt{experiment/data.windows.md} for Windows)
+give, for every row, the machine, the version of Python, the command and the SHA-256 of every output. Paths are
+relative to \texttt{experiment/results}.
+
+{\footnotesize
+\begin{longtable}{L{0.30}L{0.20}L{0.50}}
+\caption{Provenance of the result files}\label{tab:provenance}\\
+\toprule
+Result files & What they hold & Code \\
+\midrule
+\endhead
+\texttt{e1\_*.json} & Questions 1 to 3, macOS, registered & Export of \texttt{ime-observation-prereg-macos}, with
+\texttt{kit/analysis/match.py} of release \texttt{v1.0.0} (first change of D10, which leaves the results of synthetic
+runs byte-identical to those of the tag) \\
+\texttt{d10/macos/e1\_*.json} & Questions 1 to 3, macOS, corrected (D10) & The same, with the setting of the second
+change of D10 \\
+\texttt{e2\_open\_set\_<cell>.json} & Question 4, open set, macOS & Export of \texttt{ime-observation-prereg-macos} \\
+\texttt{e2\_closed\_set\_<cell>.json} & Question 4, closed set, macOS & Export of \texttt{ime-observation-prereg-macos},
+with \texttt{kit/e2/closed\_set.py} of release \texttt{v1.0.0} (D8) \\
+\texttt{e3\_macos.txt} & Question 5, macOS & Export of \texttt{ime-observation-prereg-macos} \\
+\texttt{clock\_sync\_<cell>.json} & Marker times, macOS & Export of \texttt{ime-observation-prereg-macos} \\
+\texttt{windows/e1\_*.json} & Questions 1 to 3, Windows, registered & Export of \texttt{ime-observation-prereg-windows};
+repeated on a second machine with the first change of D10, byte-identical \\
+\texttt{d10/windows/e1\_*.json} & Questions 1 to 3, Windows, corrected (D10) & Export of
+\texttt{ime-observation-prereg-windows}, with \texttt{kit/analysis/match.py} of release \texttt{v1.0.0} and the
+setting of the second change \\
+\texttt{windows/e2\_open\_set\_windows-msime-tsf.json} & Question 4, open set, Windows & Export of
+\texttt{ime-observation-prereg-windows} \\
+\texttt{windows/e2\_closed\_set\_windows-msime-tsf.json} & Question 4, closed set, Windows & Export of
+\texttt{ime-observation-prereg-windows}, with \texttt{kit/e2/closed\_set.py} of release \texttt{v1.0.0} (D8) \\
+\texttt{windows/e3\_windows.txt} & Question 5, Windows & Export of \texttt{ime-observation-prereg-windows} \\
+\texttt{windows/clock\_sync\_windows-msime-tsf.json} & Marker times, Windows & Export of
+\texttt{ime-observation-prereg-windows} \\
+\texttt{exploratory/dwell\_quantiles\_<cell>.json} & Exploratory distribution of the dwell error & \texttt{kit/analysis/explore\_dwell\_quantiles.py}
+of the commit of this article, running the export of the cell's freezing tag unchanged \\
+\bottomrule
+\end{longtable}
+}

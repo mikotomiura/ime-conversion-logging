@@ -1,0 +1,59 @@
+% Section 1 of the manuscript: introduction. It follows the section plan and the contributions of outline.md; the
+% claims it makes are those of the claims table, stated with the sections that give their evidence.
+
+\section{Introduction}
+\label{sec:introduction}
+
+Keystroke logging records each key press of a writer with its time, so that the process of writing can be studied
+alongside the text it produces \citep{wengelin2023}. From such logs researchers compute inter-key intervals
+and pauses, revisions, bursts of production between pauses, and the amount of text produced and the time taken
+\citep{conijn2019}.
+
+When Japanese is typed on a keyboard, the text passes through an input method: the writer types a reading, in Roman
+letters or in kana, the input method converts it into kanji and kana, and the writer accepts the conversion, changes it
+or abandons it. The conversion is part of the process of writing. Loggers of writing handle it in three ways
+(Section~\ref{sec:related}). A logger that keeps only the final text does not see it. A logger of keys does not record
+it directly: the conversion can be inferred from the presses by rules whose validity has to be shown, and the log holds
+the keys that spell the reading. A logger that observes the conversion reads the composition string or the text on the
+screen.
+
+A logger that records the conversion, directly or by inference, therefore also records the text that a writer produces
+or the keys that spell it. A log that holds neither the text nor the names of keys changes what has to be protected
+when the log is kept or shared, but only if it is known what the log records and how much of the text it still reveals.
+This article asks three questions: what can be logged about the conversion without reading text; how closely such a log
+agrees with the sessions that an input field receives from the input method; and how much of the text the log still
+reveals.
+
+The article makes five contributions.
+\begin{enumerate}
+\item An analysis of observability (Section~\ref{sec:observability}): what the documented public interfaces of
+Windows and macOS let a program that reads no text learn about the conversion in another application. Such a program
+may receive key codes, which spell the reading when it is typed in Roman letters, but uses no interface that delivers
+the composition, the candidates or other text; the logger writes only the category of each key. On both systems an
+application's own accessibility implementation can report a conversion without text, but whether it does depends on the
+application. Among the routes that do not depend on the application, Windows reports the display and the cloaking of
+the input method's windows without text, and on macOS none of the documented interfaces examined reports a conversion,
+so the logger infers it from key presses.
+\item A logger for both systems and its validation (Sections~\ref{sec:logger} to \ref{sec:results-text}). The logger
+writes a category and a time for every press and release of the keys it observes and one summary row for every
+conversion session, and it declares in its log which rows the log can contain. Its rows were compared with the
+sessions assembled from the calls that a reference input field received from the input method, in three cells (macOS
+with live conversion on and off; Windows with the Microsoft input method), under a pre-registered protocol with
+synthetic input. On Windows, where the logger records the windows of the input method and the reference the
+composition, the agreement includes the difference between the two (Section~\ref{sec:observability-consequence}). The
+estimate of this agreement is the primary contribution of the article.
+\item An estimate of text recoverability (Section~\ref{sec:recoverability}): how accurately an attacker can identify
+the typed phrase among $K$ candidates, or reconstruct the typed reading, from the key rows of a log, and whether either
+of two granularities of the key rows that keep no time keeps the identification near chance under the registered rule.
+\item The runtime cost of the logger on each system, with the machine idle and with scripted typing
+(Section~\ref{sec:cost}).
+\item A dataset (Section~\ref{sec:dataset}): the logs of the measurement with the ground truth of the reference input
+field, the plans and the record of every press sent, the phrase corpus and the runtime samples. With these records
+another rule that infers sessions from key presses can be evaluated against the same ground truth without new
+measurement.
+\end{enumerate}
+
+The analyses of agreement and of recoverability come from the same measurement runs; the runtime cost was measured in
+runs of its own, and the dataset holds the runs of the calibration pilots as a separate part. All key input of the
+measurement runs was produced by a program, and no claim is made about natural typing, about other input methods or
+about applications other than the reference input fields (Section~\ref{sec:limitations}).

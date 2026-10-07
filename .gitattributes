@@ -1,0 +1,16 @@
+# Text files are checked out with LF line ends on every system. The checksums of the procedures, the corpus, the
+# configuration, the pinned sources and the lists of exported files are computed over LF bytes, so a checkout with
+# CRLF line ends would not match them.
+* text=auto eol=lf
+# The files whose SHA-256 is pinned are always text, whatever the detection of text=auto decides: the logger manifests
+# (their SHA-256 is written into every log), the configuration, seed and ground-truth rules (the freeze mark of the
+# registration), and the procedures and the corpus (recorded in every plan).
+kit/logger/manifest*.json text eol=lf
+experiment/*.json text eol=lf
+experiment/SEED text eol=lf
+experiment/*.sh text eol=lf
+kit/analysis/gt_rules*.json text eol=lf
+kit/gen/recipes*.json text eol=lf
+kit/corpus/data/*.jsonl text eol=lf
+# Windows command scripts keep CRLF line ends.
+*.bat text eol=crlf

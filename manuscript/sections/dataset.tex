@@ -1,0 +1,111 @@
+% Section 11 of the manuscript: the dataset.
+% What is deposited, and under which rules, follows sections 3.1, 3.4, 6.10 and 10.10 of the registration,
+% experiment/data.md, experiment/data.windows.md and the sections on raw logs of experiment/pilot-macos.md and
+% experiment/pilot-windows.md. The values known only at deposit were filled in from those records on 2026-10-07.
+
+\section{The dataset}
+\label{sec:dataset}
+
+The records of the measurement are released as a dataset of the calls that a reference input field received from the
+input method under scripted input, with the presses sent and the logger's rows: a ground truth against which rules
+that infer conversions from key presses can be evaluated, and a set of key logs whose typed phrases are known
+(Section~\ref{sec:dataset-uses}). The dataset is synthetic input in one kind of reference input field per system.
+
+\subsection{Contents}
+\label{sec:dataset-contents}
+
+The dataset has two parts that are kept apart (Table~\ref{tab:dataset}). The first holds the runs of the measurement,
+made from the registered plans. The second holds the runs of the calibration pilots that meet the registered criteria
+for deposit; they were made from other plans, with provisional settings (Section~\ref{sec:method-pilots}). It also
+holds, under the same criteria, the run of the pilot's check plan that preceded the Windows measurement
+(Section~\ref{sec:method-cells}), with its first start, which the runner aborted before any key was sent. For each run
+the dataset holds the plan, the record of every press that the executor
+sent, the log of the reference input field, the logger's log and the run manifest, which records the versions of the
+system, the input method and the programs and the SHA-256 of every log. It further holds the samples of the
+runtime-cost study, the phrase corpus, the settings of the generator and the seed, the specification of the formats and
+the datasheet, so that every field can be read from the deposit alone. The observation logs of the pilots include the
+session rows that were sealed during the pilots; they are unsealed only to be deposited and were not analysed.
+
+\begin{table}[t]
+\caption{Contents of the dataset. The measurement runs and the calibration-pilot runs are separate parts}
+\label{tab:dataset}
+\begin{tabular}{L{0.20}L{0.40}L{0.20}L{0.20}}
+\toprule
+Record & What it holds & Measurement runs & Calibration-pilot runs \\
+\midrule
+Plan & Every trial's scenario, speed, phrase identifier, intended outcome and key schedule; the generator's settings by SHA-256 & Registered plan of each cell & Plans of the pilots \\
+Record of presses sent & Every press and release as sent, with wall-clock and monotonic times; block markers; trial boundaries & Yes & Yes \\
+Reference log & Calls that the reference input field received: kinds, lengths and times, key codes of key-downs, changes of focus; no text & Yes & Yes \\
+Observation log & The logger's header, key rows and session rows & Yes & Yes, with the session rows that were sealed \\
+Run manifest & Versions, settings, outcome of the checks of the front window, SHA-256 of every log & Yes & Yes \\
+Runtime samples & CPU and memory of the logger at a set interval of 30 seconds, in the idle and the working condition, with the conditions of each & Yes & No \\
+Phrase corpus & 1{,}800 public-domain phrases with their readings and the identifiers of the source works & Shared by both parts & \\
+Generator settings and seed & The settings and procedures from which the plans were generated & Shared by both parts & \\
+Format specification & The fields and the permitted values of the plans, the logs and the corpus & Shared by both parts & \\
+Datasheet & Motivation, composition, collection, preprocessing, uses, distribution and maintenance; the fields of the run manifest and of the runtime samples & Shared by both parts & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+In the dimensions on which keystroke datasets differ, the dataset holds fixed phrases typed without errors or
+corrections by a program; keys as fourteen categories in the logger's log, without key names, as key codes in the
+reference log and as key names in the record of presses; times of presses and releases on both systems; events injected through the
+interfaces of the operating system, not typed on a physical keyboard; and a JIS keyboard layout on both systems.
+
+\subsection{How the records were produced and checked}
+\label{sec:dataset-checks}
+
+The records were produced by the procedure of Section~\ref{sec:method}. Right after each attempt, and before any
+analysis, the stopping rule was applied to the run's logs and the plan of every measurement run was checked by hand
+against the registration (Section~\ref{sec:method-checks}). At deposit, a packing command bundles only the manifest and
+the four logs of a run, refuses a run whose files hold an absolute path, the path of the repository, a login name or home
+directory given to it, or content in the reference or observation log, applies the stopping rule and the check of the content-free
+format again, and refuses a run that fails or cannot be checked; it writes the files in a fixed order with fixed times,
+so that packing twice gives the same archive, and prints the SHA-256 of the archive, which is recorded with the run.
+The stopping rule exists so that no person's typing enters the data, and its blind spots are stated in the
+registration and in Section~\ref{sec:limitations}.
+
+\subsection{What was not deposited}
+\label{sec:dataset-excluded}
+
+A completed run that the stopping rule catches is not deposited, because its logs may hold a person's key presses. A
+run that the runner aborted is deposited only if it passes the same checks or left neither a reference log nor an
+observation log; one aborted inside a trial does not pass. The observation log of the idle condition of the runtime-cost
+study is not deposited, because the logger was started before the command that begins the sampling was typed, so the
+log holds a person's key presses; only its samples are deposited. The logs of the working condition are deposited under
+the rules of the measurement runs; the run of each system passed the checks. An attempt of the Windows pilot that
+was stopped after four trials, when a window used by S15 had been closed, does not pass the checks and is not
+deposited. The Windows pilot runs with the second reference field are not deposited, because that field received the
+key press that switches the input method on as a key-down, which the stopping rule counts as a press from outside;
+nor is an attempt with that field that the runner aborted before any key was sent, whose reference log does not come
+from the reference field of the measurement. The error output of the programs stays on the measuring machines, and
+checks typed by hand were not runs of the runner and are not deposited. The table of attempts states for every start
+of every run of a plan whether it was deposited, with the reason where these rules decide it
+(Section~\ref{sec:results-attempts}).
+
+\subsection{Uses}
+\label{sec:dataset-uses}
+
+The records support three uses from the deposit alone. (a) The calls that an input method makes to an input field, per
+system and setting, can be examined as a basis for re-examining definitions of a conversion. (b) Another rule that
+infers sessions from key presses can be evaluated against the same ground truth without new measurement, by applying it
+to the record of presses sent or to the key rows of the logger's log; the prediction of this study
+(Section~\ref{sec:method-prediction}) is a worked example. (c) How far a key log without text reveals the text can be
+studied with the typed phrases known, as in Section~\ref{sec:recoverability}. Evaluating a logger that needs other
+signals, such as the windows of the input method, is a use of the kit rather than of the dataset: it means running the
+kit again, which does not reproduce the same reference, because the learning of the input method and the versions
+differ. The dataset is not suited as a record of human writing, as a benchmark of natural typing, or for inferences
+about writers.
+
+\subsection{Distribution and maintenance}
+\label{sec:dataset-distribution}
+
+The dataset is deposited in Zenodo under DOI 10.5281/zenodo.23183438, under the Creative Commons Attribution 4.0
+licence \citep{dataset}; the code that made the records and reads them is released separately under the Apache License
+2.0 (Declarations, Code availability). A datasheet in the form proposed by \citet{gebru2021}, which organises the
+description by the stages of a dataset's life (motivation, composition, collection process, preprocessing, uses,
+distribution and maintenance), is released with it. The datasheet states the terms of the corpus source: the phrases come from works whose copyright has expired, which the source
+library allows to be copied and redistributed freely, asking that the information recorded in its files be kept
+\citep{aozora,aozora-terms}; the corpus records the identifier of each source work, and the source works are listed
+with the SHA-256 of the archives downloaded. Corrections will be released as new versions under the same concept
+identifier, with a record of what changed; the contact for the dataset is the corresponding author.

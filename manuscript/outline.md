@@ -77,12 +77,16 @@ state no limit on length. They are read again immediately before submission.
 ## Contributions
 
 1. **Observability analysis.** What the conversion state of another application exposes, on Windows and macOS, to a
-   program that does not read text, from the documented public interfaces of each system, and why the two systems
-   leave different routes: window events of the input method on Windows, inference from key presses on macOS. That no
-   documented interface reports the conversion state of another application is a result about the operating systems
-   and holds for any input method on them. Whether a remaining route works depends on the input method and the
-   application (the cloaking path follows windows of the input method's class, and an application that draws its own
-   candidates may show no window), and it was established only for the input methods measured, as was the agreement.
+   program that does not read text, from the documented public interfaces of each system. On both systems an
+   application's own accessibility implementation can report a conversion without text (on Windows an event for a
+   change of the conversion target; on macOS an attribute for the marked range and notifications for the beginning
+   and end of a marking session), but whether it does depends on the application, so a logger meant to work in any
+   application cannot rely on it. Among the routes that do not depend on the application, Windows offers the window
+   events of the input method, and on macOS none of the documented interfaces examined reports a conversion, so the
+   logger infers it from key presses. Whether a remaining route works depends on the input method and the
+   application as well (the cloaking path follows windows of the input method's class, and an application that draws
+   its own candidates may show no window), and it was established only for the input methods measured, as was the
+   agreement.
 2. **A cross-platform logger and its validation.** A stand-alone logger that writes a category and a time for every
    key press and release (except the input-mode keys and the keys listed in section 4) and one summary row for every
    conversion session (duration, arrow-key presses, abandonment), and that
@@ -191,7 +195,8 @@ recoverability attacks; runtime cost; dataset). Results by the rule above. Avail
   input, input methods, accessibility, event hooks and windows, and the interfaces that earlier loggers use); the
   interfaces examined on each system (for Windows the Text Services Framework, the input-method manager, message hooks,
   accessibility events, UI Automation and the desktop compositor; for macOS the text-input client protocol, the
-  accessibility attributes and notifications, the input-method framework, the window list and the input sources); the
+  accessibility attributes and notifications of the C interface and of AppKit, the input-method framework, the window
+  list, the input sources and event taps); the
   documents read, with their URLs, an archived copy of each, the dates they were retrieved and the system versions they
   describe; and the criterion for each interface (whether a program running outside the target application can obtain
   the conversion state through it without reading text). The claims are stated for the interfaces examined. A
@@ -203,18 +208,26 @@ recoverability attacks; runtime cost; dataset). Results by the rule above. Avail
   documented route into every application is a text service loaded into each process, which would replace the user's
   input method. Message hooks that would intercept the input-method messages of other windows load code into the target
   processes. The accessibility events of the input method's windows (show, change, hide), received out of context,
-  carry no string in their callback arguments. The text-edit pattern of UI Automation reports the finalized string
-  of a composition, so it is not content-free. On some systems the candidate window is cloaked instead of hidden, which
-  the cloak notifications report (an observation made while the logger was developed, stated with its system and
-  version). An event for a change of the conversion target exists but is raised by the
-  application's accessibility provider, so its presence depends on the application; it is not used.
-- macOS. No documented interface reports the marked text of another application: it is held by the in-process
-  text-input client protocol of the target application, and no attribute or notification of the accessibility interface
-  reports marked text or a composition. An input method runs as a process of its own whose client is the system's text
-  services, so there is no counterpart of a text service loaded into the target process. The list of windows can be
-  read only by polling; in observation it showed a candidate window only after a conversion had begun, so it misses
-  the typing of the reading; the logger does not use it. The current input source gives the input mode only. The logger therefore infers sessions
-  from key presses and the input mode.
+  carry no string in their callback arguments; following them to the accessible objects of those windows reads the
+  candidate strings. The text-edit pattern of UI Automation reports the finalized string of a composition, so it is
+  not content-free. During the development of the logger, on a Windows 11 machine whose build was not recorded, the
+  candidate window was cloaked instead of hidden and the window events did not arrive (an observation, stated as such).
+- macOS. The marked text is held by the text view of the target application through the in-process text-input client
+  protocol, which no documented call lets another program query. An input method runs as a program of its own that
+  serves the input sessions of client applications, so there is no counterpart of a text service loaded into the
+  target process. The C constants of the accessibility interface include no item on marked text; the AppKit constants
+  include one attribute for the marked range and two notifications for a marking session, listed without a
+  description (taken up in the next item). The list of windows is returned when requested, so it can only be polled,
+  and it lists windows, not marked text: the reading typed before conversion is shown by the application's text view.
+  The current input source gives the input source and input mode only. The logger therefore infers sessions from key
+  presses and the input mode.
+- Routes that depend on the application. On both systems an application's accessibility implementation can report a
+  conversion without text: on Windows the conversion-target event of the text-edit pattern, which the elements that
+  support the pattern are required to raise; on macOS the marked-range attribute and the marking-session notifications,
+  which the source code of the WebKit engine provides. Whether they are provided depends on the application, so the
+  logger does not use them, and whether they report the sessions of the reference fields or of the applications of
+  writing research was not examined. The registration states more broadly that no public interface of macOS reports
+  the conversion state of another application; the manuscript states the narrower claim and says so.
 - Consequence: the two systems log different constructs (a visible window of the input method; a segment of kana input
   inferred from keys), so the measures of the two systems are defined differently and are validated separately.
 - Table 2: interfaces examined, per system, what each exposes, whether it carries text, whether the logger uses it,
@@ -222,10 +235,15 @@ recoverability attacks; runtime cost; dataset). Results by the rule above. Avail
 
 ### 4. The logger
 
-- Rows: on both systems one key row per press and one per release, with one of fourteen categories and a time; the
-  input-mode keys produce no row on either system, the keys F13 to F19 produce no row on macOS and F13 and the keys
-  above it none on Windows, and modifier keys produce rows on Windows but not on macOS. The registration describes the
-  macOS rows as rows of presses; the logger's source writes a row for each release as well. Every analysis uses the
+- Rows: on both systems one key row per press and one per release of an observed key, with one of fourteen categories
+  and a time. The keys observed are taken from the logger's source: on macOS the letters, digits and symbol keys of the
+  main block, Return, Tab, Space, Backspace, Forward Delete, Escape, the arrow keys and F1 to F12 (no row for the
+  modifier keys, the numeric keypad, Page Up, Page Down, Home, End, the yen and underscore keys of the JIS layout, the
+  input-mode keys, the keys above F12, or auto-repeated presses); on Windows also the modifier keys, the numeric keypad,
+  Page Up, Page Down, Home and End (no row for the input-mode keys or the keys above F12). The registration describes
+  the macOS rows as rows of presses of every key but the input-mode keys, F13 to F19 and the modifier keys; the
+  logger's source observes the narrower set and writes a row for each release as well. No key outside the observed set
+  was sent in the measurement. Every analysis uses the
   rows of presses only, and the times of releases enter no measure (each synthetic key was held for 60 ms). One session
   row with `t`, `dwell_ms`, `nav` and `abandon`, where `t` is the time at which the row was collected, up to about
   100 ms after the session closed. No character, reading, candidate string or window name is written.
@@ -241,8 +259,13 @@ recoverability attacks; runtime cost; dataset). Results by the rule above. Avail
   session is open, so they are upper bounds). A row does not record which path wrote it, and which path drove the
   measured input method was not determined, so the Windows estimates hold for an unknown mixture of the two paths;
   rows of 20 to 25 seconds and of about 25 seconds are only indications of the first path and of its safety valve.
-- The log header: the format, the system, the version, the SHA-256 of the manifest of the code it was built from, and
-  the channels the log records, so that a log declares what it can and cannot contain.
+- The log header: the format, the system, the version, the SHA-256 of the manifest of the logger's shared source files
+  (the drivers of each system have manifests of their own, and the whole source is fixed by the freezing tags), and
+  the row types the log can contain, so that a log declares what it can and cannot contain.
+- On Windows the monitoring loop judges whether a candidate window is open from the two paths together with two further
+  signals (the class of the focused element and a scan of the top-level windows for a candidate window's class); this
+  judgement times the safety valve and closes a session whose dismissal was missed. The registration describes the two
+  paths only; the manuscript describes the further signals, which are part of the frozen source.
 - The content-free format: closed enumerations for every string, integers with bounded ranges, no unknown keys, no
   escapes. A validator checks this shape on every log. It does not check the meaning of a value: that no content is
   written into an integer field, a version string or the manifest's SHA-256 rests on the logger's source, identified
@@ -307,7 +330,7 @@ observation and to the reference, with the timing of the key rows of presses as 
 the stopping rule (presses from outside, losses of focus, and on Windows the key rows that no sent press explains);
 the times at which the executor, the observation and the reference recorded the same block-marker presses, whose
 differences combine the offsets of the clocks with the delays of the paths and cannot be separated without an
-external clock; every attempt and how attempts were counted (deviation D6), with whether each start was deposited and
+external clock; every attempt and how attempts were counted (deviation D7), with whether each start was deposited and
 why.
 
 5.8 Analysis: exclusions; scopes (`under_limit` primary, `over_limit`, `all_trials`); matching by interval overlap;
@@ -316,7 +339,7 @@ continuous measures, kappa and the ICC); missing values reported as null.
 
 5.9 Pre-registration and deviations: a table of the two freezes (dates, tags, the SHA-256 of the lists of exported
 files, the OSF registrations), with the reason that the freeze marks of the file carry the date of the second freeze;
-the deviations D1 to D6 (Table 6); the public commit that fixed this outline, and with it the rules for reporting,
+the deviations D1 to D10 (Table 6); the public commit that fixed this outline, and with it the rules for reporting,
 before the results were analysed.
 
 ### 6. Results: what the reference establishes, detection and per-session agreement
@@ -461,10 +484,11 @@ figures of the records (the tables of run checks and of attempts, the check of s
 |---|---|---|---|---|
 | OB1 | On Windows none of the documented interfaces examined lets a program that runs outside the target application read or follow the composition of the Text Services Framework; the only documented route is code loaded into the target process. | Not registered (documentation analysis) | Microsoft documentation of the thread manager, of the sink registration and of input-method accessibility; documentation of message hooks; each with URL, archived copy and retrieval date | Section 3, Table 2 |
 | OB2 | The window events of the input method, received out of context, carry no string; the text-edit pattern of UI Automation carries the finalized string. | Not registered (documentation analysis) | Microsoft documentation of the event callback, the event constants and the text-edit pattern | Section 3, Table 2 |
-| OB3 | On macOS none of the documented interfaces examined reports the marked text of another application; the window list can be read only by polling and, in observation, showed a candidate window only after a conversion had begun; the input source gives the input mode only. | Not registered (documentation analysis) | Apple documentation of the text-input client protocol, the accessibility attributes and notifications (counted on the system version of the measurement), the input-method framework, the window list and the input sources | Section 3, Table 2 |
+| OB3 | On macOS none of the documented interfaces examined that do not depend on the application reports a conversion of another application: the marked text is held by the application's text view through the text-input client protocol, the C accessibility constants include no item on marked text, the window list can only be polled and lists windows rather than marked text, and the input source gives the input source and mode only. | Not registered (documentation analysis) | Apple documentation of the text-input client protocol, the accessibility constants of the C interface and of AppKit (counted in the documentation retrieved, to be checked against the SDK headers of the system version of the measurement), the input-method framework, the window list, the input sources and event taps | Section 3, Table 2 |
+| OB5 | On both systems an application's accessibility implementation can report a conversion without text (Windows: the conversion-target event of the text-edit pattern; macOS: the marked-range attribute and the marking-session notifications of AppKit, listed without description); whether it does depends on the application, the logger does not use these routes, and whether they report the sessions of the reference fields or of other applications was not examined. | Not registered (documentation analysis) | Microsoft documentation of the text-edit pattern and the event constants; Apple documentation of the AppKit accessibility constants; the WebKit source code at a fixed commit | Section 3, Table 2 |
 | OB4 | The two systems therefore log different constructs, which are validated separately and not compared as equal. | Sections 1.1, 10.3, 10.11 (two constructs) | OB1 to OB3; the session rules of the logger | Sections 3, 4 and 11; Table 3 |
 | LG1a | Every deposited and analysed log has the content-free shape: closed enumerations for strings, bounded integers, no unknown keys or escapes. | Section 5 (checks before any statistic) | `kit/formats/FORMATS.md` (`obs/1`, scope of guarantee); `kit/formats/validate_logs.py`; the check applied by the analysis and by `--pack` | Section 4 |
-| LG1b | The logger writes no character, reading, candidate string or window name; that no content is written into an integer field, a version string or the manifest's SHA-256 is a property of its source, which the shape check does not test. | Sections 1.1, 2.2, 10.3 | Logger source in `kit/logger/` and its unit tests; the manifest's SHA-256 in every log header | Section 4, Table 3 |
+| LG1b | The logger writes no character, reading, candidate string or window name; that no content is written into an integer field, a version string or the manifest's SHA-256 is a property of its source, which the shape check does not test. The header's SHA-256 identifies the shared source files; the whole source, drivers included, is fixed by the freezing tags. | Sections 1.1, 2.2, 10.3 | Logger source in `kit/logger/` and its unit tests; the manifests `kit/logger/manifest.json`, `manifest.macos.json` and `manifest.windows.json`; the manifest's SHA-256 in every log header | Section 4, Table 3 |
 | LG2a | The macOS session rules are those stated, including the cut-off. | Sections 1.1, 4.5 | Logger source and unit tests (`kit/logger/src/input/ime_compose.rs`); the self-test of `kit/analysis/spec_predict.py` against that source | Section 4 |
 | LG2b | The Windows session paths are those stated, including the cut-off and the safety valve; which path drove the measured input method is not known, so the Windows estimates hold for an unknown mixture of the two paths. | Sections 10.3, 10.7 | Logger source and unit tests (`kit/logger/src/driver_windows/`, `kit/logger/src/input/ime_cloak.rs`, and for the safety valve `kit/logger/src/main.rs` with its test `windows_safety_valve_resets_active_and_emits_stale_line`); no prediction applies | Sections 4 and 12 |
 | LG3 | Which measures of writing research can be computed from the logger's rows on each system, and for which of them this study estimates agreement with the reference. | Not registered (description) | The row formats of `kit/formats/FORMATS.md` (`obs/1`); section 4.4 of the registration (a session row's time is its collection time); for the entries with an estimate, the claim that gives it | Section 4, Table 4 |
@@ -475,7 +499,7 @@ figures of the records (the tables of run checks and of attempts, the check of s
 | AG4 | Agreement of `nav` with the arrow presses that the executor sent during the session (the reference for this measure is the executor, not the reference input field). | Question 2; section 6.6 | `e1_l1.json` | Section 6; Table 9 |
 | AG5 | Behaviour at the 20-second cut-off: rows of 20 seconds or more, and rows of the long trials against the specified rows (macOS); rows of 20 to 25 seconds and of 25 seconds or more, and the sensitivity analysis of the long trials (Windows), reported descriptively. | Questions 1 and 2; sections 6.6, 10.7 | `e1_l1.json`; `e1_detection.json` (`over_limit`, `under_limit_gt_duration`, `long_trials_from`) | Section 6 |
 | AG6 | Separation of the disagreement into the validity of the rules (ground truth against prediction) and their execution (prediction against observation), macOS only. | Section 6.4 | `e1_detection.json`; `e1_l1.json` (`gt_pred`, `pred_obs`, layers) | Section 6; Table 8 |
-| AG7 | Every attempt of every run, including attempts aborted, stopped or refused, with its reason and figures, how attempts were counted, whether it was deposited and why, and the check of section 10.8; exclusions by reason, stratum and number. | Sections 3.4, 6.2, 10.8; deviation D6 | `experiment/data.md`, `experiment/data.windows.md` (run checks; check of section 10.8); `experiment/deviations.md`; `e1_delivery.json`; `e1_detection.json` | Section 5.7; table of attempts |
+| AG7 | Every attempt of every run, including attempts aborted, stopped or refused, with its reason and figures, how attempts were counted, whether it was deposited and why, and the check of section 10.8; exclusions by reason, stratum and number. | Sections 3.4, 6.2, 10.8; deviation D7 | `experiment/data.md`, `experiment/data.windows.md` (run checks; check of section 10.8); `experiment/deviations.md`; `e1_delivery.json`; `e1_detection.json` | Section 5.7; table of attempts |
 | AG8 | Per-text agreement of four measures per speed (Bland-Altman bias and limits; ICC(A,1)), the biases under three mixtures of speeds, and per-trial differences by scenario and speed. | Question 3; section 6.7 | `e1_l2.json` | Section 7; Figure 4; Table 10 |
 | KT1 | Timing of the key rows of presses on the software path, per system and speed, descriptive, as the frozen delivery report defines it: in the trials whose rows of presses equal the presses sent other than the input-mode keys (within the trial's window, from 20 ms before its start to 300 ms after its end), the i-th row is paired with the i-th press; the delay is the row's wall-clock time minus the executor's wall-clock time of dispatch, and the interval error is the difference between consecutive rows minus that between consecutive presses; each is summarised by n, mean, minimum, 5th percentile, median, 95th percentile and maximum, with the number of trials not paired. Times are whole milliseconds. No claim is made about the path from a physical keyboard. | Section 6.3 | `e1_delivery.json` (`kit/analysis/delivery.py`) | Section 6 |
 | RC1 | Closed-set identification accuracy against the chance level 1/K for six feature sets, K of 10, 100 and 1,000, per cell, with the number of unscored blocks and trials. | Question 4; section 6.8 | `e2_closed_set_<cell>.json` | Section 8; Figure 5 |
@@ -509,6 +533,8 @@ figures of the records (the tables of run checks and of attempts, the check of s
 - Table 6: deviations from the registrations.
 - Table 7: what the reference establishes (plan against ground truth by type, delivery, losses of focus, marker
   times), with the estimates each check is used to read.
+- Table of the timing of the key rows of presses (KT1), per cell and speed, next to Table 7; the same figures for the
+  key-downs of the reference in the supplement.
 - Table 8: detection per speed and cell (three comparisons on macOS, the primary comparison on Windows).
 - Table 9: per-session agreement.
 - Table 10: per-text agreement.
@@ -522,12 +548,10 @@ figures of the records (the tables of run checks and of attempts, the check of s
 
 ## Open items before the manuscript is complete
 
-- The bibliographic records of the platform documentation (Microsoft and Apple), of the loggers of Table 1, of the
-  studies of timing instruments, of the work on keylogging side channels, of the datasheet proposal, of the tokenizer
-  used for the readings and of the corpus source are to be confirmed against their primary sources when the sections
-  that cite them are drafted.
-- The count of accessibility attributes and notifications examined on macOS is to be taken on the system version of the
-  measurement before it is stated.
+- Done on 5 October 2026: the counts of the accessibility constants were checked against the header files of the SDK
+  of macOS 27.0 on the machine of the measurement (AppKit 131, 18 and 42, as in the documentation; C interface 138,
+  14 and 37 by the ending of the names, more than the 101, 9 and 25 of the documentation, none on marked text), and
+  the header of the text input sources was read in that SDK (input source and input mode only); section 3 states both.
 - Whether literature on evaluating text entry through input methods should be placed in section 2 is to be checked
   against primary sources.
 - The form in which the list of exported files of each freezing tag can be recomputed from the public repository is
@@ -536,8 +560,12 @@ figures of the records (the tables of run checks and of attempts, the check of s
   the datasheet.
 - The full SHA-256 of the check plan of section 10.8 is to be copied into `experiment/data.windows.md` from the run
   manifest of the check.
+- Done on 5 October 2026: the marker times of section 6.9 were computed for the two macOS cells on the machine that
+  holds the macOS runs, as they were for the Windows cell (`experiment/data.windows.md`, "Marker times of section
+  6.9"), and recorded in `experiment/data.md`, "Marker times of section 6.9"; the marker was found in every block of
+  both cells, and Table 7 reads them from `experiment/results/clock_sync_<cell>.json`.
 - What else was running on the Windows measuring machine during the completed run is to be established from the
   records of that machine and stated in section 5.2 and in the table of attempts.
-- The system and version on which the cloaking of the candidate window and the timing of the window list on macOS were
-  observed are to be stated with those observations in section 3.
-- An archived copy of each document of the observability analysis is to be made when it is retrieved.
+- The list of documents of the observability analysis (`supplement/observability-documents.tex`, with the URL, the
+  archived copy and the date of last update of each) is to be assembled into the supplement with the per-stratum
+  tables.

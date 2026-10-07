@@ -1,0 +1,57 @@
+% Supplementary material of the manuscript, built as a separate document with the same template as the manuscript
+% (see BUILD.md in the parent directory). The per-stratum tables are generated from the result files.
+\documentclass[pdflatex,sn-apa]{sn-jnl}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+% The class expects amsmath (it calls \allowdisplaybreaks at the start of the document).
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{pdflscape}
+% Long URLs in narrow columns may break after any character.
+\usepackage{xurl}
+
+% A ragged-right paragraph column whose width, given as a fraction of the line, includes the space between columns.
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{\dimexpr#1\linewidth-2\tabcolsep\relax}}
+
+\hypersetup{bookmarksdepth=2}
+
+\begin{document}
+
+\title{Supplementary material: Logging Japanese IME conversion without recording text}
+
+\maketitle
+
+\input{observability-documents}
+
+\clearpage
+% Generated from the result files by ../tools/results_tables.py.
+\input{../generated/reference-strata}
+
+\clearpage
+\input{../generated/detection-strata}
+
+\clearpage
+\input{../generated/detection-definitions}
+
+\clearpage
+\input{provenance}
+
+\clearpage
+\input{../generated/detection-layers}
+
+\clearpage
+\input{../generated/session-strata}
+
+\clearpage
+\input{../generated/dwell-explore}
+
+\clearpage
+\input{../generated/text-agreement}
+
+\clearpage
+\input{../generated/closed-set-all}
+
+\end{document}

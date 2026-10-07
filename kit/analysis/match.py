@@ -148,6 +148,26 @@ import gt_sessions  # noqa: E402  reuses its oracle parser and InputError
 import stats  # noqa: E402  the Wilson interval is provided by stats.wilson and is not reimplemented here
 
 InputError = gt_sessions.InputError
+
+# Deviation D10. In the frozen code a merge found by the theta recount (n_merge_obs_recount) is counted in the
+# stratum of the missed ground-truth session, while n_obs counts that observation row in the stratum of the
+# ground-truth session it is paired with; where the two strata differ, the numerator of merge_rate can exceed its
+# denominator. Without the environment variable below nothing changes, except that such a rate is reported
+# without a value or interval (with NUMERATOR_ABOVE_DENOMINATOR as its note) instead of stopping the analysis. With
+# IME_MATCH_MERGE_RECOUNT=obs the recounted merge is counted in the stratum in which n_obs counts its observation
+# row (the stratum of the paired ground-truth session), as the split recount already is on the ground-truth side,
+# so that the numerator never exceeds the denominator; n_miss_as_merge stays with the missed session.
+MERGE_RECOUNT_ENV = "IME_MATCH_MERGE_RECOUNT"
+MERGE_RECOUNT_MODES = ("gt", "obs")
+NUMERATOR_ABOVE_DENOMINATOR = "no value: the numerator exceeds the denominator (deviation D10)"
+
+
+def merge_recount_mode():
+    """The stratum of a recounted merge: "gt" (the frozen rule, the default) or "obs" (deviation D10)."""
+    mode = os.environ.get(MERGE_RECOUNT_ENV, "gt")
+    if mode not in MERGE_RECOUNT_MODES:
+        raise InputError("%s must be one of %s" % (MERGE_RECOUNT_ENV, ", ".join(MERGE_RECOUNT_MODES)))
+    return mode
 SCENARIO_RE = re.compile(r"^S([1-9]|1[0-5])$")
 SPEEDS = ("slow", "mid", "fast")
 CELL_RE = re.compile(r"^[A-Za-z0-9_.+-]{1,64}$")
@@ -439,6 +459,9 @@ def recount_split_merge(result, theta=0.5, obs_end_offset_ms=0):
 # ---------------------------------------------------------------- detection metrics
 
 def _prop(x, n):
+    if _is_int(x) and _is_int(n) and 0 <= n < x:
+        # Deviation D10: a numerator above its denominator has no interval; the frozen code stopped here.
+        return {"x": x, "n": n, "value": None, "lo": None, "hi": None, "note": NUMERATOR_ABOVE_DENOMINATOR}
     lo, hi = stats.wilson(x, n)
     return {"x": x, "n": n, "value": (x / n if n else None), "lo": lo, "hi": hi}
 
@@ -527,6 +550,8 @@ def detection_metrics(result, strata=None, theta=0.5, obs_end_offset_ms=0, recou
         bucket(ol(r))["fp"] += 1
 
     rc = recount_split_merge(result, theta, obs_end_offset_ms) if recount is None else recount
+    mode = merge_recount_mode()
+    paired_gt = dict((id(p["obs"]), p["gt"]) for p in result["pairs"])
     split_recount_seen = {}
     for e in rc["split"]:
         bucket(ol(e["obs"]))["fp_as_split"] += 1
@@ -538,6 +563,11 @@ def detection_metrics(result, strata=None, theta=0.5, obs_end_offset_ms=0, recou
         st = gl(e["gt"])
         bucket(st)["miss_as_merge"] += 1
         bucket(st)
+        if mode == "obs":
+            if id(e["obs"]) not in paired_gt:
+                raise InputError("recount: a recounted merge's observation row is not one of the pairs")
+            st = gl(paired_gt[id(e["obs"])])
+            bucket(st)
         merge_recount_seen.setdefault(st, set()).add(_dump(e["obs"]))
     for st, s in split_recount_seen.items():
         bucket(st)["split_gt_recount"] = len(s)
@@ -920,12 +950,15 @@ def evaluate(sessions_bytes, definition, obs_bytes, plan_bytes, oracle_bytes, co
     swo_labels = sorted(swo_counts, key=lambda L: (L is None, _dump(L)))
     swo_by_stratum = [{"stratum": dict(zip(["cell", "scenario", "speed"], L)), "n": swo_counts[L]} for L in swo_labels]
 
+    config_out = {"iou_min": cfg["iou_min"], "obs_end_offset_ms": off_end, "theta": theta,
+                  "clock_offsets_ms": dict((str(b), v) for b, v in sorted(offsets.items())), "cell": cell,
+                  "drop_start_while_open": cfg["drop_start_while_open"], "uncorrected_blocks": uncorrected_blocks}
+    if merge_recount_mode() != "gt":
+        config_out["merge_recount"] = merge_recount_mode()  # deviation D10; absent under the frozen rule
     return {
         "src": src,
         "definition": definition,
-        "config": {"iou_min": cfg["iou_min"], "obs_end_offset_ms": off_end, "theta": theta,
-                   "clock_offsets_ms": dict((str(b), v) for b, v in sorted(offsets.items())), "cell": cell,
-                   "drop_start_while_open": cfg["drop_start_while_open"], "uncorrected_blocks": uncorrected_blocks},
+        "config": config_out,
         "inputs_sha256": {
             "sessions": hashlib.sha256(sessions_bytes).hexdigest(), "obs": hashlib.sha256(obs_bytes).hexdigest(),
             "plan": plan["sha256"], "oracle": hashlib.sha256(oracle_bytes).hexdigest(),
@@ -1822,6 +1855,52 @@ def _case_cli():
     return f
 
 
+def _case_d10():
+    """Deviation D10: a recounted merge whose missed session lies in another stratum than the paired one."""
+    f = []
+    # gt t1 (0, 3000) pairs with ob (0, 4000); gt t2 (3000, 5000) is missed and has 0.5 of its length inside the
+    # paired observation, so the recount finds a merge. Strata by trial: t2's stratum holds no observation row.
+    r = match([_gt("t1", 0, 3000), _gt("t2", 3000, 5000)], [_ob(0, 4000)])
+    strata = {"gt": lambda s: s["trial_id"], "obs": lambda _r: "t1"}
+    saved = os.environ.pop(MERGE_RECOUNT_ENV, None)
+    try:
+        rows = dict((m["stratum"], m) for m in detection_metrics(r, strata))
+        t2 = rows.get("t2")
+        if t2 is None or (t2["n_obs"], t2["n_merge_obs_recount"], t2["n_miss_as_merge"]) != (0, 1, 1):
+            f.append("frozen rule: the recounted merge is not in the missed session's stratum: %r" % (t2,))
+        elif (t2["merge_rate"]["value"], t2["merge_rate"]["lo"], t2["merge_rate"]["note"]) != (
+                None, None, NUMERATOR_ABOVE_DENOMINATOR):
+            f.append("frozen rule: 1 / 0 is not reported without a value and with the note: %r" % (t2["merge_rate"],))
+        if rows.get("t1", {}).get("n_merge_obs_recount") != 0:
+            f.append("frozen rule: the recounted merge was also counted in the paired stratum")
+        os.environ[MERGE_RECOUNT_ENV] = "obs"
+        rows = dict((m["stratum"], m) for m in detection_metrics(r, strata))
+        t1, t2 = rows.get("t1"), rows.get("t2")
+        if t1 is None or (t1["merge_rate"]["x"], t1["merge_rate"]["n"]) != (1, 1) or "note" in t1["merge_rate"]:
+            f.append("obs rule: the recounted merge is not counted with its paired observation: %r" % (t1,))
+        if t2 is None or (t2["n_merge_obs_recount"], t2["n_miss_as_merge"], t2["merge_rate"]["x"]) != (0, 1, 0):
+            f.append("obs rule: the missed session's stratum still holds the merge, or lost n_miss_as_merge: %r" % (t2,))
+        pooled = detection_metrics(r)[0]
+        os.environ.pop(MERGE_RECOUNT_ENV)
+        if pooled != detection_metrics(r)[0]:
+            f.append("the single stratum differs between the two rules")
+        os.environ[MERGE_RECOUNT_ENV] = "x"
+        try:
+            detection_metrics(r)
+            f.append("an unknown value of %s was accepted" % MERGE_RECOUNT_ENV)
+        except InputError:
+            pass
+    finally:
+        os.environ.pop(MERGE_RECOUNT_ENV, None)
+        if saved is not None:
+            os.environ[MERGE_RECOUNT_ENV] = saved
+    # a numerator within its denominator keeps the Wilson interval
+    p = _prop(1, 2)
+    if p["lo"] is None or "note" in p:
+        f.append("_prop(1, 2) lost its interval: %r" % (p,))
+    return f
+
+
 CASES = [
     ("five types (exact match, split, merge, miss, false positive)", _case_five_types),
     ("definitional properties (adjacent fragments, imbalanced merges, short sessions)", _case_definition_properties),
@@ -1840,6 +1919,8 @@ CASES = [
     ("n_start_while_open's diagnostic role and drop_start_while_open", _case_start_while_open),
     ("prediction: scopes partition the trials, layers count only their trials, refusals", _case_prediction_scope),
     ("CLI (exclusion, strata, clock correction, byte-identical output, exit 2)", _case_cli),
+    ("deviation D10 (a recounted merge across strata: no value under the frozen rule, the paired stratum under obs)",
+     _case_d10),
 ]
 
 

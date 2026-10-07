@@ -1,0 +1,49 @@
+% Section 9 of the manuscript: runtime cost (question 5). The method is stated first, as the outline requires; it
+% follows sections 6.10 and 10.9 of the frozen registration and the description of the samplers in kit/e3/README.md.
+% The results are written from the result files e3_macos.txt and e3_windows.txt after the analysis.
+
+\section{Results: runtime cost}
+\label{sec:cost}
+
+\subsection{Method}
+\label{sec:cost-method}
+
+The cost of the logger to the machine was measured on each system under two conditions, one night each, for eight
+hours at an interval of 30~s: \emph{idle}, in which the logger ran and neither a person nor a plan operated the machine
+(what else ran on it is given in Section~\ref{sec:results-attempts}), and
+\emph{working}, in which the logger ran while the runner played the plan of one agreement cell (on macOS the plan with
+live conversion on, which takes about 11.9~hours; on Windows the plan of the Windows cell, which takes 12 to
+13~hours). In the working condition only the samples of the first eight hours were used. The conditions were measured
+after the agreement cells of the same machine (Section~\ref{sec:method-cells}).
+
+A sampler found the logger's process by its name and recorded, at every interval, its CPU and its resident memory; no
+other process was listed and no window title was read. CPU is expressed on the basis that one core is 100\%. The two
+systems measure differently. On macOS the CPU value of a sample is the increase of the process's cumulative CPU time
+divided by the increase of the wall-clock time, a mean over the whole interval, and the memory is the resident memory
+that the system's process monitor reports. On Windows the CPU value is the processor time of the process over about
+one second at the moment of reading, so a burst between two samples is not seen, and the memory is the working set.
+For this reason the values are described within each system and are not compared between the systems.
+
+Reported for each condition are the mean, median, 95th percentile and maximum of the CPU, the final resident memory,
+and the least-squares slope of the resident memory in megabytes per hour. The two conditions are always reported
+together and are not reduced to one figure. A condition with fewer than 480 usable samples or a window shorter than
+four hours was insufficient and was run again on another night, as was a condition that was aborted, up to three
+attempts in all; every attempt is reported. In the working condition the runs were checked by the stopping rule of the
+agreement cells (Section~\ref{sec:method-checks}). On Windows a counter that cannot be read gives zero, so a working
+condition in which every CPU sample was zero was treated as insufficient, because the logger processes the presses of
+the plan; in the idle condition a true zero is possible, and such a condition is reported with this flag. Battery use
+was not measured. The samples of both conditions are deposited; the observation log of the idle condition is not,
+because the logger was started before the command that begins the sampling was typed, so that log holds a person's
+key presses.
+
+\subsection{Results}
+\label{sec:cost-results}
+
+The records of the runs hold one attempt of each condition on each system (the working conditions are in
+Table~\ref{tab:attempts}), and every one had enough samples to be reported (Table~\ref{tab:cost}). On macOS the mean CPU of the
+logger was \rv{macos.e3.idle.cpu.mean} in the idle condition and \rv{macos.e3.working.cpu.mean} in the working
+condition; on Windows it was \rv{windows.e3.idle.cpu.mean} idle and \rv{windows.e3.working.cpu.mean} working (one core
+is 100). The values of each system are read within that system (Section~\ref{sec:cost-method}); the table gives the
+median, the 95th percentile and the maximum of the CPU, the final memory and its slope for each condition.
+
+\input{generated/table-cost}

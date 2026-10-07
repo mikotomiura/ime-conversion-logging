@@ -1,0 +1,100 @@
+{
+ "analysis_modules_sha256": {
+  "delivery.py": "d78a179f3e4f5275d0ece08fed18f797712508bd9aaedcdeb62481fcf0b7bdbf",
+  "gt_sessions.py": "0b5845f53fb95ef6eaac31c802fabb7c180cd7750fbed04da40835a065d98aeb",
+  "inject.py": "733418092d4d1961525ce79dc91dd4b340971ca543b350fc03462ecf26f2a805",
+  "l1.py": "3829dec748f583134b058c93297aa40172c37a174abd2f75983bbc718d3421d6",
+  "l2.py": "ba635203abdaa83dab0a30caf08024100ef617d85a9091397f0a98dcd0cbe0b8",
+  "match.py": "6f817228e2e7d5f17f65895c7a00a721c28c00df24c46df0c8bd4b237ad72cff",
+  "pipeline.py": "5ef607de6473facf032ba168005801436c59a1f0a4ec0bacf0f6e6d8ca761ad0",
+  "spec_predict.py": "6879945db975c7ba4488f441227bf37b468eab85346464623f77ee87b8082efb",
+  "stats.py": "ead0ccaa50bb86b088b66899ef5b1e04fb9b995a582e520679e04d09cbbf5c07"
+ },
+ "cells": {
+  "macos-standard-live-on": {
+   "all_trials": {
+    "fast": {
+     "n": 798,
+     "percentiles": {
+      "p2.5": -927.5999999999999,
+      "p97.5": 4386.799999999998
+     },
+     "within": {
+      "abs_le_1000_ms": 0.9335839598997494,
+      "abs_le_100_ms": 0.5112781954887218
+     }
+    },
+    "match_sha256": "2af667ae5516bbc60df6a7dcc416068ebb9fe4805b2aeeeffc71351e6df99dcf",
+    "mid": {
+     "n": 763,
+     "percentiles": {
+      "p2.5": -2208.5499999999997,
+      "p97.5": 50.94999999999993
+     },
+     "within": {
+      "abs_le_1000_ms": 0.926605504587156,
+      "abs_le_100_ms": 0.4259501965923984
+     }
+    },
+    "slow": {
+     "n": 526,
+     "percentiles": {
+      "p2.5": -5092.25,
+      "p97.5": 41.0
+     },
+     "within": {
+      "abs_le_1000_ms": 0.8726235741444867,
+      "abs_le_100_ms": 0.36311787072243346
+     }
+    }
+   },
+   "under_limit": {
+    "fast": {
+     "n": 797,
+     "percentiles": {
+      "p2.5": -900.5999999999999,
+      "p97.5": 4387.400000000001
+     },
+     "within": {
+      "abs_le_1000_ms": 0.9347553324968633,
+      "abs_le_100_ms": 0.5119196988707654
+     }
+    },
+    "match_sha256": "229b1548431427405f8ae6fb19839ed68991257bf12df77a2c43a4bd2ff5efb1",
+    "mid": {
+     "n": 746,
+     "percentiles": {
+      "p2.5": -1237.5,
+      "p97.5": 51.75
+     },
+     "within": {
+      "abs_le_1000_ms": 0.9436997319034852,
+      "abs_le_100_ms": 0.435656836461126
+     }
+    },
+    "slow": {
+     "n": 515,
+     "percentiles": {
+      "p2.5": -3315.6499999999996,
+      "p97.5": 41.299999999999955
+     },
+     "within": {
+      "abs_le_1000_ms": 0.8893203883495145,
+      "abs_le_100_ms": 0.37087378640776697
+     }
+    }
+   }
+  }
+ },
+ "exploratory": true,
+ "inputs_sha256": {
+  "config": "25733be6e52dbe0274f5d763cb06be9cd089d3de5cb4255f7a2a9abc338b6cf4",
+  "e1_l1_of_this_run": "ce385d5b9ab1d3e930db47d84c19fca736297c00ea91c09ed0b588127472ba61",
+  "e1_l1_registered": "1e22b6fb82435c926c6251bb62e392a03d048923eda5610d9204f6b738d8ca49",
+  "obs": "f5da64d02ca3f8fc3cb6f42d923661ac1904128f8e7fe442c4ace67f2e6981b3",
+  "run_manifest": "0257755cb0a9d5001fc6ce3097a03df446129840d19342e3d8bf81aed1e7c268",
+  "script": "453bfc02f961a4c2b8436d542f0e3d1ecf44aca2b4b9c18d22d56ca599a91439"
+ },
+ "note": "not registered; percentiles of the dwell error (observed minus ground truth, ms) of the one-to-one pairs of the primary comparison, and the fractions of pairs within 100 ms and 1,000 ms; no interval",
+ "percentile_method": "linear interpolation between order statistics, h = (n - 1) p"
+}

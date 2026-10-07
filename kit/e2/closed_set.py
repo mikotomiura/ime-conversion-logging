@@ -3,8 +3,12 @@
 """Closed-set identification (attacker knowledge K2): which of K candidate phrases was typed (standard library only).
 
   closed_set.py --obs OBS... --plan PLAN... --corpus F --recipes F --config F [--K 10,100,1000] [--seed N]
-                [--bootstrap B] [--markers-in-obs] [--ime-toggle-in-obs] --out F
+                [--bootstrap B] [--markers-in-obs] [--ime-toggle-in-obs] [--skip-scenario S]... --out F
   closed_set.py --selftest        positive and negative controls on synthetic observations (fast)
+
+--skip-scenario was added after the freeze by deviation D8 (experiment/deviations.md): the registration does not count
+the trials of scenario S12, but the frozen code left out only those whose phrase is not in the corpus. Without the
+switch the output is the same as that of the frozen code.
 
 Simulation attack. For every candidate phrase the attacker runs the same scenario generator as the experiment
 (build_trial of gen/generate_plan.py) to obtain a predicted log, and chooses the candidate whose predicted log is
@@ -72,6 +76,7 @@ import json
 import math
 import os
 import random
+import re
 import sys
 import tempfile
 
@@ -770,7 +775,11 @@ def _sha_file(path):
 
 
 def run(obs_paths, plan_paths, corpus_path, recipes_path, config_path, Ks, features_list, seed, markers_in_obs,
-        ime_toggle_in_obs=False, bootstrap=DEFAULT_BOOTSTRAP):
+        ime_toggle_in_obs=False, bootstrap=DEFAULT_BOOTSTRAP, skip_scenarios=()):
+    """skip_scenarios: scenarios whose trials are left out of the attack whatever their phrase (deviation D8). The
+    trials are aligned first, so that the alignment and n_trials are those of the whole plan; the output then states
+    the number left out per scenario (skipped_scenarios). Every trial draws its candidates from its own seed, so leaving
+    out trials does not change the draws of the others."""
     if len(obs_paths) != len(plan_paths):
         raise ValueError("--obs and --plan differ in count (%d and %d)" % (len(obs_paths), len(plan_paths)))
     recipes = generate_plan.load_recipes(recipes_path)
@@ -800,15 +809,25 @@ def run(obs_paths, plan_paths, corpus_path, recipes_path, config_path, Ks, featu
         seg, al = segment_by_plan(events, plan, obs_os, markers_in_obs, ime_toggle_in_obs, tag="s%d-" % i)
         trials.extend(seg)
         alignments.append(al)
+    skipped = dict((s, 0) for s in skip_scenarios)
+    attacked = []
+    for t in trials:
+        if t["scenario"] in skipped:
+            skipped[t["scenario"]] += 1
+        else:
+            attacked.append(t)
     results = {}
     for K in Ks:
-        results[str(K)] = evaluate(trials, corpus, K, features_list, seed, recipes, config, B=bootstrap)
-    return {"format": FORMAT, "assumptions": ASSUMPTIONS, "seed": seed, "bootstrap": bootstrap,
-            "n_sessions": len(obs_paths), "n_trials": len(trials), "alignment": merge_alignments(alignments), "n_ime_shadow_rows_unused": n_shadow, "features": dict(
-                (f, {"timing": FEATURE_SETS[f][0], "runs": FEATURE_SETS[f][1]}) for f in features_list),
-            "params": {"pause_ms": PAUSE_MS, "tau_ms": TAU_MS, "w_time": W_TIME, "phase_step_ms": PHASE_STEP_MS},
-            "corpus_sha256": _sha_file(corpus_path), "recipes_sha256": recipes_sha256,
-            "config_sha256": config_sha256, "results": results}
+        results[str(K)] = evaluate(attacked, corpus, K, features_list, seed, recipes, config, B=bootstrap)
+    out = {"format": FORMAT, "assumptions": ASSUMPTIONS, "seed": seed, "bootstrap": bootstrap,
+           "n_sessions": len(obs_paths), "n_trials": len(trials), "alignment": merge_alignments(alignments), "n_ime_shadow_rows_unused": n_shadow, "features": dict(
+               (f, {"timing": FEATURE_SETS[f][0], "runs": FEATURE_SETS[f][1]}) for f in features_list),
+           "params": {"pause_ms": PAUSE_MS, "tau_ms": TAU_MS, "w_time": W_TIME, "phase_step_ms": PHASE_STEP_MS},
+           "corpus_sha256": _sha_file(corpus_path), "recipes_sha256": recipes_sha256,
+           "config_sha256": config_sha256, "results": results}
+    if skip_scenarios:
+        out["skipped_scenarios"] = skipped
+    return out
 
 
 def render(result):
@@ -1187,6 +1206,32 @@ def selftest():
                           and "by_scenario" in js["results"]["10"][f] for f in feats))
             check("command line: the attack works (all features, K=10, accuracy above chance)",
                   js["results"]["10"]["all"]["acc"] > js["results"]["10"]["all"]["chance"], str(js["results"]["10"]["all"]))
+            check("command line: without --skip-scenario the output has no skipped_scenarios (the frozen format)",
+                  "skipped_scenarios" not in js)
+        out_s = new_out()
+        rc_s = main(["--obs", obs_p] + base + ["--out", out_s, "--skip-scenario", "S2"])
+        check("command line: --skip-scenario S2 exits 0", rc_s == 0, str(rc_s))
+        if rc_s == 0:
+            with open(out_s, "rb") as f:
+                js_s = json.loads(f.read().decode("utf-8"))
+            r_s = js_s["results"]["10"]["all"]
+            check("command line: --skip-scenario S2 leaves the 12 S2 trials out of the attack and states them, "
+                  "while n_trials and the alignment still cover the whole plan",
+                  js_s["skipped_scenarios"] == {"S2": 12} and js_s["n_trials"] == 36 and r_s["n"] == 24
+                  and r_s["n_skipped"] == 0 and "S2" not in r_s["by_scenario"]
+                  and sorted(r_s["by_scenario"]) == ["S1", "S3"], str((js_s.get("skipped_scenarios"), r_s["n"])))
+        out_z = new_out()
+        rc_z = main(["--obs", obs_p] + base + ["--out", out_z, "--skip-scenario", "S12"])
+        skipped_z = None
+        if rc_z == 0:
+            with open(out_z, "rb") as f:
+                skipped_z = json.loads(f.read().decode("utf-8")).get("skipped_scenarios")
+        check("command line: --skip-scenario of a scenario absent from the plan exits 0 and states zero",
+              rc_z == 0 and skipped_z == {"S12": 0}, str((rc_z, skipped_z)))
+        check("command line: --skip-scenario rejects a name that is not a scenario (exit 2)",
+              main(["--obs", obs_p] + base + ["--out", new_out(), "--skip-scenario", "s2"]) == 2)
+        check("command line: --skip-scenario rejects the same scenario twice (exit 2)",
+              main(["--obs", obs_p] + base + ["--out", new_out(), "--skip-scenario", "S2", "--skip-scenario", "S2"]) == 2)
         rc_m = main(["--obs", mk_p] + base + ["--out", new_out(), "--markers-in-obs"])
         check("command line: --markers-in-obs skips the marker presses and succeeds", rc_m == 0, str(rc_m))
         check("command line: marker presses without --markers-in-obs stop the run (exit 2)",
@@ -1554,6 +1599,10 @@ def main(argv):
     ap.add_argument("--ime-toggle-in-obs", action="store_true",
                     help="the presses of the IME toggle keys (ime_on, ime_off) appear in the observation, as "
                          "category other (default: they do not)")
+    ap.add_argument("--skip-scenario", action="append", default=[], metavar="S",
+                    help="leave every trial of scenario S (such as S12) out of the attack, whatever its phrase; may "
+                         "be given more than once (default: none). Added by deviation D8; without it the output is "
+                         "that of the frozen code")
     ap.add_argument("--out")
     args = ap.parse_args(argv)
     if args.selftest:
@@ -1571,8 +1620,12 @@ def main(argv):
         bad = [x for x in feats if x not in FEATURE_SETS]
         if not feats or bad:
             raise ValueError("--features must be among %s" % "/".join(FEATURE_SETS))
+        if any(re.match(r"S[1-9][0-9]*\Z", s) is None for s in args.skip_scenario):
+            raise ValueError("--skip-scenario must name a scenario such as S12")
+        if len(set(args.skip_scenario)) != len(args.skip_scenario):
+            raise ValueError("--skip-scenario names a scenario twice")
         result = run(args.obs, args.plan, args.corpus, args.recipes, args.config, Ks, feats, args.seed,
-                     args.markers_in_obs, args.ime_toggle_in_obs, args.bootstrap)
+                     args.markers_in_obs, args.ime_toggle_in_obs, args.bootstrap, tuple(args.skip_scenario))
         # --out is created fresh (never overwritten), and inside the try, so that an existing file or another
         # OSError is reported the same way as any other usage error instead of an uncaught Traceback.
         with open(args.out, "xb") as f:
@@ -1583,6 +1636,9 @@ def main(argv):
     al = result["alignment"]
     print("closed-set identification: %d trials scored (%d unscored in %d blocks), K = %s, written to %s" % (
         result["n_trials"], al["n_trials_unscored"], al["n_blocks_unscored"], ",".join(str(k) for k in Ks), args.out))
+    if "skipped_scenarios" in result:
+        print("left out of the attack by --skip-scenario: %s" % ", ".join(
+            "%s %d" % (s, n) for s, n in sorted(result["skipped_scenarios"].items())))
     return 0
 
 

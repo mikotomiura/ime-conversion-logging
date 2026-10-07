@@ -1,0 +1,424 @@
+{
+ "alignment": {
+  "n_blocks": 126,
+  "n_blocks_unscored": 0,
+  "n_presses": 103236,
+  "n_presses_unassigned": 0,
+  "n_trials": 3150,
+  "n_trials_unscored": 0,
+  "unscored_block_ids": [],
+  "unscored_by_scenario": {},
+  "unscored_by_speed": {},
+  "unscored_reason": "block_mismatch"
+ },
+ "data": {
+  "phrase": {
+   "n_dropped_duplicate_readings": 2,
+   "n_eval_phrases": 360,
+   "n_excluded_kana_layout": 225,
+   "n_no_typed_reading": 0,
+   "n_other_phrases": 2345,
+   "n_train_phrases": 1438,
+   "split_warnings": []
+  },
+  "work": {
+   "n_dropped_duplicate_readings": 0,
+   "n_eval_phrases": 450,
+   "n_excluded_kana_layout": 225,
+   "n_no_typed_reading": 0,
+   "n_other_phrases": 2198,
+   "n_train_phrases": 1350,
+   "split_warnings": []
+  }
+ },
+ "params": {
+  "eval_fraction": 0.2,
+  "ime_toggle_in_obs": false,
+  "markers_in_obs": true,
+  "n": 3,
+  "smoothing": "wb",
+  "split_seed": 20260929
+ },
+ "splits": {
+  "phrase": {
+   "count": {
+    "K0": {
+     "cer": 0.942045,
+     "cer_ci": [
+      0.937336,
+      0.946851
+     ],
+     "n_undecodable": 0
+    },
+    "K1": {
+     "cer": 0.916066,
+     "cer_ci": [
+      0.908791,
+      0.923557
+     ],
+     "n_undecodable": 0
+    },
+    "baseline": {
+     "K0": {
+      "cer": 1.34897,
+      "cer_ci": [
+       1.291768,
+       1.412332
+      ]
+     },
+     "K1": {
+      "cer": 1.328756,
+      "cer_ci": [
+       1.270052,
+       1.393787
+      ]
+     }
+    },
+    "gain": {
+     "K0": {
+      "gain": 0.406925,
+      "gain_ci": [
+       0.349187,
+       0.471041
+      ]
+     },
+     "K1": {
+      "gain": 0.41269,
+      "gain_ci": [
+       0.355684,
+       0.470568
+      ]
+     }
+    },
+    "n": 580,
+    "params": {
+     "beam": 8,
+     "bootstrap": 2000,
+     "conf": 0.95,
+     "length_info": "count",
+     "seed": 20260929
+    },
+    "shuffled": {
+     "K0": {
+      "cer": 1.090703,
+      "cer_ci": [
+       1.056851,
+       1.12675
+      ],
+      "gain": 0.258267,
+      "gain_ci": [
+       0.212798,
+       0.307824
+      ],
+      "gain_vs_shuffled": 0.148658,
+      "gain_vs_shuffled_ci": [
+       0.116331,
+       0.186048
+      ]
+     },
+     "K1": {
+      "cer": 1.205771,
+      "cer_ci": [
+       1.147852,
+       1.267028
+      ],
+      "gain": 0.122984,
+      "gain_ci": [
+       0.07721,
+       0.173027
+      ],
+      "gain_vs_shuffled": 0.289706,
+      "gain_vs_shuffled_ci": [
+       0.235939,
+       0.349112
+      ]
+     }
+    }
+   },
+   "true": {
+    "K0": {
+     "cer": 0.942045,
+     "cer_ci": [
+      0.937336,
+      0.946851
+     ],
+     "n_undecodable": 0
+    },
+    "K1": {
+     "cer": 0.916066,
+     "cer_ci": [
+      0.908791,
+      0.923557
+     ],
+     "n_undecodable": 0
+    },
+    "baseline": {
+     "K0": {
+      "cer": 0.96685,
+      "cer_ci": [
+       0.963271,
+       0.970503
+      ]
+     },
+     "K1": {
+      "cer": 0.969048,
+      "cer_ci": [
+       0.96495,
+       0.972745
+      ]
+     }
+    },
+    "gain": {
+     "K0": {
+      "gain": 0.024804,
+      "gain_ci": [
+       0.019395,
+       0.030329
+      ]
+     },
+     "K1": {
+      "gain": 0.052983,
+      "gain_ci": [
+       0.044136,
+       0.061541
+      ]
+     }
+    },
+    "n": 580,
+    "params": {
+     "beam": 8,
+     "bootstrap": 2000,
+     "conf": 0.95,
+     "length_info": "true",
+     "seed": 20260929
+    },
+    "shuffled": {
+     "K0": {
+      "cer": 1.090703,
+      "cer_ci": [
+       1.056851,
+       1.12675
+      ],
+      "gain": -0.123853,
+      "gain_ci": [
+       -0.159076,
+       -0.090632
+      ],
+      "gain_vs_shuffled": 0.148658,
+      "gain_vs_shuffled_ci": [
+       0.116331,
+       0.186048
+      ]
+     },
+     "K1": {
+      "cer": 1.205771,
+      "cer_ci": [
+       1.147852,
+       1.267028
+      ],
+      "gain": -0.236723,
+      "gain_ci": [
+       -0.29797,
+       -0.182827
+      ],
+      "gain_vs_shuffled": 0.289706,
+      "gain_vs_shuffled_ci": [
+       0.235939,
+       0.349112
+      ]
+     }
+    }
+   }
+  },
+  "work": {
+   "count": {
+    "K0": {
+     "cer": 0.941893,
+     "cer_ci": [
+      0.937723,
+      0.945802
+     ],
+     "n_undecodable": 0
+    },
+    "K1": {
+     "cer": 0.911159,
+     "cer_ci": [
+      0.903117,
+      0.9186
+     ],
+     "n_undecodable": 0
+    },
+    "baseline": {
+     "K0": {
+      "cer": 1.350797,
+      "cer_ci": [
+       1.292407,
+       1.41095
+      ]
+     },
+     "K1": {
+      "cer": 1.328946,
+      "cer_ci": [
+       1.272618,
+       1.387895
+      ]
+     }
+    },
+    "gain": {
+     "K0": {
+      "gain": 0.408904,
+      "gain_ci": [
+       0.347912,
+       0.468481
+      ]
+     },
+     "K1": {
+      "gain": 0.417787,
+      "gain_ci": [
+       0.359062,
+       0.479684
+      ]
+     }
+    },
+    "n": 727,
+    "params": {
+     "beam": 8,
+     "bootstrap": 2000,
+     "conf": 0.95,
+     "length_info": "count",
+     "seed": 20260929
+    },
+    "shuffled": {
+     "K0": {
+      "cer": 1.072831,
+      "cer_ci": [
+       1.047199,
+       1.099477
+      ],
+      "gain": 0.277966,
+      "gain_ci": [
+       0.230522,
+       0.326109
+      ],
+      "gain_vs_shuffled": 0.130938,
+      "gain_vs_shuffled_ci": [
+       0.104959,
+       0.159974
+      ]
+     },
+     "K1": {
+      "cer": 1.186802,
+      "cer_ci": [
+       1.142761,
+       1.232318
+      ],
+      "gain": 0.142144,
+      "gain_ci": [
+       0.101688,
+       0.185442
+      ],
+      "gain_vs_shuffled": 0.275644,
+      "gain_vs_shuffled_ci": [
+       0.232281,
+       0.320539
+      ]
+     }
+    }
+   },
+   "true": {
+    "K0": {
+     "cer": 0.941893,
+     "cer_ci": [
+      0.937723,
+      0.945802
+     ],
+     "n_undecodable": 0
+    },
+    "K1": {
+     "cer": 0.911159,
+     "cer_ci": [
+      0.903117,
+      0.9186
+     ],
+     "n_undecodable": 0
+    },
+    "baseline": {
+     "K0": {
+      "cer": 0.9674,
+      "cer_ci": [
+       0.964215,
+       0.970308
+      ]
+     },
+     "K1": {
+      "cer": 0.963975,
+      "cer_ci": [
+       0.959934,
+       0.967799
+      ]
+     }
+    },
+    "gain": {
+     "K0": {
+      "gain": 0.025507,
+      "gain_ci": [
+       0.020138,
+       0.030745
+      ]
+     },
+     "K1": {
+      "gain": 0.052817,
+      "gain_ci": [
+       0.043987,
+       0.061855
+      ]
+     }
+    },
+    "n": 727,
+    "params": {
+     "beam": 8,
+     "bootstrap": 2000,
+     "conf": 0.95,
+     "length_info": "true",
+     "seed": 20260929
+    },
+    "shuffled": {
+     "K0": {
+      "cer": 1.072831,
+      "cer_ci": [
+       1.047199,
+       1.099477
+      ],
+      "gain": -0.10543,
+      "gain_ci": [
+       -0.134024,
+       -0.078449
+      ],
+      "gain_vs_shuffled": 0.130938,
+      "gain_vs_shuffled_ci": [
+       0.104959,
+       0.159974
+      ]
+     },
+     "K1": {
+      "cer": 1.186802,
+      "cer_ci": [
+       1.142761,
+       1.232318
+      ],
+      "gain": -0.222827,
+      "gain_ci": [
+       -0.266358,
+       -0.181801
+      ],
+      "gain_vs_shuffled": 0.275644,
+      "gain_vs_shuffled_ci": [
+       0.232281,
+       0.320539
+      ]
+     }
+    }
+   }
+  }
+ }
+}

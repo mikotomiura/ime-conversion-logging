@@ -1,0 +1,476 @@
+% Section 5 of the manuscript: the validation method.
+% Every statement of this section follows the frozen registration (experiment/preregistration.md, with the
+% Windows addendum in its section 10) and the record of deviations (experiment/deviations.md). Values that are
+% read from the run manifests after the measurement are marked with \tbd.
+
+\section{Validation method}
+\label{sec:method}
+
+The logger was evaluated by comparing its rows with sessions assembled from the calls that a reference input field
+received from the input method, while a program typed according to a plan whose intent was known. The protocol, the
+analysis code and its settings were registered and frozen before any measurement: first for the two macOS cells
+\citep{prereg-macos}, then, in an addendum frozen before the first Windows measurement, for the Windows cell
+\citep{prereg-windows}. The registrations call the logger the observer. The study estimates and tests no hypothesis;
+the only rule that turns an estimate into a decision is the near-chance rule of the recoverability study
+(Section~\ref{sec:recoverability}). This section describes the protocol as registered and names a deviation where it
+applies; Section~\ref{sec:deviations} lists every departure from it.
+
+\subsection{Overview}
+\label{sec:method-overview}
+
+Each trial produced four records (Figure~\ref{fig:components}). The \emph{plan} held, for every trial, its scenario,
+speed, phrase, intended outcome and key schedule. The \emph{oracle} recorded every key press as the executor sent it,
+together with the block markers and the beginning and end of each trial. The \emph{ground-truth log} recorded the
+calls that the reference input field received from the input method, with their kinds, lengths and times but no
+text. The \emph{observation log} was the output of the logger under test. On macOS a fifth record was derived from
+the oracle and the plan alone: the rows that the logger's rules specify for the presses that were sent
+(Section~\ref{sec:method-prediction}). Ground-truth sessions were assembled from the ground-truth log by fixed rules
+(Section~\ref{sec:method-reference}) and matched to the logger's session rows (Section~\ref{sec:method-analysis}).
+
+\input{figures/components}
+
+\subsection{Cells, machines and settings}
+\label{sec:method-cells}
+
+The study had three cells. Two were on macOS: the standard Japanese input method of the system with live conversion
+on, and the same input method with live conversion off. They were measured on one Apple Silicon computer with a JIS
+keyboard and Romaji input, under macOS 27.0.1 (build 26A434; Romaji input method version 6.3), the same for every
+macOS run. The third was on Windows: the Microsoft
+input method (Japanese, Romaji input) with its default settings, measured on an x86-64 tablet computer (Intel Core
+i5-1135G7, 8 GB of memory) with a JIS keyboard under Windows 11 Home 25H2 (build 26200.9457, input method
+10.0.26100.9278). These versions differed from those of the Windows pilot (build 26200.8875, input method
+10.0.26100.8875), so, as the addendum requires, the 39-trial check plan of the pilot was run first on the measuring
+machine; every trial produced the session its plan intends (39 of 39), and the cell was measured. On both systems the
+predictive candidates were left at their default (shown). The registration asks for each machine to run on mains power,
+with automatic updates, network time synchronisation, sleep, the screen lock and the screen saver turned off; the run
+manifests do not record these settings. What else ran on each machine is reported with the runs
+(Section~\ref{sec:results-attempts}); on Windows the records show one automatic update during the completed run. On
+Windows the runs were started from a terminal without administrator rights. The runs on both systems were started and
+monitored by an AI coding assistant under the author's instructions (Declarations). The learning of the input method
+was not reset at any point: no method of resetting it was found on macOS, and the Microsoft input method offers no
+command that clears its input history. The run manifest of every run records the versions of the system, the input
+method and the programs, and the outcome of every check of the front window.
+
+On each machine the cells were measured in a fixed order (on macOS, live conversion on, then off), followed by the two
+conditions of the runtime-cost study (Section~\ref{sec:cost}), so that the replay used for the runtime cost added no
+learning to the input method before the agreement cells were measured. The registration asks for the runs to be made
+on separate nights; on macOS each run was started as soon as the check of the one before it was done, so the runs
+followed one another without overlapping (deviation D6). On Windows the cell was measured through the night and the
+morning, the idle condition in the afternoon and evening of the same day and the working condition in the following
+night, again in the registered order and without overlapping (deviation D9).
+
+\subsection{Reference input fields and ground truth}
+\label{sec:method-reference}
+
+A reference input field is a minimal application that records what the input method tells it, and only that. Both
+fields record times on the wall clock and on a monotonic clock, and neither records any text. The reference was placed
+at this software layer because the question of the study is agreement with the calls that an application receives
+from the input method, and no external device observes these calls. An external device, the usual standard for
+validating timing instruments, could time the keys, the candidate window or the marked text on the screen; none of
+these was done.\footnote{The registration gives the reason more broadly: that an external timing device would time
+the path of the keys, not the conversion.} The comparison is therefore between two software records on the same
+machine, not against an external standard: the physical path of the keys and the display are not exercised, no
+external clock is used, and the reference is the sessions that one kind of field received, not the input method's
+internal state (Section~\ref{sec:limitations}).
+
+\paragraph{macOS.} The field implements the text-input client protocol of the macOS text system and records every call
+that the input method makes to it: marked text set (with its length and the selected range), text inserted (with its
+length), marked text accepted, a request for the position of the text, a command, each key-down it receives (key code
+only) and each change of focus. It empties its text after every commit, so that no trial sees the text of an earlier
+one. Sessions were assembled from its log by the following rules. A session opens at the first call that sets marked
+text of positive length. It closes as committed at a call that inserts text of positive length, or that accepts the
+marked text, when no call setting marked text of positive length follows within 50~ms. It closes as cancelled at a
+call that sets marked text of length zero, when no call inserting text of positive length follows within 50~ms. With
+live conversion the input method commits the head of a reading while the rest is still being typed; the 50~ms window
+keeps such a commit inside its session. In the calibration pilot the following call came 0.5 to 7.9~ms after such a
+commit, and every window between 10 and 900~ms gave the same sessions. The outcome of a session is the reason it
+finally closed, and each session records how many of its commits were followed by a continuation.
+
+\paragraph{Windows.} The field is a window with a rich-edit control that is a client of the Text Services Framework.
+After each edit it reads the compositions of its document and records the start of a composition, its length after
+each edit, its end with the length of the committed text (zero when nothing was committed, and no length when the
+field closes a composition that it infers from a change of the composition's range or cannot read the committed
+length), the beginning and end of the input method's user-interface elements with their kind, each change of focus,
+and a key-down (key code only) for each key that the input method does not consume. A session runs from the start of
+a composition to its end; it is committed when the committed length is positive and cancelled otherwise; it showed a
+candidate window when the beginning of a user-interface element of the kind \emph{candidate} falls within it. Of the
+two reference fields built for Windows, this one was chosen in the calibration pilot before any row of the logger was
+read: the Microsoft input method is a text service of the framework, so its client receives the composition directly,
+whereas a field that receives the input method's messages does so through a compatibility layer of the system; and
+the latter field received the key press that switches the input method on before every block as a key-down, which
+the rule on presses from outside (Section~\ref{sec:method-checks}) does not allow. The two fields also committed at
+different points in one scenario of the pilot: in three trials of S7 the chosen field committed when the right arrow
+was pressed past the last segment, whereas the other kept the composition until Return, so the kind of field affects
+the reference.
+
+\paragraph{Assignment and definitions.} A session is assigned to the trial that it overlaps most in wall-clock time.
+Its true navigation count is the number of arrow presses that the oracle records as sent for that trial within the
+session. A session is counted as lasting 20~s or more when its duration reaches 20{,}000~ms. Each system's logger
+defines a session differently (Section~\ref{sec:logger}), so the ground truth was formed under the definition of the
+cell's system: on macOS every session, and on Windows the sessions that showed a candidate window. The Microsoft input
+method opens its prediction window, which the field reports as a candidate element, while the reading is typed, so on
+Windows this definition holds nearly all sessions and does not mean that the reading was converted. The analysis was
+also run under the definition common to both systems (every session); whether the two definitions hold the same
+sessions is reported per cell, and where they do not, how many sessions the definition of the analysis leaves out and
+the detection under the common definition, per stratum as ranges and pooled, are also reported (deviation D12, made
+after the results had been seen).
+
+\subsection{Scenarios, speeds and plans}
+\label{sec:method-plans}
+
+\paragraph{Scenarios.} Fifteen scenarios were designed to cover the ways a conversion can begin and end
+(Table~\ref{tab:scenarios}). Scenario S9 (choosing a candidate with the mouse) had no procedure, because no means of
+locating the candidate window for a scripted click was established; it was not run and is reported as not evaluated.
+Scenario S11 (conversion without Space under live conversion) was run only with live conversion on. A cell therefore
+had 14 scenarios (macOS, live conversion on) or 13 (macOS, live conversion off; Windows). With live conversion on, S3
+and S11 share a procedure; they were kept apart because they were designed to test different behaviours of the input
+method, and each is reported with its own trials. The procedures of each cell were fixed in its calibration pilot: with
+live conversion off a single Return commits and a single Escape cancels a reading that was not converted, and on
+Windows a single Return commits, a reading converted into several segments is cancelled only by a third Escape (S4),
+a digit chooses a candidate without committing it (so S8 ends with a Return), and the input mode is switched with the
+virtual keys that turn the input method on and off (S14).
+
+\begin{table}[t]
+\caption{Scenarios and their procedures (macOS, live conversion on). The last column gives the differences in the other
+two cells}
+\label{tab:scenarios}
+\begin{tabular}{L{0.08}L{0.52}L{0.40}}
+\toprule
+& Procedure & Live conversion off; Windows \\
+\midrule
+S1 & Type the reading, Space, pause, Return twice (commit) & One Return \\
+S2 & Type the reading, Space two to five times (cycling the candidates), pause, Return twice & Windows: one Return \\
+S3 & Type the reading, Return (commit without conversion) & \\
+S4 & Type the reading, Space, pause, Escape twice (cancel with the candidate window shown) & Windows: three Escapes \\
+S5 & Type the reading, Escape four times (cancel without conversion) & One Escape \\
+S6 & Type the reading, Backspace once per kana typed (delete everything) & \\
+S7 & Type the reading, Space, right arrow one to three times, pause, Return twice & One Return \\
+S8 & Type the reading, Space twice, pause, a digit choosing a candidate, Return & \\
+S9 & Choose a candidate with the mouse & Not run in any cell \\
+S10 & Type the first half of the reading, Tab (a predictive candidate), pause, Return & \\
+S11 & Type the reading, Return (live conversion converts without Space) & Not run \\
+S12 & Type a kana string with the kana keyboard layout, Space, Return twice & One Return \\
+S13 & Type the reading, Space, wait 21~s, Return twice (a session over 20~s) & One Return \\
+S14 & Type the reading, Space, switch the input mode off and on & Windows: with the virtual keys \\
+S15 & Type the reading, Space, bring another application to the front for 1~s, return, Return twice & One Return \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Speeds and timing.} The interval between key presses was drawn from a log-normal distribution with a
+median of 480~ms (slow), 240~ms (middle) or 120~ms (fast) and a log-scale standard deviation of 0.3. The medians
+follow the per-participant mean inter-key intervals reported by \citet{dhakal2018} for the slowest tenth of their
+participants, for all participants and for the fastest tenth; those values come from the transcription typing of
+English sentences and were used to span the range of typing speeds, not as estimates of Japanese typing. Intervals
+were drawn independently of the keys, and an interval shorter than the key hold plus 1~ms (61~ms) was raised to it,
+which affected about 1\% of the intervals at the fast level. Each key was held for 60~ms, and no two presses
+overlapped. In scenarios with a pause before the decisive key, the pause (think time) was drawn per trial from a
+log-uniform distribution between 0.2 and 20~s, so that sessions fell on both sides of the logger's 20-second cut-off.
+The candidate index was at most 4 (S2, S8), at most three arrow keys were pressed (S7), and the kana strings of S12,
+typed with the kana keyboard layout, had four to eight characters.
+
+\paragraph{Phrases.} The readings were taken from a corpus of 1{,}800 phrases, 150 from each of 12 public-domain works
+in modern orthography obtained from Aozora Bunko \citep{aozora}. Each phrase is a run of clauses of a sentence whose
+reading, assigned with the morphological analyser Sudachi \citep{takaoka2018} (SudachiPy 0.7.0 with the dictionary
+sudachidict\_core 20260723.1, split mode~C), has 6 to 30 kana (median 16). Outside S12 the readings were typed in
+Romaji; the reading assigned by the analyser, not the original text, is what was typed, so an incorrect reading
+changes nothing in the evaluation.
+
+\paragraph{Plans.} Each cell had one plan, generated from the settings, the cell's procedures, the corpus and the seed
+20260929. A block held 25 trials of one speed. The order of the trials within each speed, the cut into blocks, the
+order of the blocks and the order of the scenarios within a block were determined by the seed, and each trial drew its
+phrase, key intervals, think time, candidate index and arrow count from a random state derived from the seed and the
+trial's identifier. With 75 trials per scenario and speed, the plans held 3{,}150 trials in 126 blocks (live
+conversion on), 2{,}925 trials in 117 blocks (live conversion off) and 2{,}925 trials in 117 blocks (Windows). The
+plans were generated before each freeze on two versions of Python with byte-identical results, and their SHA-256 was
+registered; a run whose plan had another SHA-256 was not analysed.
+
+\paragraph{Precision plan.} The number of trials was chosen for the precision of the per-stratum proportions: near a
+proportion of 0.95 the half-width of a 95\% Wilson interval is about 5 percentage points with 75 trials, which locates
+such a proportion but does not guarantee that 0.95 and 0.90 are told apart. The number was not revised when the
+prediction later showed how many trials the 20-second cut-off sets aside (Section~\ref{sec:method-analysis}); the
+strata of the primary scope are therefore smaller. Outside S6 and S13 the smallest holds 31 trials on macOS and 32 on
+Windows, which locate a proportion near 0.95 to within about 9 points; S13 is designed to exceed the cut-off and has
+no trial in the primary scope, and S6, whose session Backspace keeps open, keeps as few as 3 trials at the slow speed
+on macOS and 30 on Windows. Because the trials of a stratum fall into
+several blocks that share the state of the input method, the design effect of the blocks within a stratum can reach
+about 3.4, which widens an interval up to about 1.8 times; the Wilson intervals of pooled proportions ignore this and
+are read as lower bounds of the uncertainty.
+
+\paragraph{Running a cell.} The runner started the logger and then the reference input field. Before every block it
+brought the field to the front, confirmed that the field was in front, and switched the input method on (with the
+kana key on macOS and with the virtual key that turns the input method on in Windows). A block began with a marker of
+four arrow presses (left, right, left, right) 150~ms apart, which both logs record and which is longer than any run of
+arrow presses inside a trial; trials were separated by 1{,}000~ms. After the last block both programs ran for another
+second before they were stopped. A run was aborted if a check of the front window failed or if either program stopped.
+
+\paragraph{Executor.} The executor sent the planned presses as system key events (on Windows through the
+\texttt{SendInput} interface) and recorded each press as sent, with its wall-clock and monotonic times taken
+immediately before dispatch. It refused to start if either clock resolved more coarsely than 1~ms.
+
+\subsection{Calibration pilots and blinding}
+\label{sec:method-pilots}
+
+A calibration pilot was run on each measuring machine before the freeze that covered it, with provisional settings
+(fewer trials per scenario and speed, other seeds and, on macOS, other key-interval medians). On macOS six runs with
+468 trials, about 87 minutes in all, were made; on Windows seven runs with 429 trials in 27 blocks, three with each of
+the two reference fields and one check of the tools. The pilots fixed the procedures of each cell, the ground-truth
+rules (including the 50~ms window), the settings of the stopping rule (Section~\ref{sec:method-checks}) and, on Windows,
+the choice of the reference field. In the second macOS pilot the assembled sessions agreed with the plan's intent in
+124 of 126 trials with live conversion on and 117 of 117 with it off, and in 39 of 39 trials of a check of the
+procedures for live conversion off; on Windows, with the corrected procedures, every trial of the two check runs with
+the chosen field produced the session its plan intends (39 of 39 each).
+
+The logger's session rows were never read in the pilots. Before any analysis of a pilot run, each observation log was
+split into its key rows, which were analysed, and its session rows, which were written to a sealed file padded to a
+multiple of 1~MiB so that not even their number could be inferred. The key rows that were read are, on macOS, the very
+input from which the logger infers its sessions; the blinding withheld the logger's output, not its input. The
+ground-truth rules, the procedures, the analysis code and its settings were fixed without reference to any session row
+of the logger, and no session row of the measurement was read before the freeze. The sealed rows are opened only to be
+deposited with the pilots' raw logs (Section~\ref{sec:dataset}) and are not analysed.
+
+\subsection{The rows the logger is specified to write}
+\label{sec:method-prediction}
+
+On macOS the logger's rules are deterministic functions of the key presses, so the rows it is specified to write can
+be computed from the oracle and the plan. A program applied the rules, as written in the logger's source (the mapping
+of key codes, the order in which a key updates the input-mode state and then drives the session, the transitions of a
+session and the 20-second cut-off), to every press in the order and at the times that the oracle records, and also
+modelled the runner's kana press and the marker presses. Its self-test compares its rule tables with the logger's
+source. The result marks each trial as \emph{long} (a press of the trial entered a session that is cut off at 20~s),
+\emph{carried out} (a session that the trial started does not end in it), \emph{received carry} (a press of the trial
+entered a session started earlier) or \emph{closing key in reading} (the reading contains a key that closes a session
+under the logger's rules, such as the minus, comma or period key).
+
+The prediction separates two sources of disagreement. Three comparisons were computed with the same matching and the
+same measures: ground truth against observation (the primary comparison), ground truth against prediction (how well
+the rules, carried out exactly, describe the sessions of the reference field) and prediction against observation
+(whether the logger carries out its rules). The tables call them reference vs.\ logger, reference vs.\ specified rows
+and specified rows vs.\ logger, the specified rows being the rows of the prediction. The Windows logger follows the
+input method's windows, which the presses do not determine, so no prediction applies to it, and only the primary
+comparison was computed for the Windows cell.
+
+\subsection{Checks of the instruments and the stopping rule}
+\label{sec:method-checks}
+
+\paragraph{Plan against ground truth.} For every trial the assembled sessions were compared with the plan's intent and
+classified as agreeing or as one of six types of disagreement (no session, an unexpected session, several sessions, a
+commit where a cancellation was planned, a cancellation where a commit was planned, a session open at the end). These
+trials were kept in the evaluation: removing them would keep only the trials in which the input method behaved as
+planned. Like the other checks of this section, this one is reported before the estimates of agreement and is used to
+read them (for example, the observation rows of trials in which the reference lost the focus are reported separately,
+so that a failure of the reference is not read as one of the logger); no check is used to exclude trials or to adjust
+values.
+
+\paragraph{Delivery.} A delivery report compared, press by press, the oracle with the plan, with the key rows of
+presses in the observation and with the key-downs of the reference log: the delay of each press against the schedule,
+the fraction of sent presses that reached each log, the rows without a sent press, and the timing of the rows. For
+the timing, a trial was used when the rows of presses within its window (from 20~ms before its start to 300~ms after
+its end) equalled its presses other than the input-mode keys; the $i$-th row was paired with the $i$-th press, the
+delay of a row was its wall-clock time minus the executor's wall-clock time of dispatch, and the interval error was
+the difference between consecutive rows minus that between the corresponding presses. Each was summarised per speed by
+its number, mean, minimum, 5th percentile, median, 95th percentile and maximum, and the trials that could not be
+paired were counted. The logger also writes a row for each key release, on both systems; no analysis uses these rows,
+and the times of releases enter no measure.
+
+\paragraph{Stopping rule.} Each cell was run once to completion, and a run that was aborted was repeated from the
+start with the same plan, up to three attempts. A completed run also counted as aborted when its plan was not the
+registered plan of its cell, when the delivery report refused its logs, when its reference log held key presses that
+neither the executor nor the procedure explained (presses from outside), or when, within a loss of focus of the
+reference field, the observation held a key row that no sent press explained. The rules on presses from outside and on
+losses of focus were closed rules computed from the run's logs alone, with settings fixed from the pilots. On Windows
+the reference field receives only the keys that the input method does not consume, so a run of the Windows cell also
+counted as aborted when, in any segment of the run (the time before the first block, and each block), the key rows of
+the observation that no sent press explained exceeded the marker presses of the segment (deviation D4). These rules
+exist so that no person's typing enters the data; they were applied right after each run, before any analysis, and
+every attempt is reported with its figures (Section~\ref{sec:results-attempts}). On Windows one attempt was stopped
+from outside the runner and was counted as aborted, and one start from a terminal with administrator rights, which the
+addendum excludes, was refused by the runner before its first trial and was not counted; this is recorded as deviation
+D7.
+
+\paragraph{Marker times.} The times at which the executor, the observation and the reference field recorded the
+same block-marker presses were compared in every run and are reported. Their differences combine the offsets of the
+processes' clocks with the delays of the paths by which each record receives a press, and the two cannot be separated
+without an external clock. They were not used to correct the matching: the duration
+error is a difference of durations, and a pair needs an overlap that tolerates a shift of up to a third of the length
+of two intervals of equal length.
+
+\subsection{Analysis of agreement}
+\label{sec:method-analysis}
+
+\paragraph{Exclusions.} Before matching, three kinds of trial were excluded and counted by reason and stratum: trials
+after a step of the wall clock of more than 1{,}000~ms (to the end of the block), trials with a ground-truth session
+still open when the reference log ends, and trials overlapped by a ground-truth session that ran from one trial into
+another (a carry-over, which cannot be assigned to one trial). Observation rows were excluded with the trial they
+overlap most. Trials in which the input method did not do what the plan intended, rows with a duration of zero (which
+the logger writes when the wall clock steps back) and trials that the cut-off sets aside (below) were not excluded.
+
+\paragraph{Scopes.} From the prediction, a trial is long when its presses entered a session that the logger's rules cut
+off at 20~s; on Windows, where no prediction applies, a trial is long when the presses sent in it span at least 20~s
+(deviation D3). The primary scope (\emph{under the limit}) holds the trials that are not long. Results are also given
+over all trials and, for the cut-off, over the long trials alone. The scope is decided from what was sent, so it does
+not depend on the observation. An estimate in the primary scope is always given with the fraction of trials that the
+scope sets aside, the fraction excluded because a conversion ran from one trial into the next, and the estimate over
+all trials, in the text or in the supplement.
+
+\paragraph{Matching.} Sessions and observation rows were matched one to one in descending order of their intersection
+over union, among the pairs that reach 0.5. A row's interval is the span of its duration ending at the time the row
+was collected, which can be up to about 100~ms after the session ended; no offset or clock correction was applied. Among the items left unmatched, one session with two or more rows
+whose combined interval reaches the criterion is a split, and one row with two or more sessions is a merge; the rest
+are misses and false positives. A row lying at least half within a matched session is also counted toward a split,
+and a session lying at least half within a matched row toward a merge, without changing the primary pairing.
+
+\paragraph{Measures.} Question~1 (detection) is answered by recall (pairs over sessions), precision (pairs over rows),
+the split, merge, miss and false-positive rates, and F1. Question~2 (per-session agreement) is answered, over the
+pairs, by the error of the duration (the row's duration minus the session's), summarised by its median absolute value
+and by the Bland--Altman bias and 95\% limits of agreement \citep{blandaltman1986}; by the agreement of the
+abandonment flag with the session's outcome, as a two-by-two table, raw agreement and Cohen's kappa \citep{cohen1960}
+per speed; and by the exact agreement of the navigation count with the arrow presses sent. For the cut-off, the rows of
+20~s or more and the rows of the long trials are counted. Question~3 (per-text agreement) groups the trials of each
+block, in plan order, into texts of eight trials and computes four aggregates on both sides: the conversions per
+trial, the mean conversion time, the abandonment rate and the fraction of time spent converting. Agreement is reported
+per speed by the Bland--Altman bias and limits of the per-text difference and by the intraclass correlation of a
+two-way mixed model with the two methods as the only raters of interest, for absolute agreement of a single
+measurement: ICC(A,1) in the notation of \citet{mcgrawwong1996}, which has the same value as ICC(2,1) of
+\citet{shroutfleiss1979}, computed by the analysis code of the kit (\texttt{kit/analysis/stats.py}). The bias is also
+reported for three mixtures of the speeds, and three per-trial differences are reported per scenario and speed so that
+a reader can weight the scenarios differently. The bias, the limits of agreement, kappa and the ICC are the effect sizes
+of this study; it tests no hypothesis, so no statistical power is computed, and the numbers of trials were set by the
+precision plan above.
+
+\paragraph{Exploratory analysis.} Not registered: because the errors of the duration have long tails, the 2.5th and
+97.5th percentiles of the error and the fractions of pairs within 100~ms and within 1~s are reported for the pairs of
+the primary comparison, without intervals. A script runs the frozen analysis unchanged, takes its pairs and requires
+them to reproduce its number of pairs, bias and median absolute error at every speed before it computes these figures.
+
+\paragraph{Intervals and wording.} The primary estimates are given per cell, scenario and speed. Proportions carry
+95\% Wilson intervals \citep{wilson1927}. Continuous measures, the limits of agreement, kappa and the ICC carry 95\%
+percentile bootstrap intervals \citep{efron1979} from 2{,}000 resamples of whole blocks \citep{cameron2008}, because
+the trials of a block share the state of the input method. Pooled proportions carry Wilson intervals that ignore this
+clustering and are read as lower bounds of the uncertainty. A value that cannot be computed is reported as missing with
+its reason, never as zero; this includes an ICC whose reference has the same value in every text, which is zero
+whatever the logger writes, or undefined if the logger writes that same value in every text too (deviation D11, made
+after the results had been seen). Synthetic input has no natural mix of scenarios, so a pooled value is labelled as
+pooled and is not an estimate of accuracy in natural typing. No threshold of adequate agreement was set,
+and the estimates are described without evaluative words. Apart from the deviations (Section~\ref{sec:deviations}),
+the one analysis not described in the registration is the exploratory analysis above, and it is labelled as such; the
+comparisons between the cells or between speeds that the discussion reads are labelled as exploratory there.
+
+\paragraph{Reproducibility.} The analyses were run from exports of the freezing tags: the registered analysis of
+questions 1 to 3 with the matching code of the first change of deviation D10, which leaves the results of the frozen
+code unchanged, the corrected analysis with its second change, and the closed-set attack with the switch of deviation
+D8; each of these replaces one file of the export. Before any statistic, the analysis checked the freeze marks, the
+SHA-256 of every log against its run manifest, the content-free format of every log, and the plan of every run, and it
+refused a run that the stopping rule catches. The result files record the SHA-256 of the configuration, the rules,
+every manifest and every log. The supplement lists, for every result file, the code it was made with, and the records
+of the runs give the commands and the SHA-256 of every output. The result values of this article are copied from the
+result files, or computed from them (the ranges over the strata, the counts of strata and the reference's standard
+deviation between texts), by a script that is released with the code (\texttt{manuscript/tools/results\_tables.py}),
+and the figures of the records (the attempts, the checks of the runs, the deviations) are copied from the records of
+the runs (Declarations, Code availability). Statements that name strata or compare values, such as which strata set the
+ends of a range, are written by hand from the generated values and tables and were checked by hand against them.
+
+\subsection{Registration and deviations}
+\label{sec:deviations}
+
+The registration fixed the analysis in two ways. The configuration, the seed and the ground-truth rules are bound to the
+registered file by a SHA-256 written into it (the freeze mark), which the analysis recomputes and checks before it
+reads any data; the analysis code, the plan settings, the procedures and the corpus are fixed by the tag of the
+freezing commit. The protocol was frozen in two stages (Table~\ref{tab:freezes}), each registered on OSF Registries
+before the first measurement it covers \citep{prereg-macos,prereg-windows}. Each registration gives the 40-digit
+identifier of its freezing commit and the SHA-256 of the list of files exported from it, so that the frozen materials
+can be checked against the public repository. The addendum changed neither the configuration, the seed nor the
+ground-truth rules, so the freeze mark kept its value; it carries the date of the second freeze, because the
+addendum replaces the marks of the registered file.
+
+\begin{table}[t]
+\caption{The two freezes of the registration}
+\label{tab:freezes}
+\begin{tabular}{L{0.20}L{0.40}L{0.40}}
+\toprule
+& macOS cells & Windows addendum \\
+\midrule
+Frozen and registered & 2 October 2026 & 3 October 2026 \\
+Tag & \texttt{ime-observation-prereg-macos} & \texttt{ime-observation-prereg-windows} \\
+Files exported & 98 & 108 \\
+Registration & \url{https://osf.io/9nh7r} & \url{https://osf.io/4jwzn} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Twelve deviations were recorded (Table~\ref{tab:deviations}): five for the Windows cell before the Windows
+measurement, one for the macOS runs after their measurement and before their analysis (D6), two for the Windows runs
+after their measurement (D7, before the analysis of the cell, and D9), one for the closed-set attack of all three
+cells before that attack was run on any of them (D8), one for the analysis of questions 1 to 3 (D10), made when the
+frozen analysis stopped on the macOS cells and before any of their results of these questions was seen, and two for
+reporting, made after all results had been seen: of the per-text ICC (D11) and of the detection under the definition
+common to both systems on Windows (D12). Both were prompted by a simulated review of this article before its submission
+(Declarations). D12 grew in two steps: it was recorded that the ranges of its per-stratum intervals would be reported
+whatever their values before the ranges were computed, although the detection under the common definition had already
+been seen, and the counts of the strata whose estimates change were added after the ranges had been seen, when a review
+of the discussion found such changes. The registered results of questions 1 to 3
+of the Windows cell, on which the frozen code did not stop, had been computed and committed before D10, and the
+corrected analysis of D10 was applied to them as well. The
+registration allowed the addendum to change only the Windows parts of existing files; deviations D1 to D4 touched
+other parts. On the macOS cells they change nothing that is reported: the macOS plans generated with the changed
+generator differ only in the recorded SHA-256 of a procedure file, the result files of the changed analysis code on
+synthetic macOS runs are byte-identical to those of the macOS tag, and the macOS analysis was run from the macOS tag,
+with the first change of D10 for questions 1 to 3 and the switch that D8 adds for the closed-set attack. The first
+change of D10 left the result files of synthetic runs byte-identical to those of the frozen code; the corrected
+analysis of its second change is reported next to the registered one for every cell.
+
+\begin{table}[t]
+\caption{Deviations from the registration}
+\label{tab:deviations}
+\begin{tabular}{L{0.08}L{0.46}L{0.46}}
+\toprule
+& Change & Reason \\
+\midrule
+D1 & On Windows, scenario S4 presses Escape three times instead of twice. &
+In the pilot two Escapes did not cancel a reading converted into several segments; the uncommitted reading ran into
+the next trial. \\
+D2 & The analysis accepts the registered plan of the Windows cell when the reference log comes from the field of the
+Text Services Framework. &
+The frozen check of the plan accepted only the two macOS plans, so no Windows run could have been analysed. \\
+D3 & For the Windows cell a trial is long when the presses sent in it span at least 20~s. &
+The prediction that defines long trials on macOS models the macOS logger and does not apply on Windows. \\
+D4 & A Windows run counts as aborted when the observation holds, in any block, key rows that no sent press explains
+beyond the block's marker presses. &
+The Windows reference field receives only the keys that the input method does not consume, so a person typing into it
+would otherwise pass the stopping rule. \\
+D5 & The cell file of the Windows measurement names the two programs with backslashes. &
+The runner could not start the programs from the relative paths of the template, which use forward slashes. \\
+D6 & The macOS runs were made in the registered order, each started as soon as the check of the one before it was
+done, not on separate nights. &
+The operator did not wait for the next night; the order, which keeps the replay of the runtime-cost study after the
+two cells, was kept, and no two runs overlapped. \\
+D7 & On Windows an attempt stopped from outside the runner is counted as aborted, and a start refused by the runner
+before its first trial, made with administrator rights, is not counted. &
+The registration names neither event; the refused start was forbidden by the addendum and sent no key. \\
+D8 & The closed-set attack leaves out every trial of scenario S12, through a switch added to the attack; without the
+switch its output is that of the frozen code. &
+The registration does not count the S12 trials, but the frozen code kept the 74 S12 trials of each plan whose phrase
+is in the corpus, and stopped because too few decoys remained. \\
+D9 & The Windows runs were made in the registered order, each started as soon as the check of the one before it was
+done, not on separate nights. &
+As for D6; the order was kept, and no two runs overlapped. \\
+D10 & A rate whose numerator exceeds its denominator is reported without a value instead of stopping the analysis;
+a corrected analysis, reported next to the registered one, counts a recounted merge in the stratum in which its
+session row is counted. &
+The frozen code counted a recounted merge in the stratum of the missed session, so the numerator of a stratum's
+merge rate could exceed its denominator, and the analysis of the macOS cells stopped before it wrote any result. \\
+D11 & The per-text ICC of a stratum whose reference has the same value in every text is reported without a value, with
+the reason and next to the registered value, and the reference's standard deviation between texts is reported next to
+every ICC. &
+Such an ICC is zero whatever the logger writes (or undefined if the logger writes that same value in every text too); the
+registration reports a measure with zero variance as missing, never as zero, but the frozen code returns no value only
+when every value of both sides is the same. \\
+D12 & On Windows, where the two definitions of a session do not hold the same sessions, how many sessions the
+definition of the analysis leaves out and the detection under the common definition, per stratum as ranges and pooled,
+are reported, with the number of strata whose estimate changes within the ranges and the largest change (added after
+the ranges had been seen). &
+The registration reports under the common definition only whether the two definitions hold the same sessions, which
+does not show how far the estimates depend on the choice of definition. \\
+\bottomrule
+\end{tabular}
+\end{table}

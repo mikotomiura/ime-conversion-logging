@@ -1,0 +1,161 @@
+% Section 3 of the manuscript: what can be logged without reading text.
+% This analysis is not part of the registration. Every statement rests on a document listed in the supplement
+% (with its URL, an archived copy, its date and the date it was retrieved) or is marked as an observation.
+
+\section{What can be logged without reading text}
+\label{sec:observability}
+
+A program that logs the conversion of another application without reading text needs an interface through which
+it can learn, from outside that application, when a conversion begins and ends. This section examines which of the
+documented public interfaces of Windows and macOS offer this. It is an analysis of documents, not part of the
+registration, and its claims are stated for the interfaces examined.
+
+\subsection{Method}
+\label{sec:observability-method}
+
+The interfaces were chosen from the sections of each system's developer documentation on text input, input methods,
+accessibility, event hooks and windows, and from the interfaces that earlier loggers use (the low-level keyboard
+hooks of keystroke loggers and the plug-ins inside particular applications of the hybrid logger;
+Section~\ref{sec:related}). On Windows the interfaces examined were the Text Services Framework, the input-method
+manager, message hooks and the low-level keyboard hook, accessibility events and the accessible objects of the input
+method's windows, UI Automation, and the desktop compositor. On macOS they were the text-input client protocol, the
+accessibility attributes and notifications of both the C interface and the AppKit framework, the Input Method Kit,
+the window list, the text input sources and event taps.
+
+Each document was read in the version published on the developer site on 5 October 2026, when it was retrieved and
+an archived copy of it was made; the list of documents in the supplement gives, for each, its URL, the URL of the
+archived copy, the date of its last update as the site states it (the Apple documentation states none, but gives the
+system version in which each item was introduced) and the date of retrieval. The documents describe the current
+systems; the measurement used Windows 11 25H2 and macOS 27.0.1. For each interface the
+criterion was whether a program that runs outside the target application can learn through it when a conversion is
+open, without receiving the composition, the candidates or any other text. An interface that requires code to be
+loaded into the target application does not meet the criterion, because such code runs inside the application and
+can read its text. A statement that rests on observing a system rather than on a document is marked as an
+observation, with the system and its version as far as they were recorded.
+
+\subsection{Windows}
+\label{sec:observability-windows}
+
+The Text Services Framework is the interface through which the Microsoft input method delivers its composition to
+an application. Its thread manager is activated for the calling thread \citep{ms-tsf-activate}, and its sinks are
+installed on a source obtained from the thread manager or from a context of the calling process
+\citep{ms-tsf-advisesink}; no parameter of these calls names another process. The documentation for assistive
+technology states that ``to access the composition string managed in TSF, the assistive technology products must
+create the ITfThreadMgr in the process of creating the target TSF-enabled applications''
+\citep{ms-ime-tsf-accessibility}. The text services of the framework, which provide text to applications, are
+implemented as in-process servers registered with the framework \citep{ms-tsf-architecture}, so code that takes this
+route runs inside the application. The input-method manager assigns an input context to each thread by default, and
+an application retrieves the context associated with a specified window \citep{ms-imm-inputcontext}; its
+composition string is the text being converted \citep{ms-imm-getcompositionstring}.
+Message hooks that would intercept the input-method messages of other windows load a library into the target
+processes \citep{ms-setwindowshookex}.
+
+Two documented routes remain that do not load code into the target and do not carry text. First, accessibility
+events report that a window of the input method has become visible, has changed its size or position, or has become
+hidden \citep{ms-eventconstants}. A program can receive these events out of context, so that its hook
+function is not mapped into the address space of the application that raised them \citep{ms-outofcontext,
+ms-setwineventhook}, and the arguments of the callback are the handle of the hook, the event, a window handle, two
+object identifiers, a thread identifier and a time \citep{ms-wineventproc}: none of them is a string. The
+documentation for assistive technology, written for Windows XP, describes the other direction: following the events
+of the candidate window to its accessible objects reads the candidate strings, and the composition string can be read
+in the same way where the input method draws it \citep{ms-ime-tsf-accessibility}. Second, accessibility events
+report that a window has been cloaked or uncloaked \citep{ms-eventconstants}, and the desktop compositor tells whether a window is cloaked
+\citep{ms-dwm-attribute}. During the development of the logger, on a Windows~11 machine whose build was not recorded,
+the candidate window of the Microsoft input method was shown and hidden by uncloaking and cloaking it, and the window
+events of the input method did not arrive (an observation made in August 2026). The logger follows both routes
+(Section~\ref{sec:logger}).
+
+\subsection{macOS}
+\label{sec:observability-macos}
+
+On macOS the marked text, the reading being converted, is held by the text view of the target application, which
+implements the text-input client protocol to receive it \citep{apple-nstextinputclient}; the documentation examined
+describes no call by which a program outside the application can query that protocol. An input method is a program of its own that creates an input
+controller for each input session of a client application \citep{apple-imkinputcontroller}, and the Input Method Kit
+is integrated with the system's text services \citep{apple-imk}; the documentation examined describes no part of an
+input method that runs inside the client application. Assistive applications reach other applications through the accessibility interface
+\citep{apple-axuielement}. Of its C constants listed in the documentation (101 attributes, 9 parameterized attributes
+and 25 notifications), none concerns marked text or a composition
+\citep{apple-ax-attributes,apple-ax-parameterized,apple-ax-notifications}; the header files of the software
+development kit of macOS 27.0 define more of them (138 attributes, 14 parameterized attributes and 37 notifications,
+counted by the ending of their names), and none of these concerns marked text either \citep{apple-sdk-27}. The
+constants of the AppKit framework (131 attributes, 18 parameterized attributes and 42 notifications, the same counts
+in the documentation and in the header file of the kit) include three that do: an attribute for the marked
+range of a text input and two notifications for the beginning and end of a marking session, available since macOS
+10.6 and listed without a description
+\citep{apple-nsaccessibility-attribute,apple-nsaccessibility-parameterized,apple-nsaccessibility-notification}. They
+are taken up below.
+
+The list of windows is returned as it stands when it is requested, with information about each window such as its
+bounds and its identifier \citep{apple-cgwindowlist}, so a program can follow it only by polling. It lists windows, not marked text: the reading
+that is typed before conversion is shown by the application's text view, and a window of the input method exists only
+when the input method shows one. The current keyboard input source \citep{apple-textinputsources} identifies the
+selected input source and input mode, and none of its properties describes a composition; in the header file of
+the kit of macOS 27.0 none of its functions or constants concerns a composition either \citep{apple-sdk-27}. An event tap receives the
+key-down and key-up events of the session \citep{apple-cgevent-tapcreate}. The logger therefore infers sessions from
+the key presses and the input source (Section~\ref{sec:logger}).
+
+\subsection{Routes that depend on the application}
+\label{sec:observability-application}
+
+On both systems an application's own accessibility implementation can report a conversion without text. On Windows
+the text-edit pattern of UI Automation defines an event for a change of the conversion target, which the elements that
+support the pattern are required to raise \citep{ms-uia-textedit}, and the corresponding accessibility event carries
+no string \citep{ms-eventconstants,ms-wineventproc}; the same pattern's event for a finished composition, however, carries the
+finalized string \citep{ms-uia-textedit}. On macOS the attribute and the two notifications named above report the
+range of the marked text (a location and a length) and the beginning and end of a marking session; the source code of
+the WebKit engine posts the two notifications when a composition begins and ends and reports the marked range as a
+location and a length \citep{webkit2026}. Whether these items are provided depends on the application and its
+toolkit: on Windows the events are raised by the elements of an application that support the pattern
+\citep{ms-uia-textedit}, and the macOS documentation does not state which elements provide the three items. A
+logger meant to work in any application cannot rely on them, and the logger does not use them. Whether they report
+the sessions of the reference input fields, or of the applications that writing research uses, was not examined.
+
+The routes that do not depend on the application therefore differ between the systems. On Windows they are the window
+events of the input method and the cloaking of its windows; on macOS none of the documented interfaces examined
+reports a conversion, and the logger infers it from key presses. The registration states more broadly that no public
+interface of macOS reports the conversion state of another application; the documents support the narrower
+statement made here. Whether a remaining route works depends on the input method and the application as well: the
+cloaking path follows windows of the input method's class, and an application that draws the candidates itself may
+show no window of the input method (Section~\ref{sec:limitations}).
+
+\subsection{Consequence}
+\label{sec:observability-consequence}
+
+The two systems log different constructs: on Windows a period during which a window of the input method is visible,
+and on macOS a segment of kana input inferred from the keys. Their measures are therefore defined differently, they
+are validated separately against references of their own system (Section~\ref{sec:method-reference}), and they are not
+compared as equal. Table~\ref{tab:interfaces} summarises the interfaces examined.
+
+\begin{sidewaystable}[p]
+\caption{Interfaces examined for logging the conversion of another application. ``Text'' is whether the interface
+delivers the composition, the candidates or other text to the program that uses it}
+\label{tab:interfaces}
+\begin{tabular}{L{0.26}L{0.35}L{0.08}L{0.18}L{0.11}}
+\toprule
+Interface & What it exposes to a program outside the application & Text & Used by the logger & Source \\
+\midrule
+\multicolumn{5}{l}{\emph{Windows}} \\
+Text Services Framework (thread manager and sinks) & The composition of the calling thread; for another application only from inside its process & Yes & No & \citet{ms-tsf-activate,ms-tsf-advisesink,ms-ime-tsf-accessibility} \\
+Text service & Text of the application in which it runs, as an in-process server & Yes & No & \citet{ms-tsf-architecture} \\
+Input-method manager & The input context of a thread and its composition string & Yes & No & \citet{ms-imm-inputcontext,ms-imm-getcompositionstring} \\
+Message hooks & Messages of other windows, through a library loaded into their processes & Yes & No & \citet{ms-setwindowshookex} \\
+Low-level keyboard hook & The key code and time of every key event & No & Key rows; \texttt{nav} and \texttt{abandon} & \citet{ms-setwindowshookex} \\
+Input-method window events, out of context & Display, change and dismissal of a window of the input method, system-wide & No & Sessions (first path) & \citet{ms-eventconstants,ms-outofcontext,ms-wineventproc} \\
+Cloak events and the compositor's cloak state & Whether a window is cloaked; the window's class & No & Sessions (second path) & \citet{ms-eventconstants,ms-dwm-attribute} \\
+Accessible objects of the input method's windows & Candidate strings; the composition string where the input method draws it & Yes & No & \citet{ms-ime-tsf-accessibility} \\
+UI Automation text-edit pattern, finished composition & The finalized string & Yes & No & \citet{ms-uia-textedit} \\
+UI Automation text-edit pattern, conversion target & A change of the conversion target, if the application raises it & No & No & \citet{ms-uia-textedit,ms-eventconstants} \\
+Focused element and top-level windows & Properties of the focused element and of the top-level windows; the logger reads class names only & No, for class names & Secondary signals of a candidate window & \citet{ms-uia-getfocusedelement,ms-uia-classname,ms-enumwindows} \\
+\midrule
+\multicolumn{5}{l}{\emph{macOS}} \\
+Text-input client protocol & Marked and inserted text, inside the application only & Yes & No & \citet{apple-nstextinputclient} \\
+Input Method Kit & The input method's own sessions with its clients & Yes & No & \citet{apple-imk,apple-imkinputcontroller} \\
+Accessibility, C constants & No item on marked text & No & No & \citet{apple-ax-attributes,apple-ax-parameterized,apple-ax-notifications} \\
+Accessibility, AppKit marked range and marking session & The range of the marked text and the beginning and end of a marking session, if the application provides them & No & No & \citet{apple-nsaccessibility-attribute,apple-nsaccessibility-notification,webkit2026} \\
+Window list & Information about each window, such as its bounds, when polled & No & No & \citet{apple-cgwindowlist} \\
+Text input sources & The selected input source and input mode & No & Whether a Japanese input source is selected & \citet{apple-textinputsources} \\
+Event tap & The key code and time of every key event & No & Key rows; sessions by inference & \citet{apple-cgevent-tapcreate} \\
+\bottomrule
+\end{tabular}
+\end{sidewaystable}

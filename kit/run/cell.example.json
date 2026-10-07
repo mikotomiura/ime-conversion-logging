@@ -10,12 +10,12 @@
     "initial_state": "Japanese, switched on by the kana key in focus_cmd before each block"
   },
   "refinput_cmd": [
-    "papers/ime-observation/kit/refinput-macos/.build/RefInput.app/Contents/MacOS/refinput-macos",
+    "kit/refinput-macos/.build/RefInput.app/Contents/MacOS/refinput-macos",
     "--out",
     "{out}"
   ],
   "logger_cmd": [
-    "papers/ime-observation/kit/logger/target/release/ime-observation-logger",
+    "kit/logger/target/release/ime-observation-logger",
     "--out",
     "{out}"
   ],

@@ -191,6 +191,11 @@ python3 closed_set.py --obs obs1.ndjson [obs2.ndjson ...] --plan plan1.jsonl [pl
     --K 10,100,1000 --seed 1 --out e2_closed.json
 ```
 
+`--skip-scenario S` (repeatable) leaves every trial of scenario `S` out of the attack after the presses have been
+assigned to the plan, and the report states the number left out per scenario (`skipped_scenarios`); without it the
+report is that of the frozen code. It was added after the freeze by deviation D8 (`../../experiment/deviations.md`):
+the registration does not count the trials of scenario S12, and the measurement runs pass `--skip-scenario S12`.
+
 `--obs` and `--plan` are paired in order. Every observation's header `os` must agree with its plan's header `os`;
 otherwise the run stops rather than scoring the pair under the wrong OS's rules. The evaluator supplies the trial
 boundaries: the observed presses are cut into trials in plan order and compared with the plan by category.
@@ -339,4 +344,6 @@ typed). It checks the following.
   counts add up.
 - The command line runs end to end, and it stops on a dropped press (without `--markers-in-obs`), on unpaired inputs, on a corpus that is too small,
   on mismatched marker or IME-toggle switches, on an observation/plan `os` mismatch, and on an existing `--out` path
-  (which is left untouched).
+  (which is left untouched). `--skip-scenario` leaves the named scenario's trials out of the attack while the
+  alignment still covers the whole plan, states zero for a scenario that the plan lacks, rejects a name that is not a
+  scenario or is given twice, and its absence leaves the report without `skipped_scenarios`.

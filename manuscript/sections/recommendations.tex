@@ -1,0 +1,58 @@
+% Section 12 of the manuscript: recommendations for researchers (claims RE1 to RE5 of outline.md). Each states its
+% basis (a result, a registered rule or a construct) and sets no threshold. The recommendations are not registered.
+
+\section{Recommendations for researchers}
+\label{sec:recommendations}
+
+The recommendations below set no threshold of adequate agreement. Which agreement is enough depends on the analysis a
+researcher intends, and is best fixed in advance for that analysis and then read against the per-stratum values of the
+supplement or computed on the dataset. Each recommendation names its basis, which is a construct, a registered rule or
+a result, and all of them hold for the reference input fields and the synthetic input of this study. They are not part
+of the registration.
+
+\paragraph{(a) Measures that are defined differently on the two systems are not compared across systems.} On macOS a
+session is a segment of kana input inferred from the keys; on Windows it is a period during which a window of the input
+method is visible (Section~\ref{sec:observability-consequence}, Table~\ref{tab:rows}). A count of conversions, a
+conversion time or an abandonment rate therefore means a different thing on each system. On macOS the count also depends
+on the keys typed inside a reading: the minus, comma and period keys in Romaji input, and every kana typed with a symbol
+key in the kana layout, close a session, so such a reading counts as several conversions
+(Section~\ref{sec:logger-macos}). Basis: the construct.
+
+\paragraph{(b) The cut-off moves a researcher's aggregates in directions that follow from the rules.} On macOS and on
+the cloaking path on Windows, a session that reaches 20~s is cut off without a row, so the longest conversions are
+left out: this lowers the mean conversion time and the fraction of time spent converting, while the conversions per
+trial and the abandonment rate can move either way, because the press that follows a cut-off can open a new session. On
+the window-event path on Windows a long conversion is kept as a row of about 25~s, and a later change of the window
+opens a new session. The size of these changes depends on the writing and is not given here. A session that was cut
+off cannot be confirmed from a researcher's own key rows, and on Windows a row does not record which path wrote it
+(Sections~\ref{sec:logger-macos} and \ref{sec:logger-windows}). Basis: the registered rules; the logger's rows at the
+cut-off in this study are reported in Section~\ref{sec:results-detection}.
+
+\paragraph{(c) The recoverability judgement is used as registered.} Under the registered rule, neither granularity of
+the key rows that keeps no time kept the identification of the typed phrase near chance in either macOS cell, so the
+recommended granularity is \rv{q4.recommendation} (Section~\ref{sec:recoverability-results}). From the key rows that
+keep no time, the typed phrase was identified among 10 candidates with accuracy
+\rv{macos-standard-live-off.q4.no_time.k10.acc} and \rv{macos-standard-live-on.q4.no_time.k10.acc}, and among 100 with
+\rv{macos-standard-live-off.q4.no_time.k100.acc} and \rv{macos-standard-live-on.q4.no_time.k100.acc}. On Windows,
+under the same judgement, \rv{q4.windows.qualification}; its plan shares the key presses of the macOS plan with live
+conversion off, so it is not an independent judgement. The rule judges the identification of one phrase among $K$
+candidates in one trial; it is not a criterion of privacy, and no log is described here as safe to publish. Basis: the
+result of question~4.
+
+\paragraph{(d) On Windows, the 39-trial check of the registration shows whether the procedures work on a researcher's
+own machine.} The check plan, run with a cell file that names the programs with backslashes (deviation D5), shows whether
+the procedures drive the input method on a researcher's machine and versions as the plan intends; it reads the reference
+side only and does not estimate the logger's agreement. Re-estimating the agreement requires the registered plan in full
+and the frozen analysis, which computes no agreement for another plan, and no shorter registered check exists for macOS.
+Basis: the registered procedure (Section~\ref{sec:method-cells}) and deviation D5.
+
+\paragraph{(e) Agreement in a researcher's own application cannot be measured with this kit.} The reference is an
+input field that records the calls it receives from the input method, and no procedure of the kit records a reference
+in another application. Basis: the registered scope.
+
+\paragraph{(f) Before the logger is used with people.} The logger writes a row for the observed keys of every
+application, system-wide, and does not record which application received a key (Section~\ref{sec:logger-rows}); a
+study that needs the keys of one document has to control what runs during a session, and its participants should know
+that every key they type is counted. On macOS the logger needs the system's permission to monitor input; on Windows it
+runs without administrator rights. Whether a log of key rows can be published was not judged here (recommendation~(c)).
+Basis: the logger's source and the scope of question~4.

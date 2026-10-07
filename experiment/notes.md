@@ -47,13 +47,26 @@ file, the macOS parts of the files of the macOS cells and the macOS sections are
 difference between the two freezing tags. The macOS plans are generated, and the macOS analysis is run, from the
 macOS freezing tag.
 
-The macOS cells were frozen on 2026-10-02. The freezing commit is `ff122e3246346da7869c4e990e4978acb1f191c6`,
-tagged `ime-observation-prereg-macos`; the recorded `sha256` is
+The macOS cells were frozen on 2026-10-02. The freezing commit of the working repository is
+`ff122e3246346da7869c4e990e4978acb1f191c6`, tagged `ime-observation-prereg-macos`; the recorded `sha256` is
 `64dfbb6e5f08222ade1fb96a8171d97c0fa1bc9ca9adb5cc987fc27bd9a8af2a`. The list of the files exported from that commit
 (section 9 of the pre-registration) holds 98 files and has the SHA-256
 `29b183ba245939ad82d9fa2d7db26e1a18520e2966f4aa9ec74478a4e51e6c49`. The frozen file was registered on OSF
 Registries on 2026-10-02 at https://osf.io/9nh7r (DOI 10.17605/OSF.IO/9NH7R); the copy attached to the
 registration has the SHA-256 of the frozen file, `fa6fd586d580c47f13506cd36a87a94c08d6b9ab55b16a7b6df0b67670f87773`.
+
+The Windows addendum (section 10 of the pre-registration) was frozen on 2026-10-03. The freezing commit of the working
+repository is `a57c4fd79134d68364c29b440637bfb717a881cb`, tagged `ime-observation-prereg-windows`; the recorded
+`sha256` is unchanged (`64dfbb6e5f08222ade1fb96a8171d97c0fa1bc9ca9adb5cc987fc27bd9a8af2a`), because the addendum
+does not change `config.json`, `SEED` or the rule file. The list of the files exported from that commit holds 108
+files and has the SHA-256 `f61af353301e1370ac27c4a7425e8c2eb32991df9f7a2a765a26948da87787b7`. The frozen file has
+the SHA-256 `f86209631e495d2c7e80dab266a91814728aa55a18485da106df836c3cec2b1d`. The frozen file was registered on OSF
+Registries on 2026-10-03 at https://osf.io/4jwzn (DOI 10.17605/OSF.IO/4JWZN), before any Windows measurement; the
+copy attached to the registration has the SHA-256 of the frozen file.
+
+The working repository is not public; the registrations name its freezing commits. The public repository does not
+carry its history: its first two commits are the exports of the two freezing commits, tagged with the same names, so
+that the two lists above can be recomputed from it (`README.md`, "Recomputing the lists of the freezing tags").
 
 ## Step 0 replaced
 

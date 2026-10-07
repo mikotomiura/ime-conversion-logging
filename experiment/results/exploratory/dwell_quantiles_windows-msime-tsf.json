@@ -1,0 +1,101 @@
+{
+ "analysis_modules_sha256": {
+  "delivery.py": "d78a179f3e4f5275d0ece08fed18f797712508bd9aaedcdeb62481fcf0b7bdbf",
+  "gt_sessions.py": "0b5845f53fb95ef6eaac31c802fabb7c180cd7750fbed04da40835a065d98aeb",
+  "inject.py": "733418092d4d1961525ce79dc91dd4b340971ca543b350fc03462ecf26f2a805",
+  "l1.py": "3829dec748f583134b058c93297aa40172c37a174abd2f75983bbc718d3421d6",
+  "l2.py": "ba635203abdaa83dab0a30caf08024100ef617d85a9091397f0a98dcd0cbe0b8",
+  "match.py": "66881f86ad09ecc64df9ea8749a6593c3ebe6648fa9aa8551a7eb4c2736e4b49",
+  "pipeline.py": "787d75026b2c607dd2b1e3ee4f126f6b8a1321c112d5c9c474688e348ea78144",
+  "scope_windows.py": "454ab0248a691fda169ac1545d664aaf891ddf91febd08a02892b062bf17546c",
+  "spec_predict.py": "6879945db975c7ba4488f441227bf37b468eab85346464623f77ee87b8082efb",
+  "stats.py": "ead0ccaa50bb86b088b66899ef5b1e04fb9b995a582e520679e04d09cbbf5c07"
+ },
+ "cells": {
+  "windows-msime-tsf": {
+   "all_trials": {
+    "fast": {
+     "n": 695,
+     "percentiles": {
+      "p2.5": -4797.25,
+      "p97.5": -33.35000000000002
+     },
+     "within": {
+      "abs_le_1000_ms": 0.7985611510791367,
+      "abs_le_100_ms": 0.3683453237410072
+     }
+    },
+    "match_sha256": "f3ce99f8ccee17cbf882896519b81d905e12991649baa523bf416e89a7dd6960",
+    "mid": {
+     "n": 802,
+     "percentiles": {
+      "p2.5": -7912.525,
+      "p97.5": -42.0
+     },
+     "within": {
+      "abs_le_1000_ms": 0.7281795511221946,
+      "abs_le_100_ms": 0.36034912718204487
+     }
+    },
+    "slow": {
+     "n": 654,
+     "percentiles": {
+      "p2.5": -10059.425,
+      "p97.5": -43.325000000000045
+     },
+     "within": {
+      "abs_le_1000_ms": 0.654434250764526,
+      "abs_le_100_ms": 0.3241590214067278
+     }
+    }
+   },
+   "under_limit": {
+    "fast": {
+     "n": 682,
+     "percentiles": {
+      "p2.5": -4046.85,
+      "p97.5": -33.02499999999998
+     },
+     "within": {
+      "abs_le_1000_ms": 0.8123167155425219,
+      "abs_le_100_ms": 0.375366568914956
+     }
+    },
+    "match_sha256": "42507c87b7587a59afaa68065d848fb3488c1a3aadc43fafca090c1b46e0d16b",
+    "mid": {
+     "n": 779,
+     "percentiles": {
+      "p2.5": -6362.95,
+      "p97.5": -42.0
+     },
+     "within": {
+      "abs_le_1000_ms": 0.7496790757381258,
+      "abs_le_100_ms": 0.37098844672657255
+     }
+    },
+    "slow": {
+     "n": 566,
+     "percentiles": {
+      "p2.5": -4988.125,
+      "p97.5": -43.0
+     },
+     "within": {
+      "abs_le_1000_ms": 0.734982332155477,
+      "abs_le_100_ms": 0.3745583038869258
+     }
+    }
+   }
+  }
+ },
+ "exploratory": true,
+ "inputs_sha256": {
+  "config": "25733be6e52dbe0274f5d763cb06be9cd089d3de5cb4255f7a2a9abc338b6cf4",
+  "e1_l1_of_this_run": "4fd11b1d3c5eba4df88f9a859629764bdfcd889e1c3a58281bdda6c35b69530e",
+  "e1_l1_registered": "4fd11b1d3c5eba4df88f9a859629764bdfcd889e1c3a58281bdda6c35b69530e",
+  "obs": "58f0bda61fa4310c58a643bb605a68c360f34378b651a3b85d58290fabcd2562",
+  "run_manifest": "5c74a1fad735b5983152847d29a540e71673f7d13257950af9726ddd79a33d82",
+  "script": "453bfc02f961a4c2b8436d542f0e3d1ecf44aca2b4b9c18d22d56ca599a91439"
+ },
+ "note": "not registered; percentiles of the dwell error (observed minus ground truth, ms) of the one-to-one pairs of the primary comparison, and the fractions of pairs within 100 ms and 1,000 ms; no interval",
+ "percentile_method": "linear interpolation between order statistics, h = (n - 1) p"
+}

@@ -1,22 +1,34 @@
 cff-version: 1.2.0
-message: "If you use these artifacts, please cite them as below."
+message: "If you use this software, please cite it as below. The records of the validation are a separate dataset."
 type: software
-title: "Observing Japanese IME conversion without recording text: Observability limits, a cross-platform logger, and a synthetic-input validation"
-# The author list is a placeholder. The authors confirm names and affiliations before publication.
+title: "Logging Japanese IME conversion without recording text: Logger, validation kit and analysis code"
+version: "1.0.0"
+doi: "10.5281/zenodo.23183441"
 authors:
-  - family-names: "TODO"
-    given-names: "TODO"
-    affiliation: "TODO"
-# Code is released under Apache-2.0; data and documents are released under CC BY 4.0.
+  - family-names: "Miura"
+    given-names: "Mikoto"
+    affiliation: "Independent researcher"
+    orcid: "https://orcid.org/0009-0000-4196-0508"
+repository-code: "https://github.com/mikotomiura/ime-conversion-logging"
+# Code is released under Apache-2.0; data and documents are released under CC BY 4.0 (README.md).
 license:
   - Apache-2.0
   - CC-BY-4.0
-# The DOI is added when the archive is published (the archive assigns it):
-# doi: "10.5281/zenodo.XXXXXXX"
 keywords:
   - Japanese input method
   - IME
+  - keystroke logging
   - keystroke dynamics
   - privacy-preserving logging
   - observability
   - reproducibility
+references:
+  - type: dataset
+    title: "Logging Japanese IME conversion without recording text: Records of the synthetic-input validation"
+    authors:
+      - family-names: "Miura"
+        given-names: "Mikoto"
+    doi: "10.5281/zenodo.23183438"
+    publisher:
+      name: "Zenodo"
+    year: 2026

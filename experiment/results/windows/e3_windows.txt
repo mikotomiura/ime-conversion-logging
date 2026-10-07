@@ -1,0 +1,20 @@
+== idle (samples.tsv)
+rows: 879 usable, 0 with the process absent, 0 unreadable
+floors used: at least 480 usable rows and 480 rows with a CPU value; window of at least 4.0 h
+sampling interval (measured): median 33.0 s  max 35 s
+cpu % (one core = 100): mean 5.56  median 4.68  p95 10.82  max 20.21
+cpu_all_zero: false
+presence transitions (present, absent, present): 0
+resident memory: final 15.1 MB  slope 0.01 MB/h  over 7.99 h
+status: measured
+
+== working (samples.tsv)
+rows: 880 usable, 1 with the process absent, 0 unreadable
+floors used: at least 480 usable rows and 480 rows with a CPU value; window of at least 4.0 h
+sampling interval (measured): median 33.0 s  max 35 s
+cpu % (one core = 100): mean 5.37  median 4.66  p95 10.84  max 15.51
+cpu_all_zero: false
+presence transitions (present, absent, present): 0
+resident memory: final 16.3 MB  slope 0.09 MB/h  over 7.99 h
+status: measured
+

@@ -1,0 +1,174 @@
+% Section 8 of the manuscript: text recoverability (question 4). The method is stated first, as the outline
+% requires; it follows sections 6.8 and 10.7 of the frozen registration. The results are written from the result
+% files e2_closed_set_<cell>.json and e2_open_set_<cell>.json after the analysis.
+
+\section{Results: text recoverability}
+\label{sec:recoverability}
+
+\subsection{Method}
+\label{sec:recoverability-method}
+
+The text-recoverability study asked how much of the typed text the key rows of a published log still reveal. Two
+attacks were run on the observation log of each cell separately, with the plan, the procedures and the settings that
+built it; the attacks refused a log whose plan or settings did not match. Both read the category and the time of
+every key row of a press and nothing else: they did not use the session rows or the rows of key releases, and no plan
+sent a modifier key, so on Windows, where modifier keys produce rows, no such row was read either. The ground truth of
+an attack was the reading that was typed,
+not the original sentence. The trials of scenario S12, whose phrase is a generated kana string, were not scored. When
+every block is scored this leaves 2{,}925 trials with live conversion on and 2{,}700 with it off on macOS, and 2{,}700
+on Windows.
+
+\paragraph{Assigning presses to trials.} Both attacks assign the observed presses to the trials in plan order, block
+by block. A block is placed where its marker of four arrow presses and all its trials match the observed presses. A
+block whose observed presses do not agree with the plan (a press missing, added or changed) is not scored: its trials
+are counted as unscored, and the assignment continues with the next block that matches, so that a difference loses
+only the block that holds it. This behaviour was checked by the self-test of the code on the cases it constructs, not
+proved in general. Before each freeze the assignment, without any attack, was run on the key rows of the pilots: it
+scored every block of the three macOS pilot runs that used the arrow-key marker (15 blocks, 282 trials) and of the
+seven Windows pilot runs (27 blocks, 429 trials) and left no press unassigned. These logs had no missing or added
+press, so the check shows that clean logs are scored whole; it does not exercise the recovery after a difference.
+Accuracies and error rates are computed over the scored trials, and the numbers of unscored blocks and trials are
+reported per cell.
+
+\paragraph{Closed set.} For each trial the attacker was given $K$ candidate phrases, the true one and $K-1$ decoys
+drawn from the phrases that the trial's scenario could have produced (excluding phrases with the same reading). It
+knew the scenario, the system, the speed, the generator, the procedures and the settings, generated the expected log
+of each candidate with the same generator, and chose the candidate whose expected log was closest to the observed
+one. $K$ was 10, 100 and 1{,}000. The attack was repeated on six feature sets that remove information from the log,
+named here, in the figures and in the tables as in the registration: exact times and the lengths of runs of letter keys
+(\texttt{all}), no times (\texttt{no\_time}), no run lengths (\texttt{no\_runs}), times in 1-second bins
+(\texttt{bin1s}), 1-second bins without run lengths (\texttt{bin1s\_count}), and neither times nor run lengths
+(\texttt{counts\_only}). Because an attacker given a detailed log can always discard
+information, the accuracy of a feature set is the maximum over that set and every coarser set derived from it. The
+accuracy is reported with its Wilson interval and, descriptively, with a 95\% percentile interval from 2{,}000
+resamples of whole blocks, together with the chance level $1/K$, the mean rank of the true phrase and, without an
+interval, the accuracy of each feature set alone per scenario and per speed.
+
+\paragraph{The near-chance rule.} The synthetic key intervals were drawn independently of the keys, so the logs carry
+none of the timing structure of human typing, neither the timing of particular key pairs nor the pauses between words
+and phrases. The accuracy on the four feature sets that keep any time is therefore reported as an estimate only and
+does not enter the recommendation, which considers the two sets that keep no time (\texttt{no\_time} and its
+coarsening \texttt{counts\_only}). The accuracy of a feature set is near chance at $K=10$ or $K=100$ when the upper
+end of its 95\% Wilson interval is at most $2/K$. A set is near chance for the recommendation when it is near chance at
+both values of $K$ in both macOS cells, and the recommended granularity is the more detailed of the two sets that is
+near chance in this sense; if neither is, no granularity is recommended, and this is reported. At $K=1{,}000$ an attack
+at the chance level would rarely be judged near chance at the planned numbers of trials, so $K=1{,}000$ is reported
+descriptively and is not part of the rule. The probability of the judgement at the planned numbers of trials was fixed
+in the registration and is given with the results (Table~\ref{tab:nearchance}). The margin of $2/K$ and the values of
+$K$ are choices of the design, not derived from a criterion of privacy. The Wilson interval treats trials as
+independent; with positive dependence within a block the rule can be met more easily than it should be, which is why the
+block-resampled interval is reported next to it. The recommendation was decided from the two macOS cells. The same
+judgement was made for the Windows cell and, where it does not hold, is reported as a qualification of the
+recommendation for logs recorded on Windows; it does not change the recommendation.
+
+\paragraph{Open set.} A second attacker saw only the categories of the key presses and, with a character language
+model, searched for the kana string that Romaji input would spell with exactly the observed letter keys and the
+observed punctuation, maximising its probability. Two levels of knowledge were evaluated, named K0 and K1 as in the
+registration (the names are not the number $K$ of candidates of the closed set). K0 knew nothing of the genre beyond
+the frequency of single characters (a character unigram model estimated from the training phrases). K1 knew the
+genre but not the individual work: a character trigram model with Witten--Bell smoothing
+\citep{wittenbell1991}, trained on the corpus with the whole works of the evaluation phrases held out (three of the
+twelve works, drawn with the seed, holding at least a fifth of the phrases; a training phrase with the reading of an
+evaluation phrase was removed). A stronger attacker of the second level, K1+, for which the corpus was split by phrase
+instead of by work, is reported alongside it. The baseline was the same model without the log, drawing a string from
+its prior while knowing either the number of segments or the true length. Reported are the character error rate of
+the attack and of the baseline, their paired difference, and the difference from a negative control in which each
+trial is decoded from another trial's observation, each with a percentile interval from resampling whole blocks. The
+open set does not enter the rule; it is reported next to the recommendation as a second view of what the lengths of
+letter runs, which the \texttt{no\_time} set keeps, reveal.
+
+\paragraph{What is not evaluated.} The rule judges the identification of one phrase among $K$ candidates in one
+trial; it is not a criterion of privacy. Combining several trials of one writer, matching a log against known final
+texts, and identifying a writer from the timing of a log are not evaluated, and no log is described as safe to
+publish. The session rows carry their
+times and durations in milliseconds and could undo the coarsening of the key rows; they were not given to the attacks,
+and publishing them is not evaluated. Neither are the rows of key releases or, on Windows, the rows of modifier keys.
+The feature sets that keep time are reported as estimates only, so whether key rows with times can be published is
+not judged, and granularities between milliseconds and 1-second bins were not evaluated. Neither attack is
+claimed to be the strongest possible. The attacker knew the generator and the procedures, and the input had no
+typing errors; these conditions are expected to favour identification, which is stated as an expectation, not as a
+result.
+
+\subsection{Results}
+\label{sec:recoverability-results}
+
+Every block of every cell was scored (\rv{macos-standard-live-off.q4.unscored} unscored with live conversion off,
+\rv{macos-standard-live-on.q4.unscored} with it on, \rv{windows-msime-tsf.q4.unscored} on Windows), so the rule was
+applied to the planned numbers of trials, whose properties Table~\ref{tab:nearchance} gives.
+
+\paragraph{Closed set and the recommendation.} Table~\ref{tab:closed-set} gives the accuracy of the two feature sets
+that keep no time. With live conversion off, the accuracy of \texttt{no\_time} was
+\rv{macos-standard-live-off.q4.no_time.k10.acc} at $K = 10$ and \rv{macos-standard-live-off.q4.no_time.k100.acc} at
+$K = 100$; with it on, \rv{macos-standard-live-on.q4.no_time.k10.acc} and
+\rv{macos-standard-live-on.q4.no_time.k100.acc}. The accuracy of \texttt{counts\_only}, the maximum over that set and
+the set derived from it, was \rv{macos-standard-live-off.q4.counts_only.k10.acc} and
+\rv{macos-standard-live-off.q4.counts_only.k100.acc} with live conversion off and
+\rv{macos-standard-live-on.q4.counts_only.k10.acc} and \rv{macos-standard-live-on.q4.counts_only.k100.acc} with it on.
+In both macOS cells the upper end of every one of these Wilson intervals lies above $2/K$, so neither set is near chance
+under the registered rule, which is not a criterion of privacy (Section~\ref{sec:recoverability-method};
+\texttt{no\_time}: \rv{macos-standard-live-off.q4.no_time.near} and
+\rv{macos-standard-live-on.q4.no_time.near}; \texttt{counts\_only}: \rv{macos-standard-live-off.q4.counts_only.near}
+and \rv{macos-standard-live-on.q4.counts_only.near}), and the recommended granularity is \rv{q4.recommendation}: no
+granularity of the key rows is recommended. In both macOS cells, at $K = 10$ and $K = 100$, the
+maximum that gives the accuracy of \texttt{no\_time} came from the attack on \texttt{counts\_only}: the numbers of key
+presses of each category in a trial, without their order or times, identified the phrase at least as often as the
+attack on \texttt{no\_time} alone did (supplement). The decoys were drawn from the phrases of the trial's scenario,
+whose readings have 6 to 30 kana (Section~\ref{sec:method-plans}), and were not matched to the true phrase in length.
+
+On Windows, under the same judgement, \rv{q4.windows.qualification}. The Windows accuracies of the two sets equal those
+of the macOS cell with live conversion off to the reported precision. The two plans were generated from the same seed
+and share every trial's block, scenario, speed, phrase and times; their presses differ only in S2, where the macOS
+procedure presses one Return more, and in S4, where the Windows procedure presses one Escape more (deviation D1), and
+the presses of letters, digits and punctuation are the same in every trial. The Windows judgement is therefore not an
+independent replication of the macOS one for these sets.
+
+Figure~\ref{fig:closed-set} shows every feature set at every $K$, and the supplement gives their values, with the
+accuracy per speed and scenario. The sets that keep time are estimates only and enter neither the judgement nor the
+recommendation (Section~\ref{sec:recoverability-method}). The accuracy of an attack on a set alone was not monotone in
+the information the set keeps: at $K = 10$ the attack on \texttt{all} alone identified fewer phrases than the attack on
+\texttt{counts\_only} in both macOS cells (supplement), so the attacks are not the strongest possible, and the maximum
+over the coarser sets is what the figure shows.
+
+\paragraph{Open set.} Table~\ref{tab:open-set} gives the character error rate of the attack and of the prior-only
+baseline, their difference (gain), and the gain over the shuffled control, in which each trial is decoded from another
+trial's observation. With the number of segments known, the gain of K1 was
+\rv{macos-standard-live-off.q4.open.K1.count.gain} with live conversion off and
+\rv{macos-standard-live-on.q4.open.K1.count.gain} with it on, and its gain over the shuffled control
+\rv{macos-standard-live-off.q4.open.K1.count.gainvsshuffled} and
+\rv{macos-standard-live-on.q4.open.K1.count.gainvsshuffled}; for K1+ the gain over the shuffled control was
+\rv{macos-standard-live-off.q4.open.K1plus.count.gainvsshuffled} and
+\rv{macos-standard-live-on.q4.open.K1plus.count.gainvsshuffled}, and for K0
+\rv{macos-standard-live-off.q4.open.K0.count.gainvsshuffled} and
+\rv{macos-standard-live-on.q4.open.K0.count.gainvsshuffled}. With the true length known, the gain of K1 over the
+baseline was \rv{macos-standard-live-off.q4.open.K1.true.gain} and \rv{macos-standard-live-on.q4.open.K1.true.gain}. The
+open-set file of the Windows cell is byte-identical to that of the macOS cell with live conversion off: the attack
+decodes the letter keys and the punctuation, which the two plans share, and every press other than the input-mode keys
+reached the log in both cells. The open set does not enter the rule; it is a second view of what the letter-run lengths
+kept by \texttt{no\_time} reveal, for these attacks.
+
+\input{generated/table-closed-set}
+\input{generated/fig-closed-set}
+\input{generated/table-open-set}
+
+\begin{table}[t]
+\caption{The near-chance rule: probability that a feature set is judged near chance when its true accuracy is $c/K$,
+at the planned numbers of trials}
+\label{tab:nearchance}
+\begin{tabular}{rrrrrr}
+\toprule
+Trials & $K$ & $c=1$ & $c=1.5$ & $c=2$ & $c=3$ \\
+\midrule
+2{,}925 & 10 & 1.000 & 1.000 & 0.024 & 0.000 \\
+2{,}925 & 100 & 0.994 & 0.487 & 0.020 & 0.000 \\
+2{,}925 & 1{,}000 & 0.210 & 0.067 & 0.020 & 0.001 \\
+2{,}700 & 10 & 1.000 & 1.000 & 0.025 & 0.000 \\
+2{,}700 & 100 & 0.989 & 0.447 & 0.019 & 0.000 \\
+2{,}700 & 1{,}000 & 0.067 & 0.017 & 0.004 & 0.000 \\
+\bottomrule
+\end{tabular}
+\footnotetext{Binomial probability that the upper end of the Wilson interval is at most $2/K$, for the accuracy of
+one feature set over the planned numbers of trials (2{,}925: live conversion on; 2{,}700: live conversion off and
+Windows), as registered. For a set whose accuracy is the maximum over coarser sets the probability is at most this
+value. If blocks are unscored, the rule is applied to the scored trials. The judgement of each cell is given in
+Table~\ref{tab:closed-set}.}
+\end{table}

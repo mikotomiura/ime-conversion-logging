@@ -1,0 +1,106 @@
+% Section 2 of the manuscript: background and related work.
+% The cells of the comparison table are filled from the documentation of each tool, with its version and the date
+% it was checked; a cell that rests on a published comparison rather than on the tool's own documentation says so.
+
+\section{Background and related work}
+\label{sec:related}
+
+\subsection{Keystroke logging in writing research}
+\label{sec:related-logging}
+
+Keystroke logging records every key press of a writer with a time, so that the process of writing can be studied
+alongside its product \citep{wengelin2023}. From such records researchers compute inter-key intervals and
+pauses, often classified by their location in the text (within a word, between words, between sentences), revisions,
+bursts of production between pauses, and the amount of text produced and the time taken \citep{conijn2019}. Five programs developed for academic
+use and free of charge have been described as available for this purpose: CyWrite, GenoGraphiX-Log, Inputlog,
+ScriptLog and Translog-II \citep{wengelin2023}. Inputlog records in any Windows program; the others record in an editor
+of their own, which a recent comparison describes as not ecological \citep{crotti2026}. That comparison also asks
+whether a logger supports non-alphabetic writing and whether it records key-down and key-up times, and it introduces a
+hybrid logger for non-alphabetic scripts \citep{crotti2026}.
+
+Table~\ref{tab:loggers} compares these loggers with the one presented here, adding the dimensions that concern a log
+of input-method conversion: how the logger handles the conversion, whether its log holds the text or the names of
+keys, and how it was validated. Each cell was filled from the documentation of the tool as published on the date it
+was checked; where the documentation examined is silent, the cell says so, and where a cell rests on the published
+comparison rather than on the tool's own documentation, it is marked. Translog-II records the key presses that a writer
+makes in the input method, together with the characters they produce, in its own editor \citep{zou2026,carl2012}.
+Inputlog has test versions for Korean and Chinese that record the input together with the resulting characters
+\citep{inputlog-web}. The hybrid logger reconstructs the state of the text by reading it through plug-ins for
+particular applications, detects the commits of the input method by inference, and was validated with two participants
+and one input method against screen recordings \citep{crotti2026}. Its detection figures are not set against this
+study's, because they come from human input and count commits, whereas this study uses synthetic input and matches
+intervals. The weaknesses of the present logger are kept in the table: it was not validated with human input or in
+applications other than the reference fields, it does not separate inter-key intervals by script, and it records
+release times without validating them.
+
+\begin{sidewaystable}[p]
+\caption{Keystroke loggers for writing research, as documented on 5 October 2026}
+\label{tab:loggers}
+\begin{tabular}{L{0.17}L{0.14}L{0.19}L{0.14}L{0.13}L{0.21}}
+\toprule
+Logger and version & Where it records & Input-method conversion & Text or key names in the log & Key-down and key-up & Validation reported \\
+\midrule
+CyWrite; no tagged release, repository described as a preliminary public release, last updated 21 July 2026 \citep{cywrite-repo} & Its own editor in a web browser \citep{wengelin2023,cywrite-repo} & Not documented & Text changes and keystrokes \citep{wengelin2023} & Yes$^{a}$ & Not examined$^{b}$ \\
+GenoGraphiX-Log 2.1.1 (Beta-3), released 15 September 2025 \citep{ggxlog-web} & Its own editor \citep{wengelin2023} & Hardware keyboard and mouse input only; software-driven input not supported \citep{ggxlog-web} & Session log and final text \citep{ggxlog-web} & Yes$^{a}$ & Not documented in the sources examined \\
+Inputlog 9.7.0.1, March 2026 \citep{inputlog-web} & Any Windows program \citep{inputlog-web} & Not supported in version 9.5$^{a}$ & Keystrokes \citep{wengelin2023} & Yes in version 9.5$^{a}$ & Not examined$^{b}$ \\
+Inputlog Korean and Chinese versions, test releases of March 2025 \citep{inputlog-web} & Windows & Records the input together with the selected or resulting characters \citep{inputlog-web} & Text & Not documented & Not documented in the sources examined \\
+ScriptLog; current version platform-independent, available from its developers \citep{wengelin2023}; the website, last updated in 2003, offers version 1.1 for Windows under a paid licence \citep{scriptlog-web} & Its own editor \citep{wengelin2023} & Not supported$^{a}$ & Keystrokes \citep{wengelin2023} & Yes$^{a}$ & Not examined \\
+Translog-II 2.24 \citep{translog-web} & Its own editor \citep{wengelin2023} & Records the presses typed into the input method with the characters they produce \citep{zou2026} & Text \citep{zou2026} & Key-down only \citep{zou2026}$^{c}$ & Not documented in the sources examined \\
+Hybrid logger; source repository, no release, last updated 13 May 2026 \citep{hylog-repo} & Plug-ins for a word processor and a web browser, with Inputlog \citep{crotti2026} & Commits inferred from keystrokes and text; inter-key intervals before a candidate is confirmed and after a conversion told apart \citep{crotti2026} & Text and keystrokes \citep{crotti2026} & Yes \citep{crotti2026} & Two participants, one input method, against screen recordings \citep{crotti2026} \\
+This logger 0.1.0, in release 1.0.0 of the code \citep{release} & Any application, system-wide; the application is not recorded & Windows: display and cloaking of the input method's windows; macOS: inferred from key presses; the time of a commit is approximated by the row's time and duration & Neither (fourteen key categories) & Yes; release times not validated & Synthetic input against reference input fields, three cells, pre-registered; no human input \\
+\bottomrule
+\end{tabular}
+\par\smallskip\footnotesize
+$^{a}$As reported in the comparison by \citet{crotti2026}, which examined Inputlog 9.5, not in the tool's own
+documentation.
+$^{b}$The articles that report a validation of the tool are not openly accessible and were not read, so the column
+reflects only the sources examined.
+$^{c}$\citet{crotti2026} describe Translog-II as having no visibility of key-down and key-up events.
+\end{sidewaystable}
+
+\subsection{Writing in Japanese and Chinese}
+\label{sec:related-cjk}
+
+Keystroke data have been used to study writing in languages that pass through an input method. A hidden Markov model
+of writing processes has been estimated from the keystroke data of high-school and university students in Japan; the
+article does not state the language of writing and does not treat the input method \citep{uto2020}. In a thesis on writing Chinese with a keyboard, pauses between typing the Pinyin and selecting the
+characters emerged during coding as a category of their own, next to the categories derived from alphabetic writing
+\citep{lu2020}. An English-to-Japanese corpus of translation processes recorded with Translog-II is publicly available
+\citep{carl2016}, and its logs record the keys typed into the input method together with the text
+\citep{tprdb-enja15}. The hybrid logger names Japanese, with its several scripts and input modes, as future work
+\citep{crotti2026}. The present study does not analyse writing; it asks whether the conversion of Japanese input can be
+logged without the text and how closely such a log agrees with a reference.
+
+\subsection{Keystroke records without text}
+\label{sec:related-content}
+
+Keystroke datasets have been released without the typed text, for example with only the hand that pressed each key,
+whether it was the space key, and the timings \citep{tappy}. Not recording text is therefore not new in itself; the difference here is a log of the
+conversion that holds no text. Keystroke records without text can still reveal it: key press and release timings form a
+side channel that yields nontrivial information about typed English words even under substantial measurement error
+\citep{monaco2018}, and the temporal features of typing are used to recognise users \citep{whiskerd2020}. This study
+estimates how far its key rows reveal the typed phrases (Section~\ref{sec:recoverability}); it judges no record that
+keeps times and does not evaluate the identification of a writer.
+
+\subsection{Validation of timing instruments}
+\label{sec:related-timing}
+
+Instruments that time responses in behavioural research are validated against an external device. Without external
+chronometry a timing error can go unnoticed while the log files suggest that a study ran normally, and benchmarks with
+idealised equipment and simplified scripts are unrepresentative of what researchers achieve in the field
+\citep{plant2016}. Keystroke sequences have been validated by closing the key switches of a keyboard with such a device
+and comparing the recorded intervals \citep{pinet2017}, and a comparison of experiment software warns that its timings
+represent something approaching a best case \citep{bridges2020}. The present study places its reference at the
+software layer, because its question is agreement with the calls that an application receives from the input method,
+which no external device observes; what this gives up is stated in Section~\ref{sec:method-reference}. The timing of
+the key rows that this study reports covers the path from the point at which a press is injected into the operating
+system to the row, a part of the path that the validations above measured from the key to the record; it is read
+together with their figures for the rest, such as the sampling of a USB keyboard every 8~ms, which bounds the precision
+of measured intervals \citep{pinet2017}.
+
+\subsection{Methods of agreement}
+\label{sec:related-agreement}
+
+Agreement is estimated with limits of agreement \citep{blandaltman1986}, Cohen's kappa \citep{cohen1960}, the
+intraclass correlation \citep{shroutfleiss1979,mcgrawwong1996} and percentile bootstrap intervals that resample
+whole blocks of trials \citep{efron1979,cameron2008}; their use is described in Section~\ref{sec:method-analysis}.

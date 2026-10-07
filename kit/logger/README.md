@@ -29,17 +29,17 @@ the atomics exposed by `src/input/hook.rs`.
 
 ```bash
 # From the repository root.
-cargo test  --manifest-path papers/ime-observation/kit/logger/Cargo.toml      # includes the copied state machine's tests
-cargo build --release --manifest-path papers/ime-observation/kit/logger/Cargo.toml
-papers/ime-observation/kit/logger/target/release/ime-observation-logger --selftest --out /tmp/obs.jsonl
-python3 papers/ime-observation/kit/formats/validate_logs.py --kind obs /tmp/obs.jsonl
+cargo test  --manifest-path kit/logger/Cargo.toml      # includes the copied state machine's tests
+cargo build --release --manifest-path kit/logger/Cargo.toml
+kit/logger/target/release/ime-observation-logger --selftest --out /tmp/obs.jsonl
+python3 kit/formats/validate_logs.py --kind obs /tmp/obs.jsonl
 
-python3 papers/ime-observation/kit/logger/check_manifest.py --self               # every listed file or excerpt matches the manifest's recorded SHA-256
-python3 papers/ime-observation/kit/logger/check_manifest.py --selftest           # negative controls for the verifier itself
+python3 kit/logger/check_manifest.py --self               # every listed file or excerpt matches the manifest's recorded SHA-256
+python3 kit/logger/check_manifest.py --selftest           # negative controls for the verifier itself
 ```
 
-Run as: `ime-observation-logger --out <path> [--duration-s <n>]` (until a driver is present for the
-current platform, this ends with "not implemented"). The output path is opened with
+Run as: `ime-observation-logger --out <path> [--duration-s <n>]` (drivers exist for macOS and
+Windows; on any other system it ends with an error saying that no driver exists). The output path is opened with
 `OpenOptions::new().write(true).create_new(true)` (**an existing observation log is never overwritten**;
 the path is opened only after the driver has started successfully). Passing `--out` twice, or a negative
 or non-integer `--duration-s`, is a usage error (exit 2). `--selftest` removes its default output path

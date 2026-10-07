@@ -1,0 +1,43 @@
+% Figure 1: the components of a trial and the records they write (Section 5.1 of the outline). It holds no result
+% value and is not generated.
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[font=\footnotesize, node distance=8mm and 5mm,
+  comp/.style={draw, rounded corners=2pt, align=center, minimum height=9mm, text width=17mm, fill=black!5},
+  rec/.style={draw, densely dashed, align=center, minimum height=8mm, text width=17mm},
+  arr/.style={-{Latex[length=1.8mm]}, semithick},
+  lab/.style={font=\footnotesize, align=center}]
+\node[comp] (gen) {Generator};
+\node[rec, right=of gen] (plan) {Plan};
+\node[comp, right=of plan] (exec) {Executor};
+\node[comp, right=12mm of exec] (ime) {Input method};
+\node[comp, right=8mm of ime] (ref) {Reference input field};
+\node[rec, below=of exec] (oracle) {Oracle (presses sent)};
+\node[comp, below=of plan] (pred) {Prediction (macOS)};
+\node[rec, below=of pred] (spec) {Specified rows};
+\node[comp, below=of ime] (logger) {Logger};
+\node[rec, below=of logger] (obs) {Observation log};
+\node[rec, below=of ref] (gt) {Ground-truth log};
+\draw[arr] (gen) -- (plan);
+\draw[arr] (plan) -- (exec);
+\draw[arr] (exec) -- node[lab, above] {key\\events} coordinate[pos=0.45] (tap) (ime);
+\draw[arr] (ime) -- node[lab, above] {calls} (ref);
+\draw[arr] (exec) -- (oracle);
+\draw[arr] (oracle) -- (pred);
+\draw[arr] (plan) -- (pred);
+\draw[arr] (pred) -- (spec);
+\draw[arr] (tap) |- (logger.west);
+\draw[arr, densely dotted] (ime) -- node[lab, right] {windows\\(Windows)} (logger);
+\draw[arr] (logger) -- (obs);
+\draw[arr] (ref) -- (gt);
+\end{tikzpicture}
+\caption{The components of a trial and the records they write (dashed boxes). The generator writes the plan from the
+settings, the procedures, the phrase corpus and the seed. The executor sends the planned presses as system key events
+and records each press as sent (the oracle). The reference input field records the calls that it receives from the
+input method (the ground-truth log), and the logger writes its key and session rows (the observation log): on macOS
+from the key presses and the input source, on Windows from the key presses and the windows of the input method. On
+macOS the prediction computes, from the plan and the oracle alone, the rows that the logger's rules specify. The
+ground-truth log and the observation log hold no text. The diagram is drawn by code written with an AI tool (Claude);
+see the AI declaration}
+\label{fig:components}
+\end{figure}

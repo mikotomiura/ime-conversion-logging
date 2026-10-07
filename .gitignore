@@ -17,3 +17,11 @@ experiment/raw/
 .venv/
 venv/
 !kit/corpus/data/*.jsonl
+# Outputs of a LaTeX build (build.sh writes them outside this directory; these guard a build run by hand)
+*.aux
+*.log
+*.blg
+*.bbl
+*.out
+*.toc
+*.synctex.gz

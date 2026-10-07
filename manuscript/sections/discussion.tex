@@ -1,0 +1,111 @@
+% Section 10 of the manuscript: discussion. Its interpretation is the author's: the section is written from the
+% author's direction (where the disagreements arise, what the interfaces allow, the effect of the Windows definition,
+% the mechanisms behind the spread of the durations as hypotheses, and the scales of writing research), as the
+% journal's publisher asks of the argument, the interpretation and the conclusions. The values that the paragraphs read
+% are given in the results sections and referred to there, except the delays of the key rows, which the third paragraph
+% states instead of a qualitative word, and the paragraph that sets the timing of the rows beside the scales of writing
+% research, whose purpose is that comparison. Every result value is read with \rv{} from generated/values.tex
+% (tools/results_tables.py).
+
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{Where the disagreements arise on macOS.} In the primary scope, the rows of the macOS logger agreed with the
+rows that its rules specify for the presses sent with the pooled recall, miss rate and false-positive rate and the
+limits of agreement of the durations given in Sections~\ref{sec:results-detection} and~\ref{sec:results-session}; the
+strata in which the two departed most were S12 at the middle and the fast speed (and, over the long trials, which the
+primary scope sets aside, S8). The
+comparison of the reference with the specified rows, which involves no observation, had the same lowest strata as the
+comparison of the reference with the logger, S6 and S10 at the fast speed, and the same sections give its pooled
+recall and the limits of agreement of its durations next to those of the logger. The disagreements of the macOS logger
+with the reference, and the long tails of its duration differences, thus arise mainly where the sessions that its
+rules define differ from the sessions of the reference (the three comparisons are read side by side, not combined
+arithmetically; Section~\ref{sec:results-detection}).
+
+\paragraph{Disagreements that the registration listed.} The registration listed, as following from the rules, a session
+that Backspace keeps open and carries into the next trial (S6), a session closed by Tab when a predictive candidate is
+chosen (S10), a reading split by the minus, comma or period key, and, with live conversion on, a session closed at the
+first of two Returns or Escapes. These set the lowest strata of the primary scope, S6 and S10 at the fast speed
+(Section~\ref{sec:results-detection}). The prediction marks the first and the third as layers (a session carried into
+the next trial, a closing key inside a reading), together with the trials that receive a carried session, and these
+layers hold its lowest agreement (supplement). In the trials outside every layer that the prediction marks, the
+reference agreed with the logger and with the specified rows with the same recall and precision, and there every row
+of the logger and every specified row were paired with each other (Section~\ref{sec:results-detection}). The layers
+do not mark the
+sessions closed by Tab in S10 or, with live conversion on, those closed at the first of two Returns or Escapes, so
+disagreements that the registration listed remain among these trials, and this study did not separate them from any
+that it did not list.
+
+\paragraph{The spread of the durations on macOS.} For the sessions that paired, the spread is not explained by the
+timing of the logger's records: its key rows followed the injected presses by a median of
+\rv{macos-standard-live-off.kt.obs.delay.all.median} with live conversion off and
+\rv{macos-standard-live-on.kt.obs.delay.all.median} with it on, with 95th percentiles of
+\rv{macos-standard-live-off.kt.obs.delay.all.p95} and \rv{macos-standard-live-on.kt.obs.delay.all.p95} and maxima of
+\rv{macos-standard-live-off.kt.obs.delay.all.max} and \rv{macos-standard-live-on.kt.obs.delay.all.max}
+(Section~\ref{sec:results-reference}), and Section~\ref{sec:results-session} gives the limits of agreement of its
+durations against those of its rules. Nor does it reflect how people type, because the input was produced by a
+program. The reference's sessions begin and end with the calls that the input method makes to the field, which the
+rules approximate from the keys. Differences in where the two place the beginning and the end of a session are
+consistent with the spread: for example a session that the rules close at a key while the input method keeps the
+reading, or, with live conversion on, the commits that the input method makes while the reading is typed, which would
+also be consistent with the larger median absolute differences with live conversion on than off (an exploratory
+comparison between the cells; Table~\ref{tab:session}). These mechanisms were not tested. The beginnings and the ends
+of the sessions were not compared separately; the two macOS cells used different plans
+(Section~\ref{sec:method-plans}), so the two settings are not compared trial by trial; durations are compared only for
+the sessions that paired, which differ between strata and speeds; and the delay between an injected press and the
+input method's calls to the reference field was not measured.
+
+\paragraph{What the interfaces allow.} Among the documented interfaces examined that do not depend on the application,
+none on macOS reports a conversion, so the logger, which is meant to work in any application, infers the sessions from
+the keys (Section~\ref{sec:observability}), and its sessions are those that its rules define. In the primary scope, the
+agreement of the macOS logger with the reference was thus set mainly by how its rules delimit sessions relative to
+those of the reference, rather than by the implementation of the rules (first paragraph of this section). Rules that
+infer the sessions differently can be evaluated against the same reference on the dataset without new measurement
+(Section~\ref{sec:dataset-uses}). On Windows, of the same interfaces, those that carry no text report the windows of
+the input method, not the composition (Section~\ref{sec:observability-windows}), so the logger records a period during
+which a window is visible, and its agreement with the reference, which records compositions, includes the difference
+between the two constructs; the values of the two systems are therefore not compared
+(Section~\ref{sec:observability-consequence}).
+
+\paragraph{Windows.} The durations of the Windows logger were shorter than the reference's at every speed
+(Section~\ref{sec:results-session}), and recall fell with speed also in S1, in which few sessions were split
+(supplement; an exploratory comparison between speeds, whose trials differ in composition,
+Section~\ref{sec:limitations}). A window that appears after the composition begins or disappears before it ends is
+consistent with shorter rows; a change of the window that the logger does not observe, and, on the cloaking path, an
+observed interval that ends at least 150~ms before the row's time, for which the matching is not adjusted, are
+consistent with sessions that fail to pair. Which of them acted cannot be told here, because a row does not record its
+path and nothing outside the software observed the windows.
+
+\paragraph{The definition of a Windows session.} Under both definitions of a Windows reference session (deviation D12),
+the ends of the ranges of the per-stratum intervals were the same, while the estimates of single strata within them
+and the pooled merge rate moved with the definition (Section~\ref{sec:results-detection}).
+
+\paragraph{The scales of writing research.} Writing research that counts pauses has traditionally set the threshold of
+a pause at 2~s; the introduction to a special issue on methods for the writing time-course notes that what holds for
+2~s, that processing on either side of it is likely to differ in kind, could be argued for ``any threshold a
+researcher might care to choose between perhaps 250 ms and 10 s'' \citep{torrance2024}. Comparisons of writing tasks
+also report differences as small as pauses between words 36~ms longer in an e-mail task than in a copy task and a key
+press time 5~ms shorter \citep[p.~2362]{conijn2019}; the time a key is held is computed
+from releases, whose times this study did not validate. On the software path alone
+(Section~\ref{sec:results-reference}), the key rows of the logger followed the injected presses by a median of
+\rv{macos-standard-live-off.kt.obs.delay.all.median} with live conversion off and
+\rv{macos-standard-live-on.kt.obs.delay.all.median} with it on (95th percentiles
+\rv{macos-standard-live-off.kt.obs.delay.all.p95} and \rv{macos-standard-live-on.kt.obs.delay.all.p95}), and the
+signed error of the intervals between consecutive rows had 5th and 95th percentiles of
+\rv{macos-standard-live-off.kt.obs.interval.all.p05} and \rv{macos-standard-live-off.kt.obs.interval.all.p95} and of
+\rv{macos-standard-live-on.kt.obs.interval.all.p05} and \rv{macos-standard-live-on.kt.obs.interval.all.p95}; on Windows
+the median delay was \rv{windows-msime-tsf.kt.obs.delay.all.median} (95th percentile
+\rv{windows-msime-tsf.kt.obs.delay.all.p95}) and the percentiles of the interval error
+\rv{windows-msime-tsf.kt.obs.interval.all.p05} and \rv{windows-msime-tsf.kt.obs.interval.all.p95}. The path from a
+physical key adds its own delay and limits the precision of the intervals, to about 8~ms for a USB keyboard sampled
+every 8~ms \citep{pinet2017}. The durations of the session rows bear on the time spent converting rather than on the
+pauses between keys: in the primary scope, those of the sessions that paired were within 100~ms of the reference's in
+\rv{macos-standard-live-off.dwellx.within100.range} of the pairs with live conversion off and
+\rv{macos-standard-live-on.dwellx.within100.range} with it on, and within 1~s in
+\rv{macos-standard-live-off.dwellx.within1000.range} and \rv{macos-standard-live-on.dwellx.within1000.range}; on
+Windows, where a session is the period of a visible window, within 100~ms in
+\rv{windows-msime-tsf.dwellx.within100.range} and within 1~s in \rv{windows-msime-tsf.dwellx.within1000.range}
+(exploratory ranges over the speeds; Section~\ref{sec:results-session}). The beginnings and the ends of the sessions,
+which would place the pauses before and after a commit, were not compared separately. These figures are set beside the
+scales; how pauses computed from the rows would be classified against a threshold was not evaluated, and the sessions
+that did not pair are counted in Section~\ref{sec:results-detection}.

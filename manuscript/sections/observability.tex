@@ -127,15 +127,23 @@ and on macOS a segment of kana input inferred from the keys. Their measures are 
 are validated separately against references of their own system (Section~\ref{sec:method-reference}), and they are not
 compared as equal. Table~\ref{tab:interfaces} summarises the interfaces examined.
 
-\begin{sidewaystable}[p]
+% A landscape long table (main.tex): a sideways float of this length runs off the rotated page.
+\begin{landscape}
+{\tablebodyfont
+\begin{longtable}{L{0.26}L{0.35}L{0.08}L{0.18}L{0.11}}
 \caption{Interfaces examined for logging the conversion of another application. ``Text'' is whether the interface
 delivers the composition, the candidates or other text to the program that uses it}
-\label{tab:interfaces}
-\begin{tabular}{L{0.26}L{0.35}L{0.08}L{0.18}L{0.11}}
+\label{tab:interfaces}\\
 \toprule
 Interface & What it exposes to a program outside the application & Text & Used by the logger & Source \\
 \midrule
-\multicolumn{5}{l}{\emph{Windows}} \\
+\endfirsthead
+\tablecontinued{5}
+\toprule
+Interface & What it exposes to a program outside the application & Text & Used by the logger & Source \\
+\midrule
+\endhead
+\multicolumn{5}{l}{\emph{Windows}} \\*
 Text Services Framework (thread manager and sinks) & The composition of the calling thread; for another application only from inside its process & Yes & No & \citet{ms-tsf-activate,ms-tsf-advisesink,ms-ime-tsf-accessibility} \\
 Text service & Text of the application in which it runs, as an in-process server & Yes & No & \citet{ms-tsf-architecture} \\
 Input-method manager & The input context of a thread and its composition string & Yes & No & \citet{ms-imm-inputcontext,ms-imm-getcompositionstring} \\
@@ -148,7 +156,7 @@ UI Automation text-edit pattern, finished composition & The finalized string & Y
 UI Automation text-edit pattern, conversion target & A change of the conversion target, if the application raises it & No & No & \citet{ms-uia-textedit,ms-eventconstants} \\
 Focused element and top-level windows & Properties of the focused element and of the top-level windows; the logger reads class names only & No, for class names & Secondary signals of a candidate window & \citet{ms-uia-getfocusedelement,ms-uia-classname,ms-enumwindows} \\
 \midrule
-\multicolumn{5}{l}{\emph{macOS}} \\
+\multicolumn{5}{l}{\emph{macOS}} \\*
 Text-input client protocol & Marked and inserted text, inside the application only & Yes & No & \citet{apple-nstextinputclient} \\
 Input Method Kit & The input method's own sessions with its clients & Yes & No & \citet{apple-imk,apple-imkinputcontroller} \\
 Accessibility, C constants & No item on marked text & No & No & \citet{apple-ax-attributes,apple-ax-parameterized,apple-ax-notifications} \\
@@ -157,5 +165,6 @@ Window list & Information about each window, such as its bounds, when polled & N
 Text input sources & The selected input source and input mode & No & Whether a Japanese input source is selected & \citet{apple-textinputsources} \\
 Event tap & The key code and time of every key event & No & Key rows; sessions by inference & \citet{apple-cgevent-tapcreate} \\
 \bottomrule
-\end{tabular}
-\end{sidewaystable}
+\end{longtable}
+}
+\end{landscape}

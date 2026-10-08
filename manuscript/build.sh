@@ -131,7 +131,12 @@ latex supplement.tex
 
 for name in $names; do
   log="$out/$name.log"
-  echo "$name: $(grep -c '^!' "$log" || true) errors, $(grep -c 'LaTeX Warning: Reference' "$log" || true) undefined references, $(grep -c 'Warning: Citation' "$log" || true) undefined citations, $(grep -c 'Package results Warning: Result value' "$log" || true) result values not generated, $(grep -c '^Overfull' "$log" || true) overfull boxes"
+  echo "$name: $(grep -c '^!' "$log" || true) errors, $(grep -c 'LaTeX Warning: Reference' "$log" || true) undefined references, $(grep -c 'Warning: Citation' "$log" || true) undefined citations, $(grep -c 'Package results Warning: Result value' "$log" || true) result values not generated, $(grep -c '^Overfull' "$log" || true) overfull boxes, $(grep -c 'Float too large for page' "$log" || true) floats too large for the page"
+done
+# LaTeX does not always warn when a table runs off the page, so the PDFs are read for text and rules outside the page
+# (tools/check_page_bounds.py, which needs PyMuPDF and says so when it is missing).
+for name in $names; do
+  "${PYTHON:-python3}" "$here/tools/check_page_bounds.py" "$out/$name.pdf" || true
 done
 for blg in main $( [ "$submission" = 1 ] && echo main-submission ); do
   echo "bibtex ($blg): $(grep -c '^Warning--' "$out/$blg.blg" || true) warnings"

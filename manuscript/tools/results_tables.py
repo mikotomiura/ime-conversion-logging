@@ -2299,24 +2299,40 @@ AGREEMENT_HEAD = ("Speed & Texts & Reference SD & Bias & Lower limit & Upper lim
 
 
 def table_text_agreement(cells):
-    """Table 10: per-text agreement of the four measures per cell and speed, primary scope."""
+    """Table 10: per-text agreement of the four measures per cell and speed, primary scope. Its rows do not fit one
+    rotated page of the manuscript, so it is a landscape long table that continues on the next page with the heading
+    repeated (main.tex loads longtable and pdflscape and defines \\tablecontinued)."""
+    head = "Cell & Measure & " + AGREEMENT_HEAD
     lines = [GENERATED_NOTE,
-             "\\begin{sidewaystable}[p]\n",
+             "\\begin{landscape}\n",
              "{\\footnotesize\n",
+             "\\begin{longtable}{L{0.13}L{0.13}L{0.06}L{0.06}L{0.09}L{0.13}L{0.13}L{0.13}L{0.13}}\n",
              "\\caption{Per-text agreement per cell, measure and speed, primary scope: bias and limits of agreement of the "
              "per-text difference (observation minus reference) and ICC(A,1), each with a 95\\%% interval that resamples "
              "blocks; Texts is the number of texts with a value on both sides, and Reference SD the standard deviation "
              "of the reference's values between those texts. An estimate printed without an interval has its interval "
              "withheld (the reason is in the result file); %s: no value; %s. The values hold for this design's numbers "
-             "of trials per text and are not compared between speeds}\n" % (NO_VALUE, REFERENCE_CONSTANT_NOTE),
-             "\\label{tab:text-agreement}\n",
-             "\\begin{tabular}{L{0.13}L{0.13}L{0.06}L{0.06}L{0.09}L{0.13}L{0.13}L{0.13}L{0.13}}\n",
-             "\\toprule\n",
-             "Cell & Measure & " + AGREEMENT_HEAD,
-             "\\midrule\n"]
+             "of trials per text and are not compared between speeds}" % (NO_VALUE, REFERENCE_CONSTANT_NOTE),
+             "\\label{tab:text-agreement}\\\\\n",
+             "\\toprule\n", head, "\\midrule\n\\endfirsthead\n",
+             "\\tablecontinued{9}\n",
+             "\\toprule\n", head, "\\midrule\n\\endhead\n"]
+    per = len(SPEEDS)
     for cell in cells:
-        lines += _agreement_rows(cell, PRIMARY_SCOPE, cell_name(cell.label))
-    lines += ["\\bottomrule\n", "\\end{tabular}\n", "}\n", "\\end{sidewaystable}\n"]
+        # Each measure's first row names the cell as well as the measure, and a page breaks only after a measure's last
+        # row (\\* forbids a break after a row), so every page of the table starts with a row that names both. A whole
+        # cell cannot be kept together: with the caption it does not fit the first page of the double-spaced layout.
+        name = cell_name(cell.label)
+        rows = _agreement_rows(cell, PRIMARY_SCOPE, name)
+        if len(rows) % per or any(not r.endswith(" \\\\\n") for r in rows):
+            raise ValueError("the rows of the per-text table are not whole measures ending with \\\\")
+        for k, r in enumerate(rows):
+            if k % per == 0 and k:
+                if not r.startswith(" & "):
+                    raise ValueError("a measure's first row already names a cell")
+                r = name + r
+            lines.append(r if k % per == per - 1 else r[:-1] + "*\n")
+    lines += ["\\bottomrule\n", "\\end{longtable}\n", "}\n", "\\end{landscape}\n"]
     return "".join(lines)
 
 
@@ -4204,13 +4220,32 @@ def selftest():
         check("the generated files say that they are generated", all(
             data.decode("utf-8").startswith("% Generated") for n, data in files.items() if n.endswith(".tex")))
         t10 = files["table-text-agreement.tex"].decode("utf-8")
+        heads = [l for l in t10.splitlines() if l.startswith("Cell & Measure & Speed & ")]
+        check("q3: the per-text table is a landscape long table that continues on the next page: the caption and the "
+              "label on the first page only, the heading repeated under a continuation line, one column per heading "
+              "entry, and no sideways float, which runs off the page",
+              t10.count("\\begin{landscape}") == 1 and t10.count("\\begin{longtable}") == 1
+              and "sidewaystable" not in t10 and t10.count("\\caption{") == 1 and len(heads) == 2
+              and heads[0].count("&") + 1 == 9 and t10.count("\\tablecontinued{9}") == 1
+              and t10.index("\\caption{") < t10.index("\\label{tab:text-agreement}") < t10.index("\\endfirsthead")
+              < t10.index("\\tablecontinued{9}") < t10.index("\\endhead") < t10.index("\\end{longtable}"),
+              t10[:800])
+        body = t10[t10.index("\\endhead") + len("\\endhead\n"):t10.index("\\bottomrule")].splitlines()
+        named = [i for i, l in enumerate(body) if l.split(" & ")[0] and l.split(" & ")[1]]
+        breaks = [i for i, l in enumerate(body) if l.endswith(" \\\\")]
+        per = len(SPEEDS)
+        check("q3: the per-text table breaks a page only after the last row of a measure, and each measure's first "
+              "row names the cell and the measure, so every continued page starts with a row that names both",
+              len(body) % per == 0 and all(l.endswith((" \\\\", " \\\\*")) for l in body)
+              and named == list(range(0, len(body), per)) and breaks == list(range(per - 1, len(body), per))
+              and all(not l.split(" & ")[0] for i, l in enumerate(body) if i % per), str((named, breaks)))
         check("q3: a duration is in whole milliseconds with a minus sign, and the bias, the lower and the upper limit "
               "and the ICC each come with their own interval",
               "Mean conversion time (ms) & slow & 40 & 117 & $-$1,234 [$-$1,235, $-$1,233] & $-$2,134 [$-$2,135, $-$2,133] "
               "& $-$534 [$-$535, $-$533] & 0.750 [0.500, 0.875] \\\\" in t10, t10[-1500:])
         row = [l for l in t10.splitlines() if "Conversions per trial & slow" in l]
         check("q3: an estimate whose interval is withheld is printed alone, not dropped",
-              len(row) == 1 and row[0].endswith("& 0.750 \\\\"), str(row))
+              len(row) == 1 and row[0].rstrip("*").endswith("& 0.750 \\\\"), str(row))
         check("q3: a measure with no text in the scope is stated",
               "Abandonment rate & slow & \\multicolumn{6}{l}{no text in the scope}" in t10)
         check("q3: proportions keep three decimals with a minus sign, after the reference's SD",
@@ -4219,9 +4254,9 @@ def selftest():
         d11_cell = "& %s; registered 0.750 [0.500, 0.875]) \\\\" % REFERENCE_CONSTANT
         check("q3: an ICC whose reference is the same in every text has no value, with the reason, the registered "
               "result next to it (deviation D11; section 8 of the registration), and its SD is zero",
-              len(mid) >= 1 and mid[0].startswith(" &  & mid & 40 & 0.000 & ") and mid[0].endswith(d11_cell)
+              len(mid) >= 1 and mid[0].startswith(" &  & mid & 40 & 0.000 & ") and mid[0].rstrip("*").endswith(d11_cell)
               and REFERENCE_CONSTANT_NOTE in t10
-              and sum(1 for l in t10.splitlines() if l.endswith(d11_cell)) == len(row), str(mid[:2]))
+              and sum(1 for l in t10.splitlines() if l.rstrip("*").endswith(d11_cell)) == len(row), str(mid[:2]))
         cst = dict((k, vals.get("q3.conversions_per_trial.%s" % k) or {}) for k in
                    ("constant.strata", "constant.of", "onetext.strata"))
         check("q3: the text's count of strata whose reference is the same in every text is the number of such ICCs "

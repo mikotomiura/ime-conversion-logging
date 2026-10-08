@@ -74,6 +74,21 @@
 % that columns whose fractions sum to at most one fit the line.
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{\dimexpr#1\linewidth-2\tabcolsep\relax}}
 
+% A table too long for one rotated page is a landscape long table that continues on the next page with its heading
+% repeated; a sideways float of that length runs off the page. The caption of a long table takes the form of the
+% class's table captions (the number in bold, no colon) instead of longtable's own, and starts at the table's left
+% edge (the cell of the caption begins one \tabcolsep inside it) with a width that stays inside the text block.
+\usepackage{longtable}
+\usepackage{pdflscape}
+\makeatletter
+\def\LT@makecaption#1#2#3{%
+  \LT@mcol\LT@cols l{\hbox to\z@{\hskip-\tabcolsep
+    \parbox[t]{\dimexpr\linewidth-2\tabcolsep\relax}{\@tablecaption{#1{#2}}{#3}\vskip\belowcaptionskip}\hss}}}
+\makeatother
+% The heading of a long table on the pages after its first, followed by the same space as a caption.
+\newcommand{\tablecontinued}[1]{\multicolumn{#1}{@{}l}{\tablecaptionfont\textbf{\tablename~\thetable}\hskip2mm
+  (continued)}\\[\belowcaptionskip]}
+
 % The APA style of the template prints the url field of a reference as plain text, so an underscore in a URL stops the
 % compilation; the environment that holds the field is redefined to pass the URL to \url.
 \makeatletter

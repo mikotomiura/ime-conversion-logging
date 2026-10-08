@@ -33,13 +33,21 @@ intervals. The weaknesses of the present logger are kept in the table: it was no
 applications other than the reference fields, it does not separate inter-key intervals by script, and it records
 release times without validating them.
 
-\begin{sidewaystable}[p]
+% A landscape long table (main.tex): a sideways float of this length runs off the rotated page.
+\begin{landscape}
+{\tablebodyfont
+\begin{longtable}{L{0.17}L{0.14}L{0.19}L{0.14}L{0.13}L{0.21}}
 \caption{Keystroke loggers for writing research, as documented on 5 October 2026}
-\label{tab:loggers}
-\begin{tabular}{L{0.17}L{0.14}L{0.19}L{0.14}L{0.13}L{0.21}}
+\label{tab:loggers}\\
 \toprule
 Logger and version & Where it records & Input-method conversion & Text or key names in the log & Key-down and key-up & Validation reported \\
 \midrule
+\endfirsthead
+\tablecontinued{6}
+\toprule
+Logger and version & Where it records & Input-method conversion & Text or key names in the log & Key-down and key-up & Validation reported \\
+\midrule
+\endhead
 CyWrite; no tagged release, repository described as a preliminary public release, last updated 21 July 2026 \citep{cywrite-repo} & Its own editor in a web browser \citep{wengelin2023,cywrite-repo} & Not documented & Text changes and keystrokes \citep{wengelin2023} & Yes$^{a}$ & Not examined$^{b}$ \\
 GenoGraphiX-Log 2.1.1 (Beta-3), released 15 September 2025 \citep{ggxlog-web} & Its own editor \citep{wengelin2023} & Hardware keyboard and mouse input only; software-driven input not supported \citep{ggxlog-web} & Session log and final text \citep{ggxlog-web} & Yes$^{a}$ & Not documented in the sources examined \\
 Inputlog 9.7.0.1, March 2026 \citep{inputlog-web} & Any Windows program \citep{inputlog-web} & Not supported in version 9.5$^{a}$ & Keystrokes \citep{wengelin2023} & Yes in version 9.5$^{a}$ & Not examined$^{b}$ \\
@@ -49,14 +57,15 @@ Translog-II 2.24 \citep{translog-web} & Its own editor \citep{wengelin2023} & Re
 Hybrid logger; source repository, no release, last updated 13 May 2026 \citep{hylog-repo} & Plug-ins for a word processor and a web browser, with Inputlog \citep{crotti2026} & Commits inferred from keystrokes and text; inter-key intervals before a candidate is confirmed and after a conversion told apart \citep{crotti2026} & Text and keystrokes \citep{crotti2026} & Yes \citep{crotti2026} & Two participants, one input method, against screen recordings \citep{crotti2026} \\
 This logger 0.1.0, in release 1.0.0 of the code \citep{release} & Any application, system-wide; the application is not recorded & Windows: display and cloaking of the input method's windows; macOS: inferred from key presses; the time of a commit is approximated by the row's time and duration & Neither (fourteen key categories) & Yes; release times not validated & Synthetic input against reference input fields, three cells, pre-registered; no human input \\
 \bottomrule
-\end{tabular}
-\par\smallskip\footnotesize
+\end{longtable}
+\par\smallskip\noindent\footnotesize
 $^{a}$As reported in the comparison by \citet{crotti2026}, which examined Inputlog 9.5, not in the tool's own
 documentation.
 $^{b}$The articles that report a validation of the tool are not openly accessible and were not read, so the column
 reflects only the sources examined.
-$^{c}$\citet{crotti2026} describe Translog-II as having no visibility of key-down and key-up events.
-\end{sidewaystable}
+$^{c}$\citet{crotti2026} describe Translog-II as having no visibility of key-down and key-up events.\par
+}
+\end{landscape}
 
 \subsection{Writing in Japanese and Chinese}
 \label{sec:related-cjk}

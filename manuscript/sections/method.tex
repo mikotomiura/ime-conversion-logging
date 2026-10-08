@@ -419,13 +419,20 @@ with the first change of D10 for questions 1 to 3 and the switch that D8 adds fo
 change of D10 left the result files of synthetic runs byte-identical to those of the frozen code; the corrected
 analysis of its second change is reported next to the registered one for every cell.
 
-\begin{table}[t]
+% A long table (main.tex): as a float it is taller than the page of the template.
+{\tablebodyfont
+\begin{longtable}{L{0.08}L{0.46}L{0.46}}
 \caption{Deviations from the registration}
-\label{tab:deviations}
-\begin{tabular}{L{0.08}L{0.46}L{0.46}}
+\label{tab:deviations}\\
 \toprule
 & Change & Reason \\
 \midrule
+\endfirsthead
+\tablecontinued{3}
+\toprule
+& Change & Reason \\
+\midrule
+\endhead
 D1 & On Windows, scenario S4 presses Escape three times instead of twice. &
 In the pilot two Escapes did not cancel a reading converted into several segments; the uncommitted reading ran into
 the next trial. \\
@@ -472,5 +479,5 @@ the ranges had been seen). &
 The registration reports under the common definition only whether the two definitions hold the same sessions, which
 does not show how far the estimates depend on the choice of definition. \\
 \bottomrule
-\end{tabular}
-\end{table}
+\end{longtable}
+}

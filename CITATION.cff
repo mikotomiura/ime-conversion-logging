@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below. The records of the validation are a separate dataset."
 type: software
 title: "Logging Japanese IME conversion without recording text: Logger, validation kit and analysis code"
-version: "1.0.0"
-doi: "10.5281/zenodo.23183441"
+version: "1.0.1"
+doi: "10.5281/zenodo.23219322"
 authors:
   - family-names: "Miura"
     given-names: "Mikoto"

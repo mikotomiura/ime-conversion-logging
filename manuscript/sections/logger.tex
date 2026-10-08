@@ -145,14 +145,21 @@ Cut-off & At the first press 20~s or more after opening; no row & Window events:
 \end{tabular}
 \end{table}
 
-\begin{table}[tp]
+% A long table (main.tex): as a float it is taller than the page of the template.
+{\tablebodyfont
+\begin{longtable}{L{0.18}L{0.17}L{0.17}L{0.18}L{0.30}}
 \caption{Measures of keystroke studies of writing: whether each can be computed from the logger's rows alone, and
 whether this study estimates its agreement with a reference}
-\label{tab:measures}
-\begin{tabular}{L{0.18}L{0.17}L{0.17}L{0.18}L{0.30}}
+\label{tab:measures}\\
 \toprule
 Measure & macOS & Windows & Agreement estimated & Reason when not computable or not estimated \\
 \midrule
+\endfirsthead
+\tablecontinued{5}
+\toprule
+Measure & macOS & Windows & Agreement estimated & Reason when not computable or not estimated \\
+\midrule
+\endhead
 Inter-key intervals and pauses between presses & Yes & Yes & Timing of the rows of presses on the software path only (Section~\ref{sec:method-checks}) & Physical keyboard and keys outside the observed set not covered \\
 Pauses at word and sentence boundaries & Partly & Partly & No & No text; only the comma and period keys are marked, and Space converts rather than separating words \\
 Pauses before and after a conversion is committed & Approximate & Approximate & No & The row gives the collection time and the duration, not the time of the commit \\
@@ -169,5 +176,5 @@ study the per-text rate was lower than the reference's (Section~\ref{sec:results
 Pointer and mouse actions & No & No & No & Not recorded, so a revision or insertion made with the pointer is not seen \\
 Four per-text aggregates of this study & Yes & Yes & Per-text agreement & Defined by this study \\
 \bottomrule
-\end{tabular}
-\end{table}
+\end{longtable}
+}

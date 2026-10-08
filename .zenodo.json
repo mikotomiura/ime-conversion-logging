@@ -1,7 +1,7 @@
 {
   "upload_type": "software",
   "title": "Logging Japanese IME conversion without recording text: Logger, validation kit and analysis code",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The standalone logger for Windows and macOS, which records Japanese input-method conversion without recording text; the kit that generates the plans, runs the cells and checks the logs (plan generator, executor, reference input fields, log formats and their validator, corpus tools); the analysis code; the aggregate results; and the script that generates the tables, the values quoted in the text and the figures of the article. Code is released under Apache-2.0. Data (including the phrases and readings in kit/corpus/data/) and documents are released under CC BY 4.0; both licenses are described in README.md. The records of the validation are a separate dataset (DOI 10.5281/zenodo.23183438).",
   "access_right": "open",
   "license": "apache-2.0",

@@ -19,11 +19,11 @@ a reading in an input field; Space converts it and Enter commits it. Right: the 
 times: a key category and a time for every key press and, when the conversion ends, its duration, the number of
 arrow-key presses during it and whether it was abandoned. No character is written.">
 
-[![Code release](https://img.shields.io/badge/code%20release-v1.0.0-1682D4?style=for-the-badge)](https://doi.org/10.5281/zenodo.23183441)
+[![Code release](https://img.shields.io/badge/code%20release-v1.0.1-1682D4?style=for-the-badge)](https://doi.org/10.5281/zenodo.23183440)
 [![Dataset](https://img.shields.io/badge/dataset-Zenodo-1682D4?style=for-the-badge)](https://doi.org/10.5281/zenodo.23183438)
 [![Pre-registered](https://img.shields.io/badge/pre--registered-OSF-2C6EAB?style=for-the-badge)](#pre-registration)
 
-[![DOI of the code](https://zenodo.org/badge/DOI/10.5281/zenodo.23183441.svg)](https://doi.org/10.5281/zenodo.23183441)
+[![DOI of the code](https://zenodo.org/badge/DOI/10.5281/zenodo.23183440.svg)](https://doi.org/10.5281/zenodo.23183440)
 [![DOI of the data](https://zenodo.org/badge/DOI/10.5281/zenodo.23183438.svg)](https://doi.org/10.5281/zenodo.23183438)
 [![Code license: Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-3C873A)](LICENSE-CODE)
 [![Data and documents license: CC BY 4.0](https://img.shields.io/badge/data%20and%20documents-CC%20BY%204.0-3C873A)](LICENSE-DATA)
@@ -152,11 +152,11 @@ manuscript is built.
 @software{miura2026code,
   author    = {Miura, Mikoto},
   title     = {Logging {J}apanese {IME} conversion without recording text: Logger, validation kit and analysis code},
-  version   = {1.0.0},
+  version   = {1.0.1},
   year      = {2026},
   publisher = {Zenodo},
-  doi       = {10.5281/zenodo.23183441},
-  url       = {https://doi.org/10.5281/zenodo.23183441}
+  doi       = {10.5281/zenodo.23219322},
+  url       = {https://doi.org/10.5281/zenodo.23219322}
 }
 
 @dataset{miura2026data,
@@ -204,11 +204,17 @@ is, in order:
 1. the files exported from the freezing commit of the macOS cells, tagged `ime-observation-prereg-macos`;
 2. the files exported from the freezing commit of the Windows addendum, tagged `ime-observation-prereg-windows`;
 3. a commit that adds only `manuscript/outline.md` as it stood before the results were analysed;
-4. the release, tagged `v1.0.0`.
+4. release 1.0.0, tagged `v1.0.0`;
+5. release 1.0.1, tagged `v1.0.1`. Apart from `CITATION.cff`, `.zenodo.json` and the two README files, it changes
+   only how the manuscript is typeset and checked: the five tables that did not fit on their page (Tables 1, 2, 4, 7
+   and 13) are set so that they can continue onto the next page, and the build also lists and counts the pages on
+   which text or a line lies outside the page or over the page number. The text and the values of the manuscript, the
+   logger, the kit, the analysis code and the results are those of release 1.0.0; the script that generates the
+   tables changed only in the layout of Table 13.
 
 The first three commits carry the date of the working commit they come from, and their messages name it. The
-license texts, this file's identifiers and figures and the line-end rules of `.gitattributes` are added in the
-release.
+license texts, this file's identifiers and figures and the line-end rules of `.gitattributes` were added in
+release 1.0.0.
 
 <details>
 <summary>Recomputing the lists of the freezing tags</summary>

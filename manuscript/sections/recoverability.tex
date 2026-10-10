@@ -35,10 +35,14 @@ drawn from the phrases that the trial's scenario could have produced (excluding 
 knew the scenario, the system, the speed, the generator, the procedures and the settings, generated the expected log
 of each candidate with the same generator, and chose the candidate whose expected log was closest to the observed
 one. $K$ was 10, 100 and 1{,}000. The attack was repeated on six feature sets that remove information from the log,
-named here, in the figures and in the tables as in the registration: exact times and the lengths of runs of letter keys
-(\texttt{all}), no times (\texttt{no\_time}), no run lengths (\texttt{no\_runs}), times in 1-second bins
-(\texttt{bin1s}), 1-second bins without run lengths (\texttt{bin1s\_count}), and neither times nor run lengths
-(\texttt{counts\_only}). Because an attacker given a detailed log can always discard
+named here, in the figures and in the tables as in the registration: exact times (\texttt{all}), no times
+(\texttt{no\_time}), times in 1-second bins (\texttt{bin1s}), and each of these three with every run of letter keys
+made one token (\texttt{no\_runs}, \texttt{bin1s\_count} and \texttt{counts\_only}). The registration describes the
+last three as having no lengths of letter runs, but the token of a run kept the number of its presses, and the distance
+charged the difference of these numbers; what the three sets removed was the time of every press of a run after its
+first (deviation D13). Without times, \texttt{counts\_only} therefore held the same information as \texttt{no\_time},
+the category of every press in order, and differed from it only in how the distance counted a run of letter keys.
+Because an attacker given a detailed log can always discard
 information, the accuracy of a feature set is the maximum over that set and every coarser set derived from it. The
 accuracy is reported with its Wilson interval and, descriptively, with a 95\% percentile interval from 2{,}000
 resamples of whole blocks, together with the chance level $1/K$, the mean rank of the true phrase and, without an
@@ -47,8 +51,9 @@ interval, the accuracy of each feature set alone per scenario and per speed.
 \paragraph{The near-chance rule.} The synthetic key intervals were drawn independently of the keys, so the logs carry
 none of the timing structure of human typing, neither the timing of particular key pairs nor the pauses between words
 and phrases. The accuracy on the four feature sets that keep any time is therefore reported as an estimate only and
-does not enter the recommendation, which considers the two sets that keep no time (\texttt{no\_time} and its
-coarsening \texttt{counts\_only}). The accuracy of a feature set is near chance at $K=10$ or $K=100$ when the upper
+does not enter the recommendation, which considers the two sets that keep no time (\texttt{no\_time} and
+\texttt{counts\_only}, registered as its coarsening). The accuracy of a feature set is near chance at $K=10$ or $K=100$
+when the upper
 end of its 95\% Wilson interval is at most $2/K$. A set is near chance for the recommendation when it is near chance at
 both values of $K$ in both macOS cells, and the recommended granularity is the more detailed of the two sets that is
 near chance in this sense; if neither is, no granularity is recommended, and this is reported. At $K=1{,}000$ an attack
@@ -60,6 +65,23 @@ independent; with positive dependence within a block the rule can be met more ea
 block-resampled interval is reported next to it. The recommendation was decided from the two macOS cells. The same
 judgement was made for the Windows cell and, where it does not hold, is reported as a qualification of the
 recommendation for logs recorded on Windows; it does not change the recommendation.
+
+\paragraph{Exploratory: feature sets without run lengths.} Because no registered set dropped the lengths of letter
+runs, the closed-set attack was also run, as an exploratory analysis that is not registered (deviation D13), on two
+feature sets without times that drop them: \texttt{letter\_runs\_unit}, in which every run of letter keys is one token
+whatever its length and every other press one token, and \texttt{all\_runs\_unit}, in which every run of presses of the
+same category is one token whatever its length, so that the numbers of Backspace, arrow and other repeated presses are
+dropped as well. Both keep the order of the tokens. The predicted logs, the distance, the candidates and the
+tie-breaking of each trial, the values of $K$ and the intervals were those of the registered attack, and every run also
+computed \texttt{no\_time} and \texttt{counts\_only} and stopped unless they equalled the registered results. As
+\texttt{all\_runs\_unit} can be derived from \texttt{letter\_runs\_unit}, the accuracy of \texttt{letter\_runs\_unit}
+is the larger of the two. Both sets can also be derived from \texttt{no\_time} and \texttt{counts\_only}; at every $K$
+and in every cell each was less accurate than both, so the registered accuracies, their Wilson intervals and the
+registered judgement are unchanged. The registered near-chance rule was applied to both sets as an exploratory judgement, from
+the two macOS cells, with the Windows judgement as its qualification; it is reported next to the registered judgement
+and does not change the recommendation. The two sets, the rule and the place of the result in this article were fixed
+after all registered results had been seen and before the analysis was run, and a related measurement on single trials
+of the Windows cell, made with a related attack in another study, had been seen before (deviation D13).
 
 \paragraph{Open set.} A second attacker saw only the categories of the key presses and, with a character language
 model, searched for the kana string that Romaji input would spell with exactly the observed letter keys and the
@@ -100,8 +122,8 @@ applied to the planned numbers of trials, whose properties Table~\ref{tab:nearch
 that keep no time. With live conversion off, the accuracy of \texttt{no\_time} was
 \rv{macos-standard-live-off.q4.no_time.k10.acc} at $K = 10$ and \rv{macos-standard-live-off.q4.no_time.k100.acc} at
 $K = 100$; with it on, \rv{macos-standard-live-on.q4.no_time.k10.acc} and
-\rv{macos-standard-live-on.q4.no_time.k100.acc}. The accuracy of \texttt{counts\_only}, the maximum over that set and
-the set derived from it, was \rv{macos-standard-live-off.q4.counts_only.k10.acc} and
+\rv{macos-standard-live-on.q4.no_time.k100.acc}. The accuracy of \texttt{counts\_only}, the coarsest registered set,
+from which no other registered set is derived, was \rv{macos-standard-live-off.q4.counts_only.k10.acc} and
 \rv{macos-standard-live-off.q4.counts_only.k100.acc} with live conversion off and
 \rv{macos-standard-live-on.q4.counts_only.k10.acc} and \rv{macos-standard-live-on.q4.counts_only.k100.acc} with it on.
 In both macOS cells the upper end of every one of these Wilson intervals lies above $2/K$, so neither set is near chance
@@ -110,10 +132,12 @@ under the registered rule, which is not a criterion of privacy (Section~\ref{sec
 \rv{macos-standard-live-on.q4.no_time.near}; \texttt{counts\_only}: \rv{macos-standard-live-off.q4.counts_only.near}
 and \rv{macos-standard-live-on.q4.counts_only.near}), and the recommended granularity is \rv{q4.recommendation}: no
 granularity of the key rows is recommended. In both macOS cells, at $K = 10$ and $K = 100$, the
-maximum that gives the accuracy of \texttt{no\_time} came from the attack on \texttt{counts\_only}: the numbers of key
-presses of each category in a trial, without their order or times, identified the phrase at least as often as the
-attack on \texttt{no\_time} alone did (supplement). The decoys were drawn from the phrases of the trial's scenario,
-whose readings have 6 to 30 kana (Section~\ref{sec:method-plans}), and were not matched to the true phrase in length.
+maximum that gives the accuracy of \texttt{no\_time} came from the attack on \texttt{counts\_only}, which holds the
+same information as \texttt{no\_time} and differs from it only in how its distance counts a run of letter keys
+(Section~\ref{sec:recoverability-method}): counted as one token of its length, the runs identified the phrase at least
+as often as the attack on \texttt{no\_time} alone did (supplement). The decoys were drawn from the phrases of the
+trial's scenario, whose readings have 6 to 30 kana (Section~\ref{sec:method-plans}), and were not matched to the true
+phrase in length.
 
 On Windows, under the same judgement, \rv{q4.windows.qualification}. The Windows accuracies of the two sets equal those
 of the macOS cell with live conversion off to the reported precision. The two plans were generated from the same seed
@@ -121,6 +145,28 @@ and share every trial's block, scenario, speed, phrase and times; their presses 
 procedure presses one Return more, and in S4, where the Windows procedure presses one Escape more (deviation D1), and
 the presses of letters, digits and punctuation are the same in every trial. The Windows judgement is therefore not an
 independent replication of the macOS one for these sets.
+
+% Every word of the exploratory judgement is generated from the result files (q4x.*); the paragraph was to be here
+% whatever the result (deviation D13).
+\paragraph{Exploratory: feature sets without run lengths.} In the exploratory analysis of deviation D13, the accuracy of
+\texttt{letter\_runs\_unit} was \rv{macos-standard-live-off.q4x.letter_runs_unit.k10.acc} at $K = 10$ and
+\rv{macos-standard-live-off.q4x.letter_runs_unit.k100.acc} at $K = 100$ with live conversion off and
+\rv{macos-standard-live-on.q4x.letter_runs_unit.k10.acc} and \rv{macos-standard-live-on.q4x.letter_runs_unit.k100.acc}
+with it on; that of \texttt{all\_runs\_unit}, which also drops the numbers of repeated presses of the other categories,
+was \rv{macos-standard-live-off.q4x.all_runs_unit.k10.acc} and \rv{macos-standard-live-off.q4x.all_runs_unit.k100.acc}
+with live conversion off and \rv{macos-standard-live-on.q4x.all_runs_unit.k10.acc} and
+\rv{macos-standard-live-on.q4x.all_runs_unit.k100.acc} with it on. Under the registered rule, applied as an exploratory
+judgement, \rv{q4x.judgement}: in both cells, \rv{q4x.byk} (\texttt{letter\_runs\_unit} with live conversion off
+and on: \rv{macos-standard-live-off.q4x.letter_runs_unit.k10.near} and
+\rv{macos-standard-live-on.q4x.letter_runs_unit.k10.near} at $K = 10$,
+\rv{macos-standard-live-off.q4x.letter_runs_unit.k100.near} and
+\rv{macos-standard-live-on.q4x.letter_runs_unit.k100.near} at $K = 100$; \texttt{all\_runs\_unit}:
+\rv{macos-standard-live-off.q4x.all_runs_unit.k10.near} and \rv{macos-standard-live-on.q4x.all_runs_unit.k10.near},
+\rv{macos-standard-live-off.q4x.all_runs_unit.k100.near} and \rv{macos-standard-live-on.q4x.all_runs_unit.k100.near}).
+Applied to these two sets, the rule would recommend \rv{q4x.granularity}. On Windows, under the same judgement,
+\rv{q4x.windows}; as for the registered sets, its values equal those of the macOS cell with live conversion off. The
+registered judgement and recommendation do not change. The supplement gives both sets at every $K$, with the accuracy
+per speed and per scenario.
 
 Figure~\ref{fig:closed-set} shows every feature set at every $K$, and the supplement gives their values, with the
 accuracy per speed and scenario. The sets that keep time are estimates only and enter neither the judgement nor the

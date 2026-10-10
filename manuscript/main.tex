@@ -126,7 +126,9 @@ synthetic-input validation}
 % for each cell and item (iii), the recommendation. Items (iv), the CPU of the logger, and (ii), the bias of the
 % session duration, are left to the text (Sections sec:cost and sec:results-session), in this order, because the
 % abstract does not fit 250 words with them. Every value is read with \rv{} from the generated values; the words that
-% state the judgement of question 4 ("neither", "none", "nor") and the strata that set the lower ends ("lowest where
+% state the judgement of question 4 ("no", "in any cell", "none") and the exploratory judgement of deviation D13
+% ("nor did two that drop run lengths": q4x.judgement and q4x.windows; the sentence was to be there whatever its
+% result, as fixed before that analysis) and the strata that set the lower ends ("lowest where
 % the logger's rules predict disagreement": S6 and S10 in both macOS cells; "lowest in a scenario built to outlast the
 % 20-s cut-off": S13, the only stratum over all trials whose intervals start at 0, in every cell) follow from the values
 % and the supplement and are corrected by hand if the result files change.
@@ -150,9 +152,9 @@ construct from the reference's compositions, recall spanned \rv{windows-msime-ts
 precision \rv{windows-msime-tsf.primary.precision.range} (\rv{windows-msime-tsf.primary.recall.strata.left} and
 \rv{windows-msime-tsf.primary.precision.strata.left} strata left out; \rv{windows-msime-tsf.scope.setaside.pct} set
 aside; \rv{windows-msime-tsf.carryover.pct} carried over; over all trials \rv{windows-msime-tsf.all.recall.range} and
-\rv{windows-msime-tsf.all.precision.range}). For identifying the typed phrase among $K$ candidates, neither granularity
-of the key rows without times met the registered near-chance rule in either macOS cell, so none is recommended; nor did
-either on Windows. The registrations, code and data are public.}
+\rv{windows-msime-tsf.all.precision.range}). For identifying the typed phrase among $K$ candidates, no granularity of
+the key rows without times met the registered near-chance rule in any cell, so none is recommended; nor did two that
+drop run lengths (exploratory). The registrations, code and data are public.}
 
 \keywords{Japanese input method, keystroke logging, writing research, observability, method validation,
 reproducibility}

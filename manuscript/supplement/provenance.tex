@@ -4,8 +4,10 @@
 \section*{Provenance of the result files}
 \label{sec:supp-provenance}
 
-Every result file was made from an export of a freezing tag of the public repository. Where a deviation replaced a
-file of the export, the replacing file is the one of release \texttt{v1.0.0}, with these SHA-256:
+Every result file other than the exploratory ones was made from an export of a freezing tag of the public repository;
+the exploratory result files have the code given in their rows of the table below. Where a deviation replaced a file
+of the export, the
+replacing file is the one of release \texttt{v1.0.0}, with these SHA-256:
 \begin{itemize}
 \item \texttt{kit/analysis/match.py} (D10):\\
 {\footnotesize\texttt{6f817228e2e7d5f17f65895c7a00a721c28c00df24c46df0c8bd4b237ad72cff}}
@@ -47,6 +49,9 @@ setting of the second change \\
 \texttt{ime-observation-prereg-windows} \\
 \texttt{exploratory/dwell\_quantiles\_<cell>.json} & Exploratory distribution of the dwell error & \texttt{kit/analysis/explore\_dwell\_quantiles.py}
 of the commit of this article, running the export of the cell's freezing tag unchanged \\
+\texttt{exploratory/\allowbreak closed\_set\_run\_lengths\_<cell>.json} & Exploratory closed set of D13, every cell &
+\texttt{kit/e2/explore\_run\_lengths.py} of release \texttt{v1.0.2}, importing \texttt{kit/e2/closed\_set.py} of
+release \texttt{v1.0.0} unchanged; the procedure files of the macOS cells from \texttt{ime-observation-prereg-macos} \\
 \bottomrule
 \end{longtable}
 }

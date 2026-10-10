@@ -19,7 +19,7 @@ a reading in an input field; Space converts it and Enter commits it. Right: the 
 times: a key category and a time for every key press and, when the conversion ends, its duration, the number of
 arrow-key presses during it and whether it was abandoned. No character is written.">
 
-[![Code release](https://img.shields.io/badge/code%20release-v1.0.1-1682D4?style=for-the-badge)](https://doi.org/10.5281/zenodo.23183440)
+[![Code release](https://img.shields.io/badge/code%20release-v1.0.2-1682D4?style=for-the-badge)](https://doi.org/10.5281/zenodo.23183440)
 [![Dataset](https://img.shields.io/badge/dataset-Zenodo-1682D4?style=for-the-badge)](https://doi.org/10.5281/zenodo.23183438)
 [![Pre-registered](https://img.shields.io/badge/pre--registered-OSF-2C6EAB?style=for-the-badge)](#pre-registration)
 
@@ -152,11 +152,11 @@ manuscript is built.
 @software{miura2026code,
   author    = {Miura, Mikoto},
   title     = {Logging {J}apanese {IME} conversion without recording text: Logger, validation kit and analysis code},
-  version   = {1.0.1},
+  version   = {1.0.2},
   year      = {2026},
   publisher = {Zenodo},
-  doi       = {10.5281/zenodo.23219322},
-  url       = {https://doi.org/10.5281/zenodo.23219322}
+  doi       = {10.5281/zenodo.23273986},
+  url       = {https://doi.org/10.5281/zenodo.23273986}
 }
 
 @dataset{miura2026data,
@@ -211,6 +211,15 @@ is, in order:
    which text or a line lies outside the page or over the page number. The text and the values of the manuscript, the
    logger, the kit, the analysis code and the results are those of release 1.0.0; the script that generates the
    tables changed only in the layout of Table 13.
+6. release 1.0.2, tagged `v1.0.2`. Three feature sets of the closed-set attack (`no_runs`, `bin1s_count` and
+   `counts_only`) keep the lengths of runs of letter keys, although the registration describes them as dropping
+   them. The release corrects their description in the manuscript and in `kit/e2/README.md` (the comments and
+   docstrings of the frozen code are left unchanged) and adds an exploratory analysis of two feature sets that drop them, recorded as
+   deviation D13 in `experiment/deviations.md`: the script `kit/e2/explore_run_lengths.py`, its results in
+   `experiment/results/exploratory/`, the records of its runs in `experiment/data.md` and
+   `experiment/data.windows.md`, and the text, the values and a table of the supplement in the manuscript. The
+   registered results and the code that produced them are unchanged from release 1.0.0; the script that generates the
+   tables also reads the exploratory results.
 
 The first three commits carry the date of the working commit they come from, and their messages name it. The
 license texts, this file's identifiers and figures and the line-end rules of `.gitattributes` were added in

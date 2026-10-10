@@ -15,7 +15,7 @@
 
 <img src="assets/demo.svg" width="100%" alt="左: 入力方法をオンにして打ったローマ字 n, i, h, o, n, g, o が入力欄の読みになり、Space で変換され、Enter で確定する。右: 同じ時刻にロガーが書く行。キーを押すたびにキーの分類と時刻を、変換が終わると変換の長さ、その間の矢印キーの回数、取り消したかどうかを書く。文字は 1 つも書かない。">
 
-[![Code release](https://img.shields.io/badge/code%20release-v1.0.1-1682D4?style=for-the-badge)](https://doi.org/10.5281/zenodo.23183440)
+[![Code release](https://img.shields.io/badge/code%20release-v1.0.2-1682D4?style=for-the-badge)](https://doi.org/10.5281/zenodo.23183440)
 [![Dataset](https://img.shields.io/badge/dataset-Zenodo-1682D4?style=for-the-badge)](https://doi.org/10.5281/zenodo.23183438)
 [![Pre-registered](https://img.shields.io/badge/pre--registered-OSF-2C6EAB?style=for-the-badge)](#事前登録)
 
@@ -112,11 +112,11 @@ macOS では、ロガーはキーの打鍵から変換のまとまりを推し�
 @software{miura2026code,
   author    = {Miura, Mikoto},
   title     = {Logging {J}apanese {IME} conversion without recording text: Logger, validation kit and analysis code},
-  version   = {1.0.1},
+  version   = {1.0.2},
   year      = {2026},
   publisher = {Zenodo},
-  doi       = {10.5281/zenodo.23219322},
-  url       = {https://doi.org/10.5281/zenodo.23219322}
+  doi       = {10.5281/zenodo.23273986},
+  url       = {https://doi.org/10.5281/zenodo.23273986}
 }
 
 @dataset{miura2026data,
@@ -165,6 +165,7 @@ macOS では、ロガーはキーの打鍵から変換のまとまりを推し�
 3. 結果を解析する前の `manuscript/outline.md` だけを足した commit
 4. リリース 1.0.0（タグ `v1.0.0`）
 5. リリース 1.0.1（タグ `v1.0.1`）。`CITATION.cff`、`.zenodo.json`、2 つの README のほかに変えたのは、原稿の組版とその確かめだけです。頁に収まっていなかった 5 つの表（表 1、2、4、7、13）を次の頁へ続けられる形にし、ビルドが、頁の外や頁番号の上に文字や線がある頁を挙げて数えるようにもしました。原稿の文と値、ロガー、キット、解析のコード、結果はリリース 1.0.0 と同じで、表を作るスクリプトは表 13 の組み方だけが変わりました。
+6. リリース 1.0.2（タグ `v1.0.2`）。closed set の攻撃の 3 つの組（`no_runs`、`bin1s_count`、`counts_only`）は、登録が英字の連なりの長さを捨てると書いているのに、実際には長さを持っています。原稿と `kit/e2/README.md` のその記述を直し（凍結したコードの注と docstring はそのまま残しました）、長さを捨てた 2 つの組の探索的な解析を足しました（`experiment/deviations.md` の逸脱 D13）。足したのは、スクリプト `kit/e2/explore_run_lengths.py`、その結果（`experiment/results/exploratory/`）、その実行の記録（`experiment/data.md`・`experiment/data.windows.md`）、原稿の文と値と補遺の表です。登録の結果と、それを出したコードはリリース 1.0.0 から変わっていません。表を作るスクリプトは探索的な結果も読むようになりました。
 
 最初の 3 つの commit には元になった作業用の commit の日付を付け、メッセージでその commit を挙げています。ライセンスの全文、この文書の識別子と図、`.gitattributes` の行末の規則はリリース 1.0.0 で足しました。
 

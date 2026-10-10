@@ -10,6 +10,7 @@ presses to the plan with `closed_set.py` (block resynchronisation at the markers
 | `simulate_obs.py` | Predicted observation of one planned trial, and the feature transforms of the removal experiment |
 | `closed_set.py` | The attack, the evaluation, the assignment of presses to the plan (`align_plan`, which `open_set.py` imports), and the command line |
 | `open_set.py` | The open-set reconstruction of the typed reading (documented in its own module docstring) |
+| `explore_run_lengths.py` | Exploratory, not registered: the closed-set attack on two feature sets that drop the lengths of runs (see [Exploratory](#exploratory-feature-sets-that-drop-the-lengths-of-runs)) |
 
 All files use the Python standard library only. Each has a fast default `--selftest` (a few seconds to some twenty seconds).
 
@@ -115,20 +116,33 @@ interval easier to meet, which is why the block-resampled interval is reported n
 |---|---|---|
 | `all` | exact (ms) | kept |
 | `no_time` | removed | kept |
-| `no_runs` | exact (ms) | run length removed: one token per run between delimiters |
+| `no_runs` | exact (ms) | one token per run whose count is the run length; the times after the first press of a run removed |
 | `bin1s` | coarsened to 1-second bins | kept |
-| `bin1s_count` | 1-second bins | run length removed: one token per run between delimiters |
-| `counts_only` | removed | run length removed: one token per run between delimiters |
+| `bin1s_count` | 1-second bins | one token per run whose count is the run length; the times after the first press of a run removed |
+| `counts_only` | removed | one token per run whose count is the run length (the same information as `no_time`) |
 
 With `runs="count"`, every maximal run of consecutive alphabetic rows -- a run ends at the next row of a different
 category, for example space or punctuation -- is stamped with the time of its first row (so the run collapses to one
 token further down the pipeline), regardless of how many 1-second bins the run happens to span; a bin edge inside a
-continuous run of letters is not, by itself, a break. Rows of other categories keep their order and times.
+continuous run of letters is not, by itself, a break. Rows of other categories keep their order and times. The token of
+a run holds the number of its presses as its count, and the distance charges the difference of the counts of two
+tokens of the same category, so **the length of a run is kept**: what `runs="count"` removes is the time of every
+press of a run after its first. With no times, the tokens of `counts_only` expanded by their counts give the category
+of every press in order, which is what `no_time` keeps; the two sets hold the same information and differ only in how
+the distance counts a run of letter keys (one token of the run's length, or one token per press).
+
+The pre-registration (section 6.8), the comments of `FEATURE_SETS` in `closed_set.py` and the docstring of `simulate_obs.py`
+describe
+these three sets as having no run lengths. That description does not match the code; it is corrected by deviation D13
+(`../../experiment/deviations.md`). The two files are kept unchanged, because the registered results were computed
+with them and their SHA-256 are recorded with the results. The attack on two sets that do drop the lengths of runs is
+the exploratory analysis below.
 
 `FEATURE_SETS` forms a coarsening order: a feature set G is derivable from a feature set F (an attacker who sees F
 could compute the result an attacker restricted to G would get, by discarding timing and/or run detail) exactly when G
 is not more detailed than F in either dimension (`coarser_or_equal`). `all` is the finest and dominates every other set;
-`counts_only` is the coarsest and dominates only itself. For example, `no_runs` (exact times, run length removed)
+`counts_only` is the coarsest and dominates only itself (in the order; in information it equals `no_time`, see above).
+For example, `no_runs` (exact times, the times within a run removed)
 dominates both `bin1s_count` (coarsen its times further) and `counts_only` (remove its times further); `bin1s`
 (coarsened times, runs kept) dominates `no_time` (remove its bin information further) as well as `bin1s_count` and
 `counts_only`.
@@ -294,8 +308,8 @@ The pre-registration of the first experiment fixes the rule for its logs: a feat
 K = 100 when the upper end of its Wilson interval is at most 2/K, and it must be near chance at both values of K in
 both cells; K = 1000 is reported descriptively, because at the planned numbers of trials an attack at the chance
 level would rarely meet the rule there. The recommendation considers only `no_time` and `counts_only`. These two sets are ordered (`counts_only` is a
-coarsening of `no_time`), so for the first experiment the recommendation is the more detailed of the two that is near
-chance. The feature
+coarsening of `no_time` in the order, although it holds the same information), so for the first experiment the
+recommendation is the more detailed of the two that is near chance. The feature
 sets that keep millisecond times (`all`, `no_runs`) and the feature sets with 1-second bins (`bin1s`, `bin1s_count`)
 are reported as estimates only and are excluded from the recommendation: the synthetic key intervals are drawn
 independently of the keys (see above), and the synthetic design models no human pause structure either, so the timing
@@ -303,11 +317,48 @@ of particular key pairs and the pauses that human logs carry are absent. Blocks 
 unscored and counted (`alignment`); the rule is applied to the scored trials. The session rows are not used by the
 attack and are outside the recommendation.
 
+## Exploratory: feature sets that drop the lengths of runs
+
+Not registered (deviation D13). `explore_run_lengths.py` runs the attack of `closed_set.py`, imported unchanged, on two
+feature sets without times that drop the lengths of runs:
+
+| Name | Tokens |
+|---|---|
+| `letter_runs_unit` | every run of consecutive letter-key presses is one token of count 1; every other press is one token of count 1; the order is kept |
+| `all_runs_unit` | every run of consecutive presses of the same category, whatever the category, is one token of count 1; the order is kept |
+
+`all_runs_unit` is derivable from `letter_runs_unit`, so the accuracy reported for `letter_runs_unit` is the larger of
+the two measured accuracies (the registered reporting rule above). The predicted logs, the distance, the candidates of
+each trial, the tie-breaking (by the name of the feature set), the Wilson intervals and the block bootstrap are those of
+`closed_set.py`; the evaluation loop of `closed_set.evaluate` is copied with the token function as a parameter. The copy
+is checked twice: its self-test compares it with `closed_set.evaluate` for `no_time` and `counts_only` on a synthetic
+world, and every run also computes these two registered sets and stops without writing anything (exit 2) unless every
+value of them, at every K, equals the registered result file of the cell (`--registered`), together with the SHA-256 of
+the corpus, procedures and settings, the seed, the number of resamples, the alignment and the trials left out.
+
+```sh
+python3 explore_run_lengths.py --obs <run>/obs.jsonl --plan <run>/plan.jsonl --corpus ../corpus/data/phrases.jsonl \
+    --recipes ../gen/<procedure file> --config <plan config> --registered <e2_closed_set_<cell>.json> \
+    --K 10,100,1000 --seed 20260929 --bootstrap 2000 --markers-in-obs --skip-scenario S12 \
+    --out <closed_set_run_lengths_<cell>.json>
+python3 explore_run_lengths.py --selftest
+```
+
+The procedure file must be the one the plan was built from: for the macOS cells, that of their freezing tag
+(`git show ime-observation-prereg-macos:kit/gen/<procedure file>`, see `../../experiment/data.md`); the run stops when
+the SHA-256 that the plan records differs. The registered runs did not use `--ime-toggle-in-obs`, which this script
+does not offer.
+
+The output (`e2-closed-posthoc/1`) holds, per K, the values of the two sets in the shape of the registered result file,
+the SHA-256 of the inputs and of the code, and the result of the comparison. The registered values and recommendation
+are not changed; the near-chance rule above is applied to the two sets as an exploratory judgement.
+
 ## Verification
 
 ```sh
 python3 simulate_obs.py --selftest
 python3 closed_set.py --selftest
+python3 explore_run_lengths.py --selftest
 bash ../check.sh
 ```
 

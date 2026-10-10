@@ -55,9 +55,12 @@ registered near-chance rule in either macOS cell, so the recommended granularity
 under the same judgement, \rv{q4.windows.qualification}. From the key rows that keep no time, the phrase was identified
 among 10 candidates with accuracy \rv{macos-standard-live-off.q4.no_time.k10.acc} and
 \rv{macos-standard-live-on.q4.no_time.k10.acc}, and among 100 with \rv{macos-standard-live-off.q4.no_time.k100.acc}
-and \rv{macos-standard-live-on.q4.no_time.k100.acc}, using the numbers of keys of each category alone: a log that
-records no text can still reveal which of a few known texts was typed, among candidates that were not matched in
-length. The rule is not a criterion of privacy, and
+and \rv{macos-standard-live-on.q4.no_time.k100.acc}, using only the category of every key press in order: a log
+that records no text can still reveal which of a few known texts was typed, among candidates that were not matched in
+length. The registered granularity meant to drop the lengths of runs of letter keys had kept them (deviation D13); in an
+exploratory analysis of two granularities without times that drop the lengths of runs, \rv{q4x.judgement} under the
+same rule (\rv{q4x.byk}), and on Windows \rv{q4x.windows}. The rule is
+not a criterion of privacy, and
 records that keep time were not judged.
 
 The mean CPU of the logger, with one core as 100, was \rv{macos.e3.idle.cpu.mean} with the machine idle and

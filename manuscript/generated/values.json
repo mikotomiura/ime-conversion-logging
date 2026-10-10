@@ -3004,6 +3004,72 @@
     0
    ]
   },
+  "macos-standard-live-off.q4x.all_runs_unit.k10.acc": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-off.json:results/10/all_runs_unit/acc|acc_ci",
+   "text": "0.106 [0.095, 0.118]",
+   "value": [
+    0.10629629629629629,
+    0.09522467233124686,
+    0.11848662236601139
+   ]
+  },
+  "macos-standard-live-off.q4x.all_runs_unit.k10.near": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-off.json:results/10/all_runs_unit/acc_ci",
+   "text": "yes",
+   "value": true
+  },
+  "macos-standard-live-off.q4x.all_runs_unit.k100.acc": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-off.json:results/100/all_runs_unit/acc|acc_ci",
+   "text": "0.017 [0.012, 0.022]",
+   "value": [
+    0.016666666666666666,
+    0.01247935431126761,
+    0.02222736213268541
+   ]
+  },
+  "macos-standard-live-off.q4x.all_runs_unit.k100.near": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-off.json:results/100/all_runs_unit/acc_ci",
+   "text": "no",
+   "value": false
+  },
+  "macos-standard-live-off.q4x.all_runs_unit.near": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-off.json:results/10|100/all_runs_unit/acc_ci",
+   "text": "no",
+   "value": false
+  },
+  "macos-standard-live-off.q4x.letter_runs_unit.k10.acc": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-off.json:results/10/letter_runs_unit/acc|acc_ci",
+   "text": "0.168 [0.155, 0.183]",
+   "value": [
+    0.16814814814814816,
+    0.15451474756174083,
+    0.18272449989709588
+   ]
+  },
+  "macos-standard-live-off.q4x.letter_runs_unit.k10.near": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-off.json:results/10/letter_runs_unit/acc_ci",
+   "text": "yes",
+   "value": true
+  },
+  "macos-standard-live-off.q4x.letter_runs_unit.k100.acc": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-off.json:results/100/letter_runs_unit/acc|acc_ci",
+   "text": "0.037 [0.030, 0.044]",
+   "value": [
+    0.03666666666666667,
+    0.030210376452329667,
+    0.044439510345666663
+   ]
+  },
+  "macos-standard-live-off.q4x.letter_runs_unit.k100.near": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-off.json:results/100/letter_runs_unit/acc_ci",
+   "text": "no",
+   "value": false
+  },
+  "macos-standard-live-off.q4x.letter_runs_unit.near": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-off.json:results/10|100/letter_runs_unit/acc_ci",
+   "text": "no",
+   "value": false
+  },
   "macos-standard-live-off.samesessions": {
    "source": "e1_detection.json:same_sessions_as_all/macos-standard-live-off",
    "text": "yes",
@@ -6082,6 +6148,72 @@
     0
    ]
   },
+  "macos-standard-live-on.q4x.all_runs_unit.k10.acc": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-on.json:results/10/all_runs_unit/acc|acc_ci",
+   "text": "0.111 [0.101, 0.123]",
+   "value": [
+    0.11145299145299145,
+    0.10055433360104984,
+    0.1233708832609002
+   ]
+  },
+  "macos-standard-live-on.q4x.all_runs_unit.k10.near": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-on.json:results/10/all_runs_unit/acc_ci",
+   "text": "yes",
+   "value": true
+  },
+  "macos-standard-live-on.q4x.all_runs_unit.k100.acc": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-on.json:results/100/all_runs_unit/acc|acc_ci",
+   "text": "0.019 [0.015, 0.025]",
+   "value": [
+    0.019487179487179488,
+    0.015071782518865137,
+    0.02516305452422401
+   ]
+  },
+  "macos-standard-live-on.q4x.all_runs_unit.k100.near": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-on.json:results/100/all_runs_unit/acc_ci",
+   "text": "no",
+   "value": false
+  },
+  "macos-standard-live-on.q4x.all_runs_unit.near": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-on.json:results/10|100/all_runs_unit/acc_ci",
+   "text": "no",
+   "value": false
+  },
+  "macos-standard-live-on.q4x.letter_runs_unit.k10.acc": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-on.json:results/10/letter_runs_unit/acc|acc_ci",
+   "text": "0.162 [0.149, 0.176]",
+   "value": [
+    0.1623931623931624,
+    0.14947177586866395,
+    0.17620015695243213
+   ]
+  },
+  "macos-standard-live-on.q4x.letter_runs_unit.k10.near": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-on.json:results/10/letter_runs_unit/acc_ci",
+   "text": "yes",
+   "value": true
+  },
+  "macos-standard-live-on.q4x.letter_runs_unit.k100.acc": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-on.json:results/100/letter_runs_unit/acc|acc_ci",
+   "text": "0.037 [0.031, 0.044]",
+   "value": [
+    0.036923076923076927,
+    0.030674138530818067,
+    0.04438675565264993
+   ]
+  },
+  "macos-standard-live-on.q4x.letter_runs_unit.k100.near": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-on.json:results/100/letter_runs_unit/acc_ci",
+   "text": "no",
+   "value": false
+  },
+  "macos-standard-live-on.q4x.letter_runs_unit.near": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-on.json:results/10|100/letter_runs_unit/acc_ci",
+   "text": "no",
+   "value": false
+  },
   "macos-standard-live-on.samesessions": {
    "source": "e1_detection.json:same_sessions_as_all/macos-standard-live-on",
    "text": "yes",
@@ -6224,6 +6356,44 @@
    "value": {
     "counts_only": false,
     "no_time": false
+   }
+  },
+  "q4x.byk": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-on.json, exploratory/closed_set_run_lengths_macos-standard-live-off.json:results/10|100/*/acc_ci",
+   "text": "among 10 candidates both were near chance, among 100 neither was",
+   "value": {
+    "10": {
+     "all_runs_unit": true,
+     "letter_runs_unit": true
+    },
+    "100": {
+     "all_runs_unit": false,
+     "letter_runs_unit": false
+    }
+   }
+  },
+  "q4x.granularity": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-on.json, exploratory/closed_set_run_lengths_macos-standard-live-off.json:results/10|100/*/acc_ci",
+   "text": "none",
+   "value": {
+    "set": null,
+    "status": "none"
+   }
+  },
+  "q4x.judgement": {
+   "source": "exploratory/closed_set_run_lengths_macos-standard-live-on.json, exploratory/closed_set_run_lengths_macos-standard-live-off.json:results/10|100/*/acc_ci",
+   "text": "neither \\texttt{letter\\_runs\\_unit} nor \\texttt{all\\_runs\\_unit} was near chance at both $K = 10$ and $K = 100$ in both macOS cells",
+   "value": {
+    "set": null,
+    "status": "none"
+   }
+  },
+  "q4x.windows": {
+   "source": "exploratory/closed_set_run_lengths_windows-msime-tsf.json:results/10|100/*/acc_ci",
+   "text": "neither \\texttt{letter\\_runs\\_unit} nor \\texttt{all\\_runs\\_unit} was near chance at both $K = 10$ and $K = 100$",
+   "value": {
+    "all_runs_unit": false,
+    "letter_runs_unit": false
    }
   },
   "windows-msime-tsf.abandon.continued.unknown.all": {
@@ -8644,6 +8814,72 @@
     0,
     0
    ]
+  },
+  "windows-msime-tsf.q4x.all_runs_unit.k10.acc": {
+   "source": "exploratory/closed_set_run_lengths_windows-msime-tsf.json:results/10/all_runs_unit/acc|acc_ci",
+   "text": "0.106 [0.095, 0.118]",
+   "value": [
+    0.10629629629629629,
+    0.09522467233124686,
+    0.11848662236601139
+   ]
+  },
+  "windows-msime-tsf.q4x.all_runs_unit.k10.near": {
+   "source": "exploratory/closed_set_run_lengths_windows-msime-tsf.json:results/10/all_runs_unit/acc_ci",
+   "text": "yes",
+   "value": true
+  },
+  "windows-msime-tsf.q4x.all_runs_unit.k100.acc": {
+   "source": "exploratory/closed_set_run_lengths_windows-msime-tsf.json:results/100/all_runs_unit/acc|acc_ci",
+   "text": "0.017 [0.012, 0.022]",
+   "value": [
+    0.016666666666666666,
+    0.01247935431126761,
+    0.02222736213268541
+   ]
+  },
+  "windows-msime-tsf.q4x.all_runs_unit.k100.near": {
+   "source": "exploratory/closed_set_run_lengths_windows-msime-tsf.json:results/100/all_runs_unit/acc_ci",
+   "text": "no",
+   "value": false
+  },
+  "windows-msime-tsf.q4x.all_runs_unit.near": {
+   "source": "exploratory/closed_set_run_lengths_windows-msime-tsf.json:results/10|100/all_runs_unit/acc_ci",
+   "text": "no",
+   "value": false
+  },
+  "windows-msime-tsf.q4x.letter_runs_unit.k10.acc": {
+   "source": "exploratory/closed_set_run_lengths_windows-msime-tsf.json:results/10/letter_runs_unit/acc|acc_ci",
+   "text": "0.168 [0.155, 0.183]",
+   "value": [
+    0.16814814814814816,
+    0.15451474756174083,
+    0.18272449989709588
+   ]
+  },
+  "windows-msime-tsf.q4x.letter_runs_unit.k10.near": {
+   "source": "exploratory/closed_set_run_lengths_windows-msime-tsf.json:results/10/letter_runs_unit/acc_ci",
+   "text": "yes",
+   "value": true
+  },
+  "windows-msime-tsf.q4x.letter_runs_unit.k100.acc": {
+   "source": "exploratory/closed_set_run_lengths_windows-msime-tsf.json:results/100/letter_runs_unit/acc|acc_ci",
+   "text": "0.037 [0.030, 0.044]",
+   "value": [
+    0.03666666666666667,
+    0.030210376452329667,
+    0.044439510345666663
+   ]
+  },
+  "windows-msime-tsf.q4x.letter_runs_unit.k100.near": {
+   "source": "exploratory/closed_set_run_lengths_windows-msime-tsf.json:results/100/letter_runs_unit/acc_ci",
+   "text": "no",
+   "value": false
+  },
+  "windows-msime-tsf.q4x.letter_runs_unit.near": {
+   "source": "exploratory/closed_set_run_lengths_windows-msime-tsf.json:results/10|100/letter_runs_unit/acc_ci",
+   "text": "no",
+   "value": false
   },
   "windows-msime-tsf.samesessions": {
    "source": "windows/e1_detection.json:same_sessions_as_all/windows-msime-tsf",

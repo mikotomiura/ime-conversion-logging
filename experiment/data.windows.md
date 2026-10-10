@@ -196,6 +196,25 @@ cells share.
   closed-set results of the two cells are different files; their accuracies for the two feature sets that keep no time
   are the same to the reported precision.
 
+## Exploratory closed set of deviation D13 (run on 2026-10-10 on the second Windows machine)
+
+Not registered (deviation D13). The closed-set attack on the two feature sets without times that drop the lengths of
+runs was run for the Windows cell with `kit/e2/explore_run_lengths.py` on the machine of the two previous sections
+(Python 3.11.9), from the working tree, whose files the output records by SHA-256. The run directory is the one
+listed above; `plan.jsonl` and `obs.jsonl` have the SHA-256 given for the closed set above.
+
+- **Command.** `python kit/e2/explore_run_lengths.py --obs <run>/obs.jsonl --plan <run>/plan.jsonl --corpus
+  kit/corpus/data/phrases.jsonl --recipes kit/gen/recipes.json --config experiment/plan_config.windows.json
+  --registered experiment/results/windows/e2_closed_set_windows-msime-tsf.json --K 10,100,1000 --seed 20260929
+  --bootstrap 2000 --markers-in-obs --skip-scenario S12 --out
+  experiment/results/exploratory/closed_set_run_lengths_windows-msime-tsf.json`. Exit status 0 after about two
+  minutes; `no_time` and `counts_only` reproduced every value of the registered result file at every K before anything
+  was written. A second run gave a byte-identical file.
+- **Code.** As recorded in the output (`code_sha256`); `kit/e2/explore_run_lengths.py`
+  `a99f2036f0376c9cfe1a1e31b9b390c3e05e0ae0691f1fdc351ae057bf69ca65`, `kit/e2/closed_set.py` that of release
+  `v1.0.0`.
+- **Output SHA-256.** `a20f46303be8f800cac4bed7e922e6e5f647061b1af41702e316782f697b95f4`.
+
 ## Machine that ran the deposit check
 
 Record, for every archive, the machine on which `--pack` was run and whether `--also-user` and `--also-home` were

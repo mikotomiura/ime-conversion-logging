@@ -398,14 +398,15 @@ Registration & \url{https://osf.io/9nh7r} & \url{https://osf.io/4jwzn} \\
 \end{tabular}
 \end{table}
 
-Twelve deviations were recorded (Table~\ref{tab:deviations}): five for the Windows cell before the Windows
+Thirteen deviations were recorded (Table~\ref{tab:deviations}): five for the Windows cell before the Windows
 measurement, one for the macOS runs after their measurement and before their analysis (D6), two for the Windows runs
 after their measurement (D7, before the analysis of the cell, and D9), one for the closed-set attack of all three
 cells before that attack was run on any of them (D8), one for the analysis of questions 1 to 3 (D10), made when the
-frozen analysis stopped on the macOS cells and before any of their results of these questions was seen, and two for
-reporting, made after all results had been seen: of the per-text ICC (D11) and of the detection under the definition
-common to both systems on Windows (D12). Both were prompted by a simulated review of this article before its submission
-(Declarations). D12 grew in two steps: it was recorded that the ranges of its per-stratum intervals would be reported
+frozen analysis stopped on the macOS cells and before any of their results of these questions was seen, and three made
+after all results had been seen: two for reporting, of the per-text ICC (D11) and of the detection under the
+definition common to both systems on Windows (D12), both prompted by a simulated review of this article before its
+submission (Declarations), and one for question 4 (D13), which corrects the description of three feature sets to what
+the code computed and adds an exploratory analysis, prompted when the code was read for another study. D12 grew in two steps: it was recorded that the ranges of its per-stratum intervals would be reported
 whatever their values before the ranges were computed, although the detection under the common definition had already
 been seen, and the counts of the strata whose estimates change were added after the ranges had been seen, when a review
 of the discussion found such changes. The registered results of questions 1 to 3
@@ -478,6 +479,13 @@ are reported, with the number of strata whose estimate changes within the ranges
 the ranges had been seen). &
 The registration reports under the common definition only whether the two definitions hold the same sessions, which
 does not show how far the estimates depend on the choice of definition. \\
+D13 & The feature sets \texttt{no\_runs}, \texttt{bin1s\_count} and \texttt{counts\_only} are described as computed:
+each run of letter keys is one token that keeps the number of its presses, so \texttt{counts\_only} holds the same
+information as \texttt{no\_time}. Two sets without times that drop the lengths of runs are added as an exploratory
+analysis, with the registered attack and rule, and do not change the recommendation (fixed after all results had been
+seen and a related measurement of another study on the Windows cell). &
+The registration describes these sets as having no lengths of letter runs, which the code does not do, so the
+registered rule was applied to no set without those lengths. \\
 \bottomrule
 \end{longtable}
 }

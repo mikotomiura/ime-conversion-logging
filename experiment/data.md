@@ -129,6 +129,35 @@ the registered analysis above, and `<scratch>` is an empty directory outside thi
 
 The tables and values of the manuscript were then regenerated with `manuscript/tools/results_tables.py`.
 
+## Exploratory closed set of deviation D13 for the macOS cells (run on 2026-10-10 on a Windows machine)
+
+Not registered (deviation D13). The closed-set attack on the two feature sets without times that drop the lengths of
+runs was run for both macOS cells with `kit/e2/explore_run_lengths.py`, on the x86-64 desktop computer of
+`data.windows.md` (Windows 11 Home build 26300, Python 3.11.9), not the measuring machine. `<cell>` is
+`macos-standard-live-on` or `macos-standard-live-off`, and paths are relative to the top of the repository.
+
+- **Inputs.** The archives of the two cells were downloaded from the deposit (https://doi.org/10.5281/zenodo.23183438);
+  their SHA-256 are those of the table of deposits above, and their MD5 those the deposit lists. Each was unpacked into
+  its own directory `<run>`, where `run.json` has the SHA-256 of the line of `run.sh` above, `plan.jsonl` the SHA-256 of
+  the table of run checks, and `obs.jsonl` the SHA-256 that `run.json` records (on
+  `f5da64d02ca3f8fc3cb6f42d923661ac1904128f8e7fe442c4ace67f2e6981b3`, off
+  `e3c67eab7d2e2c4f8ff85566ab419d943ed68eea1743c4e75bcf72c8d690ff2c`). The procedure files are those of the macOS
+  freezing tag, from which the plans were built (`git show ime-observation-prereg-macos:kit/gen/<procedure file>`:
+  `recipes.json` `158cac1bcc15effac2eafc994d788e585b61e3c43f410d558c87c2188866d16f`, `recipes.macos-live-off.json`
+  `36aad15abc118e8f57533db43a880c1615008af8f2fb4dd33b846f6d1abb9168`); the files of the same names in the working tree
+  were changed for the Windows cell (deviations D1 to D4) and are refused by the attack.
+- **Command.** `python kit/e2/explore_run_lengths.py --obs <run>/obs.jsonl --plan <run>/plan.jsonl --corpus
+  kit/corpus/data/phrases.jsonl --recipes <procedure file of the tag> --config experiment/plan_config.macos.json
+  --registered experiment/results/e2_closed_set_<cell>.json --K 10,100,1000 --seed 20260929 --bootstrap 2000
+  --markers-in-obs --skip-scenario S12 --out experiment/results/exploratory/closed_set_run_lengths_<cell>.json`. Exit
+  status 0 for both cells, about two minutes each; `no_time` and `counts_only` reproduced every value of the registered
+  result file at every K before anything was written. A second run gave byte-identical files.
+- **Code.** The SHA-256 of the six files the script runs are recorded in the output (`code_sha256`): among them
+  `kit/e2/closed_set.py` `364cc833b48a73aeb15b9416bff203ec21a71296e26534f914e3a2bb9bd067c3` (that of release `v1.0.0`)
+  and `kit/e2/explore_run_lengths.py` `a99f2036f0376c9cfe1a1e31b9b390c3e05e0ae0691f1fdc351ae057bf69ca65`.
+- **Output SHA-256.** on `2877f46e8fa152f27b57d50a1cc1c1fbd1ec2e03f4df8afb9455dd796d675a2f`, off
+  `9828814eeda4fb22936fcf64cb885957022e6b65150f25af1d9e6a18dbd6e1c7`.
+
 ## Deposit procedure
 
 1. Right after every attempt, also one that the runner aborted, before the next run of the order (section 3.2 of

@@ -1,8 +1,9 @@
 # Deviations
 
 Departures from the frozen registration (`preregistration.md`, tag `ime-observation-prereg-macos`), recorded
-under section 8 before the analysis they affect is run, except D11 and D12, which change how results are reported and
-were made after every result had been seen. Each entry gives its date, the reason and the effect. D1
+under section 8 before the analysis they affect is run, except D11 to D13, which change how results are reported (D13
+also adds an exploratory analysis) and were made after every result had been seen. Each entry gives its date, the
+reason and the effect. D1
 to D5 were made for the Windows cell before any Windows measurement; the evidence that they leave the macOS
 cells unchanged is given at the end. D6 concerns the macOS
 measurement. D7 was made after the measurement of the Windows cell and before any analysis of it, and concerns
@@ -10,7 +11,8 @@ the Windows cell only. D8 was made before the closed-set attack of question 4 wa
 three cells. D9 concerns the Windows measurement. D10 was made when the analysis of the macOS cells stopped, before
 any of their results of questions 1 to 3 was seen; the registered results of the Windows cell had been computed by
 then. D11 concerns the report of question 3 in all three cells. D12 concerns the report of question 1 in the Windows
-cell.
+cell. D13 concerns the description of three feature sets of question 4 and adds an exploratory analysis of question 4
+in all three cells.
 
 ## D1. Scenario S4 presses three Escapes on Windows (2026-10-03)
 
@@ -305,6 +307,56 @@ article before its submission asked for the size of the difference between the t
 per-stratum intervals were added afterwards: it was recorded that they would be reported whatever their values before
 they were computed. The counts of the strata that change were added after the ranges had been seen, when a review of
 the discussion found that the per-stratum estimates within the ranges change.
+
+## D13. The feature sets with run counts keep the lengths of letter runs; two sets that drop them are added as an exploratory analysis (2026-10-10)
+
+**What changes.** The description of three feature sets of question 4 is corrected to what the frozen code computes,
+and an exploratory analysis is added. Section 6.8 describes `no_runs` as having no lengths of letter runs, `bin1s_count`
+as 1-second bins without run lengths, and `counts_only` as having neither times nor run lengths. In the code
+(`kit/e2/simulate_obs.py` and `kit/e2/closed_set.py`), these three sets make every run of letter keys one token whose
+count is the number of its presses, and the distance charges the difference of the counts of two tokens of the same
+category; what they remove is the time of every press of a run after its first. With no times, the tokens of
+`counts_only` expanded by their counts give the category of every press in order, which is what `no_time` keeps:
+`counts_only` holds the same information as `no_time` and differs from it only in how the distance counts a run of
+letter keys. The comments of `FEATURE_SETS` in `closed_set.py` and the docstring of `simulate_obs.py` repeat the
+registered description; the files are not changed,
+because the registered results were computed with them and their SHA-256 are recorded with the results. The registered
+results, the registered judgement and the recommendation (none) do not change; the article describes the three sets
+as computed.
+
+The closed-set attack is also run, as an exploratory analysis, on two feature sets without times that drop the lengths
+of runs: `letter_runs_unit`, in which every run of letter keys is one token of count 1 and every other press one token
+(the registered intent of "no lengths of letter runs"), and `all_runs_unit`, in which every run of presses of the same
+category, whatever the category, is one token of count 1, so that the numbers of Backspace, arrow and other repeated
+presses are dropped as well. Both keep the order of the tokens. Everything else is as registered: the predicted logs,
+the distance, the candidates and the tie-breaking of each trial, K = 10, 100 and 1,000, the seed, the trials left out
+(D8), the Wilson interval and the interval that resamples blocks. `all_runs_unit` is derivable from
+`letter_runs_unit`, so the accuracy reported for `letter_runs_unit` is the larger of the two. The registered
+near-chance rule (section 6.8) is applied to the two sets and reported, as an exploratory judgement, next to the
+registered judgement; it does not change the recommendation. The analysis is run by `kit/e2/explore_run_lengths.py`,
+which imports the two code files unchanged, also computes `no_time` and `counts_only` with the same procedure, and
+stops without writing anything unless every value of them, at every K, equals the registered result file of the cell.
+
+**Reason.** The description and the code disagree. The recommendation considers `no_time` and `counts_only`, the second
+of which was meant to drop the lengths of letter runs; as computed it does not, so the registered rule was applied to
+no feature set without those lengths. The article had also described `counts_only` as the numbers of key presses of
+each category without their order; the attack uses the order, and that sentence is corrected as well.
+
+**Effect.** No registered value changes. The method section of the article describes the three sets as computed. The
+results section, the abstract, the conclusions and the recommendations each give the exploratory judgement in one
+sentence, and its values are given in a table of the supplement; this placement was fixed before the analysis was run,
+to be used whatever its result. This deviation was made after all results had been seen, for the six registered sets
+in all three cells. Before the two sets and the rule above were fixed, a related value on the Windows cell had also
+been seen: a prototype of another study by the author, which matches the logs of consecutive trials against candidate
+texts with a similar attack but draws its own candidates and counts a tie among m candidates as 1/m, had measured on
+single trials of the Windows cell, for a set built as `all_runs_unit` is (every run of presses of the same category one
+token of count 1, no times), an accuracy of 11.2% among 10 candidates, 1.68% among 100 and 0.27% among 1,000 (90.6%,
+44.3% and 7.64% for `no_time`), and its accuracy per scenario. No value of `letter_runs_unit`, and no value of either
+set on a macOS cell, had been seen. Both sets can also be derived from `no_time` and `counts_only`, so the registered
+maxima would change if either set were as accurate as these or more; at every K and in every cell each set was less
+accurate, so the registered accuracies, their Wilson intervals and the registered judgement are unchanged (the script
+that makes the tables of the article checks the accuracies). The descriptive intervals that resample blocks were not
+recomputed with the two sets.
 
 ## The macOS cells are unchanged
 
